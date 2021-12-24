@@ -19,6 +19,7 @@ public class MyGame : Game
 		// Add the canvas to the engine to display it:
 		AddChild(canvas);
 		Console.WriteLine("MyGame initialized");
+		Console.ReadLine();
 	}
 
 	// For every game object, Update is called every frame, by the engine:

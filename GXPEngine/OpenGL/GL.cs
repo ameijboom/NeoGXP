@@ -64,88 +64,88 @@ namespace GXPEngine.OpenGL {
 		public const int FUNC_REVERSE_SUBTRACT		= 0x800B;
 		public const int GL_REPEAT 					= 0x2901;
 
-		[DllImport("opengl32.dll", EntryPoint="glEnable")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glEnable")]
 		public static extern void Enable(int cap);
-		[DllImport("opengl32.dll", EntryPoint="glDisable")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glDisable")]
 		public static extern void Disable(int cap);
-		[DllImport("opengl32.dll", EntryPoint="glBlendFunc")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glBlendFunc")]
 		public static extern void BlendFunc(int sourceFactor, int destFactor);
-		[DllImport("opengl32.dll", EntryPoint="glBlendEquation")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glBlendEquation")]
 		public static extern void BlendEquation(int mode);
-		[DllImport("opengl32.dll", EntryPoint="glClearColor")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glClearColor")]
 		public static extern void ClearColor(float r, float g, float b, float a);
-		[DllImport("opengl32.dll", EntryPoint="glMatrixMode")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glMatrixMode")]
 		public static extern void MatrixMode(int mode);
-		[DllImport("opengl32.dll", EntryPoint="glLoadIdentity")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glLoadIdentity")]
 		public static extern void LoadIdentity();
-		[DllImport("opengl32.dll", EntryPoint="glOrtho")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glOrtho")]
 		public static extern void Ortho(double left, double right, double top, double bottom, double near, double far);
-		[DllImport("opengl32.dll", EntryPoint="glClear")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glClear")]
 		public static extern void Clear(int mask);
-		[DllImport("opengl32.dll", EntryPoint="glColor4ub")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glColor4ub")]
 		public static extern void Color4ub(byte r, byte g, byte b, byte a);
-		[DllImport("opengl32.dll", EntryPoint="glPushMatrix")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glPushMatrix")]
 		public static extern void PushMatrix();
-		[DllImport("opengl32.dll", EntryPoint="glMultMatrixf")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glMultMatrixf")]
 		public static extern void MultMatrixf(float[] matrix);
-		[DllImport("opengl32.dll", EntryPoint="glPopMatrix")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glPopMatrix")]
 		public static extern void PopMatrix();
-		[DllImport("opengl32.dll", EntryPoint="glBegin")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glBegin")]
 		public static extern void Begin(int mode);
 
 
 
-		[DllImport("opengl32.dll", EntryPoint="glTexCoord2f")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glTexCoord2f")]
 		public static extern void TexCoord2f(float u, float v);
-		[DllImport("opengl32.dll", EntryPoint="glVertex2f")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glVertex2f")]
 		public static extern void Vertex2f(float x, float y);
-		[DllImport("opengl32.dll", EntryPoint="glVertex3f")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glVertex3f")]
 		public static extern void Vertex3f(float x, float y, float z);
-		[DllImport("opengl32.dll", EntryPoint="glEnd")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glEnd")]
 		public static extern void End();
-		[DllImport("opengl32.dll", EntryPoint="glBindTexture")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glBindTexture")]
 		public static extern void BindTexture(int target, int texture);
-		[DllImport("opengl32.dll", EntryPoint="glGenTextures")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glGenTextures")]
 		public static extern void GenTextures(int count, int[] textures);
-		[DllImport("opengl32.dll", EntryPoint="glTexParameteri")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glTexParameteri")]
 		public static extern void TexParameteri(int target, int name, int value);
-		[DllImport("opengl32.dll", EntryPoint="glTexImage2D")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glTexImage2D")]
 		public static extern void TexImage2D(int target, int level, int internalFormat, int width, int height, 
 		                                     int border, int format, int type, IntPtr pixels);
-		[DllImport("opengl32.dll", EntryPoint="glDeleteTextures")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glDeleteTextures")]
 		public static extern void DeleteTextures(int count, int[] textures);
-		[DllImport("opengl32.dll", EntryPoint="glFinish")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glFinish")]
 		public static extern void Flush();
-		[DllImport("opengl32.dll", EntryPoint="glFlush")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glFlush")]
 		public static extern void Finish();
-		[DllImport("opengl32.dll", EntryPoint="glHint")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glHint")]
 		public static extern void Hint(int target, int mode);
-		[DllImport("opengl32.dll", EntryPoint="glViewport")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glViewport")]
 		public static extern void Viewport(int x, int y, int width, int height);
-		[DllImport("opengl32.dll", EntryPoint="glScissor")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glScissor")]
 		public static extern void Scissor(int x, int y, int width, int height);
-		[DllImport("opengl32.dll", EntryPoint="glVertexPointer")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glVertexPointer")]
 		public static extern void VertexPointer(int size, int type, int stride, float[] pointer);
 		
-		[DllImport("opengl32.dll", EntryPoint="glTexCoordPointer")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glTexCoordPointer")]
 		public static extern void TexCoordPointer(int size, int type, int stride, float[] pointer);
 		
-		[DllImport("opengl32.dll", EntryPoint="glDrawElements")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glDrawElements")]
 		public static extern void DrawElements(int mode, int count, int type, int[] indices);
-		[DllImport("opengl32.dll", EntryPoint="glEnableClientState")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glEnableClientState")]
 		public static extern void EnableClientState(int array);
-		[DllImport("opengl32.dll", EntryPoint="glArrayElement")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glArrayElement")]
 		public static extern void ArrayElement(int element);
-		[DllImport("opengl32.dll", EntryPoint="glDrawArrays")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glDrawArrays")]
 		public static extern void DrawArrays(int mode, int offset, int count);
-		[DllImport("opengl32.dll", EntryPoint="glDisableClientState")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glDisableClientState")]
 		public static extern void DisableClientState(int state);
-		[DllImport("opengl32.dll", EntryPoint="glGetError")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glGetError")]
 		public static extern int GetError();
-		[DllImport("opengl32.dll", EntryPoint="glGetIntegerv")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glGetIntegerv")]
 		public static extern void GetIntegerv(int name, int[] param);
 
-		[DllImport("opengl32.dll", EntryPoint="glLineWidth")]
+		[DllImport("libGLX_mesa.so.0", EntryPoint="glLineWidth")]
 		public static extern void LineWidth(float width);
 
 		//----------------------------------------------------------------------------------------------------------------------

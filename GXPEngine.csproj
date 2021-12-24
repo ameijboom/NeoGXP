@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="glfw-net" Version="3.3.1" />
+    <PackageReference Include="OpenTK" Version="4.6.7" />
     <PackageReference Include="system.drawing.common" Version="6.0.0" />
   </ItemGroup>
 </Project>
