@@ -152,58 +152,10 @@ namespace GXPEngine.OpenGL {
 		//														GLFW
 		//----------------------------------------------------------------------------------------------------------------------
 		
-		public const int GLFW_OPENED 					= 0x00020001;
 		public const int GLFW_WINDOWED             		= 0x00010001;
 		public const int GLFW_FULLSCREEN           		= 0x00010002;
-		public const int GLFW_ACTIVE               		= 0x00020001;
-		public const int GLFW_FSAA_SAMPLES				= 0x0002100E;
-		public const int GLFW_MOUSE_CURSOR				= 0x00030001;
-
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-		public delegate void GLFWWindowSizeCallback(int width, int height);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-		public delegate void GLFWKeyCallback(int key, int action);
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity]
-		public delegate void GLFWMouseButtonCallback(int button, int action);
-		
-		[DllImport("lib/libglfw")]
-		public static extern void glfwSetTime (double time);
-		[DllImport("lib/libglfw")]
-		public static extern double glfwGetTime ();
-
-		[DllImport("lib/libglfw")]
-		public static extern void glfwPollEvents();
-		[DllImport("lib/libglfw")]
-		public static extern int glfwGetWindowParam(int param);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwInit();
-		[DllImport("lib/libglfw")]
-		public static extern void glfwOpenWindow(int width, int height, int r, int g, int b, int a, int depth, int stencil, int mode);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwSetWindowTitle(string title);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwSwapInterval(bool mode);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwSetWindowSizeCallback(GLFWWindowSizeCallback callback);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwCloseWindow();
-		[DllImport("lib/libglfw")]
-		public static extern void glfwTerminate();				
-		[DllImport("lib/libglfw")]
-		public static extern void glfwSwapBuffers();
-		[DllImport("lib/libglfw")]
-		public static extern bool glfwGetKey(int key);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwSetKeyCallback(GLFWKeyCallback callback);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwOpenWindowHint(int name, int value);
-		[DllImport("lib/libglfw")]
-		public static extern bool glfwGetMousePos(out int x, out int y);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwSetMouseButtonCallback(GLFWMouseButtonCallback callback);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwEnable(int property);
-		[DllImport("lib/libglfw")]
-		public static extern void glfwDisable(int property);
+		public const int GLFW_FOCUSED               	= ((int)GLFW.Hint.Focused);
+		public const int GLFW_SAMPLES					= ((int)GLFW.Hint.Samples);
+		public const int GLFW_CURSOR					= ((int)GLFW.InputMode.Cursor);
 	}
 }

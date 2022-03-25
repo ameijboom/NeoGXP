@@ -2,7 +2,7 @@
 #define STRETCH_ON_RESIZE
 
 using System;
-using GXPEngine.OpenGL;
+using GLFW;
 
 namespace GXPEngine.Core {
 
@@ -41,6 +41,7 @@ namespace GXPEngine.Core {
 		private static double _realToLogicWidthRatio;
 		private static double _realToLogicHeightRatio;
 
+		public static GLFW.Window Window;
 		//------------------------------------------------------------------------------------------------------------------------
 		//														RenderWindow()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -88,49 +89,64 @@ namespace GXPEngine.Core {
 			_realToLogicHeightRatio = (double)realHeight / height;
 			_vsyncEnabled = vSync;
 			
-			GL.glfwInit();
+			Glfw.Init();
 			
-			GL.glfwOpenWindowHint(GL.GLFW_FSAA_SAMPLES, 8);
-			GL.glfwOpenWindow(realWidth, realHeight, 8, 8, 8, 8, 24, 0, (fullScreen?GL.GLFW_FULLSCREEN:GL.GLFW_WINDOWED));
-			GL.glfwSetWindowTitle("Game");
-			GL.glfwSwapInterval(vSync);
+			// Glfw.glfwOpenWindowHint(Glfw.GLFW_FSAA_SAMPLES, 8);
+			// Glfw.glfwOpenWindow(realWidth, realHeight, 8, 8, 8, 8, 24, 0, (fullScreen?Glfw.GLFW_FULLSCREEN:Glfw.GLFW_WINDOWED));
+			Glfw.WindowHint(GLFW.Hint.Samples, 8);
+			Window = Glfw.CreateWindow(realWidth, realHeight, "Game", (fullScreen ? Glfw.PrimaryMonitor : Monitor.None), GLFW.Window.None);
+			Glfw.SwapInterval(vSync ? 1 : 0);
 			
-			GL.glfwSetKeyCallback(
-				(int _key, int _mode) => {
-				bool press = (_mode == 1);
-				if (press) { keydown[_key] = true; anyKeyDown = true; keyPressedCount++; } 
-				else { keyup[_key] = true; keyPressedCount--; }
-				keys[_key] = press;
-			});
+			Glfw.SetKeyCallback(Window,
+				(System.IntPtr _window, GLFW.Keys _key, int _scanCode, GLFW.InputState _action, GLFW.ModifierKeys _mods) => {
+					bool press = (_action == GLFW.InputState.Press);
+
+					if (press) 
+					{ 
+						keydown[((int)_key)] = true; 
+						anyKeyDown = true; 
+						keyPressedCount++; 
+					} else 
+					{ 
+						keyup[((int)_key)] = true; 
+						keyPressedCount--; 
+					}
+
+					keys[((int)_key)] = press;
+				});
 			
-			GL.glfwSetMouseButtonCallback(
-				(int _button, int _mode) => {
-				bool press = (_mode == 1);
-				if (press) mousehits[_button] = true;
-				else mouseup[_button] = true;
-				buttons[_button] = press;
+			Glfw.SetMouseButtonCallback(Window,
+				(System.IntPtr _window, GLFW.MouseButton _button, GLFW.InputState _action, GLFW.ModifierKeys _mods) => {
+				bool press = (_action == GLFW.InputState.Press);
+
+				if (press)
+					mousehits[((int)_button)] = true;
+				else
+					mouseup[((int)_button)] = true;
+
+				buttons[((int)_button)] = press;
 			});
 
-			GL.glfwSetWindowSizeCallback((int newWidth, int newHeight) => {
-				GL.Viewport(0, 0, newWidth, newHeight);	
-				GL.Enable(GL.MULTISAMPLE);	
-				GL.Enable (GL.TEXTURE_2D);
-				GL.Enable( GL.BLEND );
-				GL.BlendFunc( GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA );
-				GL.Hint (GL.PERSPECTIVE_CORRECTION, GL.FASTEST);
-				//GL.Enable (GL.POLYGON_SMOOTH);
-				GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			Glfw.SetWindowSizeCallback(Window, (System.IntPtr _window, int newWidth, int newHeight) => {
+				Glfw.Viewport(0, 0, newWidth, newHeight);	
+				Glfw.SetInputMode(OpenGL.GL.MULTISAMPLE);	
+				Glfw.SetInputMode (Glfw.TEXTURE_2D);
+				Glfw.SetInputMode( Glfw.BLEND );
+				Glfw.BlendFunc( Glfw.SRC_ALPHA, Glfw.ONE_MINUS_SRC_ALPHA );
+				Glfw.Hint (Glfw.PERSPECTIVE_CORRECTION, Glfw.FASTEST);
+				//Glfw.Enable (Glfw.POLYGON_SMOOTH);
+				Glfw.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 				// Load the basic projection settings:
-				GL.MatrixMode(GL.PROJECTION);
-				GL.LoadIdentity();
+				Glfw.MatrixMode(Glfw.PROJECTION);
+				Glfw.LoadIdentity();
 
 #if STRETCH_ON_RESIZE
 				_realToLogicWidthRatio = (double)newWidth / WindowSize.instance.width;
 				_realToLogicHeightRatio = (double)newHeight / WindowSize.instance.height;
 #endif
 				// Here's where the conversion from logical width/height to real width/height happens: 
-				GL.Ortho(0.0f, newWidth / _realToLogicWidthRatio, newHeight / _realToLogicHeightRatio, 0.0f, 0.0f, 1000.0f);
+				Glfw.Ortho(0.0f, newWidth / _realToLogicWidthRatio, newHeight / _realToLogicHeightRatio, 0.0f, 0.0f, 1000.0f);
 #if !STRETCH_ON_RESIZE
 				lock (WindowSize.instance) {
 					WindowSize.instance.width = (int)(newWidth/_realToLogicWidthRatio);
@@ -160,15 +176,15 @@ namespace GXPEngine.Core {
 		public void ShowCursor (bool enable)
 		{
 			if (enable) {
-				GL.glfwEnable(GL.GLFW_MOUSE_CURSOR);
+				Glfw.glfwEnable(Glfw.GLFW_MOUSE_CURSOR);
 			} else {
-				GL.glfwDisable(GL.GLFW_MOUSE_CURSOR);
+				Glfw.glfwDisable(Glfw.GLFW_MOUSE_CURSOR);
 			}
 		}
 
 		public void SetVSync(bool enableVSync) {
 			_vsyncEnabled = enableVSync;
-			GL.glfwSwapInterval(_vsyncEnabled);
+			Glfw.glfwSwapInterval(_vsyncEnabled);
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
@@ -176,18 +192,18 @@ namespace GXPEngine.Core {
 		//------------------------------------------------------------------------------------------------------------------------
 		public void SetScissor(int x, int y, int width, int height) {
 			if ((width == WindowSize.instance.width) && (height == WindowSize.instance.height)) {
-				GL.Disable(GL.SCISSOR_TEST);
+				Glfw.Disable(Glfw.SCISSOR_TEST);
 			} else {
-				GL.Enable(GL.SCISSOR_TEST);
+				Glfw.Enable(Glfw.SCISSOR_TEST);
 			}
 
-			GL.Scissor(
+			Glfw.Scissor(
 				(int)(x*_realToLogicWidthRatio), 
 				(int)(y*_realToLogicHeightRatio), 
 				(int)(width*_realToLogicWidthRatio), 
 				(int)(height*_realToLogicHeightRatio)
 			);
-			//GL.Scissor(x, y, width, height);
+			//Glfw.Scissor(x, y, width, height);
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
@@ -195,8 +211,8 @@ namespace GXPEngine.Core {
 		//------------------------------------------------------------------------------------------------------------------------
 		public void Close() {
             _soundSystem.Deinit();
-            GL.glfwCloseWindow();
-			GL.glfwTerminate();
+            Glfw.glfwCloseWindow();
+			Glfw.glfwTerminate();
 			System.Environment.Exit(0);
 		}
 		
@@ -204,7 +220,7 @@ namespace GXPEngine.Core {
 		//														Run()
 		//------------------------------------------------------------------------------------------------------------------------
 		public void Run() {
-            GL.glfwSetTime(0.0);
+            Glfw.glfwSetTime(0.0);
 			do {
 				if (_vsyncEnabled || (Time.time - _lastFrameTime > (1000 / _targetFrameRate))) {
 					_lastFrameTime = Time.time;
@@ -225,11 +241,11 @@ namespace GXPEngine.Core {
 					Display();
 					
 					Time.newFrame ();
-					GL.glfwPollEvents();
+					Glfw.glfwPollEvents();
 				}
 				
 				
-			} while (GL.glfwGetWindowParam(GL.GLFW_ACTIVE) == 1);
+			} while (Glfw.glfwGetWindowParam(Glfw.GLFW_ACTIVE) == 1);
 		}
 		
 		
@@ -237,14 +253,14 @@ namespace GXPEngine.Core {
 		//														display()
 		//------------------------------------------------------------------------------------------------------------------------
 		private void Display () {
-			GL.Clear(GL.COLOR_BUFFER_BIT);
+			Glfw.Clear(Glfw.COLOR_BUFFER_BIT);
 			
-			GL.MatrixMode(GL.MODELVIEW);
-			GL.LoadIdentity();
+			Glfw.MatrixMode(Glfw.MODELVIEW);
+			Glfw.LoadIdentity();
 			
 			_owner.Render(this);
 
-			GL.glfwSwapBuffers();
+			Glfw.glfwSwapBuffers();
 			if (GetKey(Key.ESCAPE)) this.Close();
 		}
 		
@@ -252,35 +268,35 @@ namespace GXPEngine.Core {
 		//														SetColor()
 		//------------------------------------------------------------------------------------------------------------------------
 		public void SetColor (byte r, byte g, byte b, byte a) {
-			GL.Color4ub(r, g, b, a);
+			Glfw.Color4ub(r, g, b, a);
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
 		//														PushMatrix()
 		//------------------------------------------------------------------------------------------------------------------------
 		public void PushMatrix(float[] matrix) {
-			GL.PushMatrix ();
-			GL.MultMatrixf (matrix);
+			Glfw.PushMatrix ();
+			Glfw.MultMatrixf (matrix);
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
 		//														PopMatrix()
 		//------------------------------------------------------------------------------------------------------------------------
 		public void PopMatrix() {
-			GL.PopMatrix ();
+			Glfw.PopMatrix ();
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
 		//														DrawQuad()
 		//------------------------------------------------------------------------------------------------------------------------
 		public void DrawQuad(float[] vertices, float[] uv) {
-			GL.EnableClientState( GL.TEXTURE_COORD_ARRAY );
-			GL.EnableClientState( GL.VERTEX_ARRAY );
-			GL.TexCoordPointer( 2, GL.FLOAT, 0, uv);
-			GL.VertexPointer( 2, GL.FLOAT, 0, vertices);
-			GL.DrawArrays(GL.QUADS, 0, 4);
-			GL.DisableClientState(GL.VERTEX_ARRAY);
-			GL.DisableClientState(GL.TEXTURE_COORD_ARRAY);			
+			Glfw.EnableClientState( Glfw.TEXTURE_COORD_ARRAY );
+			Glfw.EnableClientState( Glfw.VERTEX_ARRAY );
+			Glfw.TexCoordPointer( 2, Glfw.FLOAT, 0, uv);
+			Glfw.VertexPointer( 2, Glfw.FLOAT, 0, vertices);
+			Glfw.DrawArrays(Glfw.QUADS, 0, 4);
+			Glfw.DisableClientState(Glfw.VERTEX_ARRAY);
+			Glfw.DisableClientState(Glfw.TEXTURE_COORD_ARRAY);			
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
@@ -348,7 +364,7 @@ namespace GXPEngine.Core {
 		//														UpdateMouseInput()
 		//------------------------------------------------------------------------------------------------------------------------
 		public static void UpdateMouseInput() {
-			GL.glfwGetMousePos(out mouseX, out mouseY);
+			Glfw.glfwGetMousePos(out mouseX, out mouseY);
 			mouseX = (int)(mouseX / _realToLogicWidthRatio);
 			mouseY = (int)(mouseY / _realToLogicHeightRatio);
 		}
