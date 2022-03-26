@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 
-using GXPEngine.OpenGL;
+using OpenTK.Graphics.OpenGL;
 
 namespace GXPEngine.Core
 {
@@ -103,7 +103,7 @@ namespace GXPEngine.Core
 		public void Bind() {
 			if (lastBound == this) return;
 			lastBound = this;
-			GL.BindTexture(GL.TEXTURE_2D, _glTexture[0]);
+			GL.BindTexture(TextureTarget.Texture2D, _glTexture[0]);
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------
@@ -151,19 +151,19 @@ namespace GXPEngine.Core
 
 			GL.GenTextures (1, _glTexture);
 			
-			GL.BindTexture (GL.TEXTURE_2D, _glTexture[0]);
+			GL.BindTexture (TextureTarget.Texture2D, _glTexture[0]);
 			if (Game.main.PixelArt) {
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.NEAREST);
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.NEAREST);
+				GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+				GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 			} else {
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
+				GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+				GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 			}
-			GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE_EXT);
-			GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE_EXT);	
+			GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.ClampToEdge);
+			GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.ClampToEdge);	
 			
 			UpdateGLTexture();
-			GL.BindTexture (GL.TEXTURE_2D, 0);
+			GL.BindTexture (TextureTarget.Texture2D, 0);
 			lastBound = null;
 		}
 		
@@ -174,9 +174,9 @@ namespace GXPEngine.Core
 			BitmapData data = _bitmap.LockBits (new System.Drawing.Rectangle (0, 0, _bitmap.Width, _bitmap.Height),
 			                                     ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			               			
-			GL.BindTexture (GL.TEXTURE_2D, _glTexture[0]);
-			GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, _bitmap.Width, _bitmap.Height, 0,
-			              GL.BGRA, GL.UNSIGNED_BYTE, data.Scan0);
+			GL.BindTexture (TextureTarget.Texture2D, _glTexture[0]);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, _bitmap.Width, _bitmap.Height, 0,
+			              OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedInt, data.Scan0);
 			              
 			_bitmap.UnlockBits(data);
 			lastBound = null;
@@ -207,10 +207,10 @@ namespace GXPEngine.Core
 
 		public bool wrap {
 			set { 
-				GL.BindTexture (GL.TEXTURE_2D, _glTexture[0]);
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, value?GL.GL_REPEAT:GL.GL_CLAMP_TO_EDGE_EXT);
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, value?GL.GL_REPEAT:GL.GL_CLAMP_TO_EDGE_EXT);	
-				GL.BindTexture (GL.TEXTURE_2D, 0);
+				GL.BindTexture (TextureTarget.Texture2D, _glTexture[0]);
+				GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureWrapS, value ? (float)TextureWrapMode.Repeat : (float)TextureWrapMode.ClampToEdge);
+				GL.TexParameter (TextureTarget.Texture2D, TextureParameterName.TextureWrapT, value ? (float)TextureWrapMode.Repeat : (float)TextureWrapMode.ClampToEdge);	
+				GL.BindTexture (TextureTarget.Texture2D, 0);
 				lastBound = null;
 			}
 		}

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GXPEngine.Core;
-using GXPEngine.OpenGL;
+using OpenTK.Graphics.OpenGL;
 
 namespace GXPEngine {
 	/// <summary>
@@ -224,13 +224,13 @@ namespace GXPEngine {
 		public void DrawBuffers(GLContext glContext) {
 			_texture.Bind();
 
-			GL.EnableClientState(GL.TEXTURE_COORD_ARRAY);
-			GL.EnableClientState(GL.VERTEX_ARRAY);
-			GL.TexCoordPointer(2, GL.FLOAT, 0, uvs);
-			GL.VertexPointer(2, GL.FLOAT, 0, verts);
-			GL.DrawArrays(GL.QUADS, 0, numberOfVertices);
-			GL.DisableClientState(GL.VERTEX_ARRAY);
-			GL.DisableClientState(GL.TEXTURE_COORD_ARRAY);
+			GL.EnableClientState(ArrayCap.TextureCoordArray);
+			GL.EnableClientState(ArrayCap.VertexArray);
+			GL.TexCoordPointer(2, TexCoordPointerType.Float, 0, uvs);
+			GL.VertexPointer(2, VertexPointerType.Float, 0, verts);
+			GL.DrawArrays(BeginMode.Quads, 0, numberOfVertices);
+			GL.DisableClientState(ArrayCap.VertexArray);
+			GL.DisableClientState(ArrayCap.TextureCoordArray);
 
 			_texture.Unbind();
 		}

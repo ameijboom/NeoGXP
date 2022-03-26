@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -16,8 +16,7 @@
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="glfw-net" Version="3.3.1" />
-    <PackageReference Include="OpenTK" Version="4.6.7" />
+    <PackageReference Include="OpenTK" Version="4.7.1" />
     <PackageReference Include="system.drawing.common" Version="6.0.0" />
   </ItemGroup>
 </Project>

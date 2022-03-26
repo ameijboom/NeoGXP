@@ -27,7 +27,7 @@ namespace GXPEngine
 		/// The time.
 		/// </value>
 		public static int time {
-			get { return (int)(OpenGL.GL.glfwGetTime()*1000); }
+			get { return (int)(GLFW.Glfw.Time*1000); }
 		}
 		
 		/// <summary>

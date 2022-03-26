@@ -95,14 +95,14 @@ namespace GXPEngine
 		/// <summary>
 		/// Gets the current mouse x position in pixels.
 		/// </summary>
-		public static int mouseX {
+		public static double mouseX {
 			get { return GLContext.mouseX; }
 		}
 		
 		/// <summary>
 		/// Gets the current mouse y position in pixels.
 		/// </summary>
-		public static int mouseY {
+		public static double mouseY {
 			get { return GLContext.mouseY; }
 		}
 	}
