@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System;
+using Arqan;
 
 namespace GXPEngine
 {
@@ -27,7 +28,7 @@ namespace GXPEngine
 		/// The time.
 		/// </value>
 		public static int time {
-			get { return (int)(GLFW.Glfw.Time*1000); }
+			get { return (int)(GLFW.glfwGetTime()*1000); }
 		}
 		
 		/// <summary>

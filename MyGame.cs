@@ -31,5 +31,6 @@ public class MyGame : Game
 	public static void Main(String[] args)							// Main() is the first method that's called when the program is run
 	{
 		new MyGame().Start();					// Create a "MyGame" and start it
+		Console.WriteLine("After Start");
 	}
 }

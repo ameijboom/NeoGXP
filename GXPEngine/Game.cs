@@ -173,6 +173,7 @@ namespace GXPEngine
 		/// Start the game loop. Call this once at the start of your game.
 		/// </summary>
 		public void Start() {
+			Console.WriteLine("This is Game.cs");
 			_glContext.Run();
 		}
 		

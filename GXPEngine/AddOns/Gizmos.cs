@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using GXPEngine;
 using GXPEngine.Core;
-using OpenTK.Graphics.OpenGL;
+using Arqan;
 
 namespace GXPEngine {
 	/// <summary>
@@ -177,16 +178,16 @@ namespace GXPEngine {
 		/// used. These can be set using SetStyle, SetColor and SetWidth.
 		/// </summary>
 		public static void RenderLine(float x1, float y1, float x2, float y2, uint pColor = 0xffffffff, uint pLineWidth = 1, bool pGlobalCoords = false) {
-			if (pGlobalCoords) GL.LoadIdentity();
-			GL.Disable(EnableCap.Texture2D);
-			GL.LineWidth(pLineWidth);
-			GL.Color4((byte)((pColor >> 16) & 0xff), (byte)((pColor >> 8) & 0xff), (byte)((pColor) & 0xff), (byte)((pColor >> 24) & 0xff));
+			if (pGlobalCoords) GL.glLoadIdentity();
+			GL.glDisable(GL.GL_TEXTURE_2D);
+			GL.glLineWidth(pLineWidth);
+			GL.glColor4ub((byte)((pColor >> 16) & 0xff), (byte)((pColor >> 8) & 0xff), (byte)((pColor) & 0xff), (byte)((pColor >> 24) & 0xff));
 			float[] vertices = new float[] { x1, y1, x2, y2 };
-			GL.EnableClientState(ArrayCap.VertexArray);
-			GL.VertexPointer(2, VertexPointerType.Float, 0, vertices);
-			GL.DrawArrays(BeginMode.Lines, 0, 2);
-			GL.DisableClientState(ArrayCap.VertexArray);
-			GL.Enable(EnableCap.Texture2D);
+			GL.glEnableClientState(GL.GL_VERTEX_ARRAY);
+			GL.glVertexPointer(2, GL.GL_FLOAT, 0, vertices.ToIntPtr());
+			GL.glDrawArrays(GL.GL_LINES, 0, 2);
+			GL.glDisableClientState(GL.GL_VERTEX_ARRAY);
+			GL.glEnable(GL.GL_TEXTURE_2D);
 		}
 
 		void DrawLines(GLContext glContext) {

@@ -1,4 +1,4 @@
-using OpenTK.Graphics.OpenGL;
+using Arqan;
 using GXPEngine.Core;
 
 namespace GXPEngine {
@@ -127,7 +127,7 @@ namespace GXPEngine {
 				var oldRange = main.RenderRange;
 				SetRenderRange();
 				main.SetViewport (_windowX, _windowY, _width, _height, false);
-				GL.Clear(ClearBufferMask.ColorBufferBit);
+				GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 				current.Render (glContext);
 				main.SetViewport ((int)oldRange.left, (int)oldRange.top, (int)oldRange.width, (int)oldRange.height);
 			}

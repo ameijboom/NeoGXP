@@ -120,6 +120,14 @@ namespace GXPEngine
 			return true;
 		}
 
+		public static IntPtr ToIntPtr(this float[] src)
+		{
+			IntPtr ptr = IntPtr.Zero;
+			System.Runtime.InteropServices.Marshal.Copy(src, 0, ptr, src.Length);
+
+			return ptr;
+		}
+
 	}
 }
 

@@ -15,8 +15,11 @@
     <OutputPath>bin\Release</OutputPath>
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.7.1" />
-    <PackageReference Include="system.drawing.common" Version="6.0.0" />
+  <ItemGroup Condition="'$(OS)' == 'UNIX'">
+      <PackageReference Include="Arqan.Linux" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+      <PackageReference Include="Arqan.Windows.x64" Version="2.1.0" />
+      <PackageReference Include="Aspose.Drawing" Version="22.3.0" />
   </ItemGroup>
 </Project>
