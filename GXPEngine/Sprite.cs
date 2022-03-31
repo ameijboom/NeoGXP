@@ -185,7 +185,7 @@ namespace GXPEngine
 					                   (byte)((_color >> 8) & 0xFF), 
 					                   (byte)(_color & 0xFF), 
 					                   (byte)(_alpha * 0xFF));
-					glContext.DrawQuad(GetArea(), _uvs);
+					glContext.DrawQuad(GetExtents());
 					glContext.SetColor(1, 1, 1, 1);
 					_texture.Unbind();
 					if (blendMode != null) BlendMode.NORMAL.enable();

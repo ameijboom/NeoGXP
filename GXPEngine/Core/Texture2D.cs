@@ -153,14 +153,14 @@ namespace GXPEngine.Core
 			
 			GL.glBindTexture (GL.GL_TEXTURE_2D, _glTexture[0]);
 			if (Game.main.PixelArt) {
-				GL.glTextureParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (int)GL.GL_NEAREST);
-				GL.glTextureParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (int)GL.GL_NEAREST);
+				GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (int)GL.GL_NEAREST);
+				GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (int)GL.GL_NEAREST);
 			} else {
-				GL.glTextureParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (int)GL.GL_LINEAR);
-				GL.glTextureParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (int)GL.GL_LINEAR);
+				GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (int)GL.GL_LINEAR);
+				GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (int)GL.GL_LINEAR);
 			}
-			GL.glTextureParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, (int)GL.GL_CLAMP_TO_EDGE);
-			GL.glTextureParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, (int)GL.GL_CLAMP_TO_EDGE);	
+			GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, (int)GL.GL_CLAMP_TO_EDGE);
+			GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, (int)GL.GL_CLAMP_TO_EDGE);	
 			
 			UpdateGLTexture();
 			GL.glBindTexture (GL.GL_TEXTURE_2D, 0);
@@ -176,7 +176,7 @@ namespace GXPEngine.Core
 			               			
 			GL.glBindTexture (GL.GL_TEXTURE_2D, _glTexture[0]);
 			GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, _bitmap.Width, _bitmap.Height, 0,
-			              GL.GL_BGRA, GL.GL_UNSIGNED_INT, data.Scan0);
+			              GL.GL_BGRA, GL.GL_UNSIGNED_BYTE, data.Scan0);
 			              
 			_bitmap.UnlockBits(data);
 			lastBound = null;

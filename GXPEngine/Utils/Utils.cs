@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing; // For Font
 using System.Drawing.Text; // For PrivateFontCollection
+using System.Runtime.InteropServices;
 
 namespace GXPEngine
 {
@@ -122,10 +123,20 @@ namespace GXPEngine
 
 		public static IntPtr ToIntPtr(this float[] src)
 		{
-			IntPtr ptr = IntPtr.Zero;
-			System.Runtime.InteropServices.Marshal.Copy(src, 0, ptr, src.Length);
-
-			return ptr;
+            GCHandle handle = GCHandle.Alloc(src, GCHandleType.Pinned);
+            IntPtr ptr = new IntPtr(1);
+            try
+            {
+                ptr = handle.AddrOfPinnedObject();
+            }
+            finally
+            {
+                if (handle.IsAllocated)
+                    {
+                        handle.Free();
+                    }
+            }
+            return ptr;
 		}
 
 	}
