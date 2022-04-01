@@ -149,7 +149,7 @@ namespace GXPEngine.Core
                         keyPressedCount--;
                     }
 
-                    keys[((int)_key)] = press;
+                    keys[((int)_key)] = (_action == GLFW.GLFW_REPEAT || press);
                 });
 
             GLFW.glfwSetMouseButtonCallback(Window,
@@ -203,6 +203,8 @@ namespace GXPEngine.Core
 
         private void InitializeGLData()
         {
+            GL.glEnable(GL.GL_BLEND);
+            GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
             _data = new GLData();
             uint[] VBO = { 0 };
             uint[] VAO = { 0 };
@@ -431,9 +433,6 @@ namespace GXPEngine.Core
             GL.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL.GL_STATIC_DRAW);
 
             GL.glUniformMatrix4fv(GL.glGetUniformLocation(shaderProgram, "transform"), 1, false, transform);
-
-			GL.glClearColor(0, 0, 0, 1);
-			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
 			GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, IntPtr.Zero);
         }
