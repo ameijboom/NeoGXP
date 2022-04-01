@@ -411,21 +411,21 @@ namespace GXPEngine.Core
         //------------------------------------------------------------------------------------------------------------------------
         //														DrawQuad()
         //------------------------------------------------------------------------------------------------------------------------
-        public void DrawQuad(Vector2[] verts)
+        public void DrawQuad(Vector2[] verts, float[] uvs)
         {
             DrawQuad(verts, new float[16] { 
 			1.0f, 0.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f });
+			0.0f, 0.0f, 0.0f, 1.0f }, uvs);
         }
-        public void DrawQuad(Vector2[] verts, float[] transform)
+        public void DrawQuad(Vector2[] verts, float[] transform, float[] uvs)
         {
             verts = AbsoluteToRelative(verts);
-            float[] verts_reshaped = {verts[0].x, verts[0].y, 0.0f, 0.0f, 1.0f,
-                                      verts[1].x, verts[1].y, 0.0f, 1.0f, 1.0f,
-                                      verts[2].x, verts[2].y, 0.0f, 1.0f, 0.0f,
-                                      verts[3].x, verts[3].y, 0.0f, 0.0f, 0.0f
+            float[] verts_reshaped = {verts[0].x, verts[0].y, 0.0f, uvs[6], uvs[7],
+                                      verts[1].x, verts[1].y, 0.0f, uvs[4], uvs[5],
+                                      verts[2].x, verts[2].y, 0.0f, uvs[2], uvs[3],
+                                      verts[3].x, verts[3].y, 0.0f, uvs[0], uvs[1]
                                       };
 			GL.glBindVertexArray(_data.VAO);
 
