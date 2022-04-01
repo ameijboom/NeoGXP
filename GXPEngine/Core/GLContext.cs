@@ -57,18 +57,10 @@ namespace GXPEngine.Core
         private uint fragmentShader;
         private uint shaderProgram;
 
-        private static float[] vertices = {
-        // positions          // texture coords
-         	0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-         	0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-        	-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, // bottom left
-        	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
-    	};
-
-        private static uint[] indices = {
+        private static readonly uint[] indices = {
                 0, 1, 3, // first triangle
                 1, 2, 3  // second triangle
-            };
+        };
 
         //------------------------------------------------------------------------------------------------------------------------
         //														RenderWindow()
@@ -222,10 +214,8 @@ namespace GXPEngine.Core
             GL.glBindVertexArray(_data.VAO);
             
             GL.glBindBuffer(GL.GL_ARRAY_BUFFER, _data.VBO);
-            GL.glBufferData(GL.GL_ARRAY_BUFFER, vertices.Length * sizeof(float), vertices, GL.GL_STATIC_DRAW);
 
 			GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, _data.EBO);
-            GL.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL.GL_STATIC_DRAW);
 
             GL.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 5 * sizeof(float), IntPtr.Zero);
             GL.glEnableVertexAttribArray(0);
