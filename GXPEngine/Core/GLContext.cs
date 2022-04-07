@@ -57,18 +57,10 @@ namespace GXPEngine.Core
         private uint fragmentShader;
         private uint shaderProgram;
 
-        private static float[] vertices = {
-        // positions          // texture coords
-         	0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-         	0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-        	-0.5f, -0.5f, 0.0f,  0.0f, 0.0f, // bottom left
-        	-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
-    	};
-
-        private static uint[] indices = {
+        private static readonly uint[] indices = {
                 0, 1, 3, // first triangle
                 1, 2, 3  // second triangle
-            };
+        };
 
         //------------------------------------------------------------------------------------------------------------------------
         //														RenderWindow()
@@ -149,7 +141,7 @@ namespace GXPEngine.Core
                         keyPressedCount--;
                     }
 
-                    keys[((int)_key)] = press;
+                    keys[((int)_key)] = (_action == GLFW.GLFW_REPEAT || press);
                 });
 
             GLFW.glfwSetMouseButtonCallback(Window,
@@ -203,6 +195,8 @@ namespace GXPEngine.Core
 
         private void InitializeGLData()
         {
+            GL.glEnable(GL.GL_BLEND);
+            GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
             _data = new GLData();
             uint[] VBO = { 0 };
             uint[] VAO = { 0 };
@@ -220,10 +214,8 @@ namespace GXPEngine.Core
             GL.glBindVertexArray(_data.VAO);
             
             GL.glBindBuffer(GL.GL_ARRAY_BUFFER, _data.VBO);
-            GL.glBufferData(GL.GL_ARRAY_BUFFER, vertices.Length * sizeof(float), vertices, GL.GL_STATIC_DRAW);
 
 			GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, _data.EBO);
-            GL.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL.GL_STATIC_DRAW);
 
             GL.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 5 * sizeof(float), IntPtr.Zero);
             GL.glEnableVertexAttribArray(0);
@@ -409,21 +401,21 @@ namespace GXPEngine.Core
         //------------------------------------------------------------------------------------------------------------------------
         //														DrawQuad()
         //------------------------------------------------------------------------------------------------------------------------
-        public void DrawQuad(Vector2[] verts)
+        public void DrawQuad(Vector2[] verts, float[] uvs)
         {
             DrawQuad(verts, new float[16] { 
 			1.0f, 0.0f, 0.0f, 0.0f,
 			0.0f, 1.0f, 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f });
+			0.0f, 0.0f, 0.0f, 1.0f }, uvs);
         }
-        public void DrawQuad(Vector2[] verts, float[] transform)
+        public void DrawQuad(Vector2[] verts, float[] transform, float[] uvs)
         {
             verts = AbsoluteToRelative(verts);
-            float[] verts_reshaped = {verts[0].x, verts[0].y, 0.0f, 0.0f, 1.0f,
-                                      verts[1].x, verts[1].y, 0.0f, 1.0f, 1.0f,
-                                      verts[2].x, verts[2].y, 0.0f, 1.0f, 0.0f,
-                                      verts[3].x, verts[3].y, 0.0f, 0.0f, 0.0f
+            float[] verts_reshaped = {verts[0].x, verts[0].y, 0.0f, uvs[6], uvs[7],
+                                      verts[1].x, verts[1].y, 0.0f, uvs[4], uvs[5],
+                                      verts[2].x, verts[2].y, 0.0f, uvs[2], uvs[3],
+                                      verts[3].x, verts[3].y, 0.0f, uvs[0], uvs[1]
                                       };
 			GL.glBindVertexArray(_data.VAO);
 
@@ -431,9 +423,6 @@ namespace GXPEngine.Core
             GL.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL.GL_STATIC_DRAW);
 
             GL.glUniformMatrix4fv(GL.glGetUniformLocation(shaderProgram, "transform"), 1, false, transform);
-
-			GL.glClearColor(0, 0, 0, 1);
-			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
 			GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, IntPtr.Zero);
         }
