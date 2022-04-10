@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing; // For Font
-using System.Drawing.Text; // For PrivateFontCollection
+using SkiaSharp;
 using System.Runtime.InteropServices;
 
 namespace GXPEngine
@@ -13,7 +12,7 @@ namespace GXPEngine
 	{
 		static private Random random = new Random();
 
-		static Dictionary<string, PrivateFontCollection> fontIndex=null;
+		static Dictionary<string, SKTypeface> fontIndex=null;
 
 		/// <summary>
 		/// Creates a font from a font file (extension: ttf), with the given point size and font style.
@@ -22,16 +21,15 @@ namespace GXPEngine
 		/// <param name="fontSize">The size in points</param>
 		/// <param name="fontStyle">The font style (pass e.g. FontStyle.Italic|FontStyle.Bold here)</param>
 		/// <returns></returns>
-		public static Font LoadFont(string filename, float fontSize, FontStyle fontStyle = FontStyle.Regular) {
+		public static SKFont LoadFont(string filename, float fontSize, SKFontStyle fontStyle = null) {
 			if (fontIndex==null) {
-				fontIndex=new Dictionary<string, PrivateFontCollection>();
+				fontIndex=new Dictionary<string, SKTypeface>();
 			}
 			if (!fontIndex.ContainsKey(filename)) {
-				fontIndex[filename]=new PrivateFontCollection();
-				fontIndex[filename].AddFontFile(filename);
+				fontIndex[filename] = SKTypeface.FromFamilyName(filename);
 				//Console.WriteLine("Loaded new font: "+fontIndex[filename].Families[0]);
 			} 
-			return new Font(fontIndex[filename].Families[0], fontSize, fontStyle);
+			return new SKFont(SKTypeface.FromFamilyName(fontIndex[filename].FamilyName, fontStyle == null ? SKFontStyle.Normal : fontStyle), fontSize);
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------

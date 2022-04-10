@@ -1,5 +1,5 @@
 using System;
-using System.Drawing;
+using SkiaSharp;
 using GXPEngine.Core;
 
 namespace GXPEngine
@@ -9,7 +9,7 @@ namespace GXPEngine
 	/// </summary>
 	public class Canvas : Sprite
 	{
-		protected Graphics _graphics;
+		protected SKCanvas _graphics;
 		protected bool _invalidate = false;
 
 		//------------------------------------------------------------------------------------------------------------------------
@@ -27,20 +27,20 @@ namespace GXPEngine
 		/// <param name='height'>
 		/// Height of the canvas in pixels.
 		/// </param>
-		public Canvas (int width, int height, bool addCollider=true) : this(new Bitmap (width, height), addCollider)
+		public Canvas (int width, int height, bool addCollider=true) : this(new SKBitmap (width, height), addCollider)
 		{
 			name = width + "x" + height;
 		}
 
-		public Canvas (System.Drawing.Bitmap bitmap, bool addCollider=true) : base (bitmap,addCollider)
+		public Canvas (SKBitmap bitmap, bool addCollider=true) : base (bitmap,addCollider)
 		{
-			_graphics = Graphics.FromImage(bitmap);
+			_graphics = new SKCanvas(bitmap);
 			_invalidate = true;
 		}
 
 		public Canvas(string filename, bool addCollider=true):base(filename,addCollider)
 		{
-			_graphics = Graphics.FromImage(texture.bitmap);
+			_graphics = new SKCanvas(texture.bitmap);
 			_invalidate = true;
 		}
 
@@ -52,7 +52,7 @@ namespace GXPEngine
 		/// Returns the graphics component. This interface provides tools to draw on the sprite.
 		/// See: <a href="http://msdn.microsoft.com/en-us/library/system.drawing.graphics(v=vs.110).aspx">System.Drawing.Graphics</a>
 		/// </summary>
-		public Graphics graphics {
+		public SKCanvas graphics {
 			get { 
 				_invalidate = true;
 				return _graphics; 
@@ -81,17 +81,13 @@ namespace GXPEngine
 		/// <param name='sprite'>
 		/// The Sprite that should be drawn.
 		/// </param>
-		private PointF[] destPoints = new PointF[3];
+		private SKRect destPoints;
 		public void DrawSprite(Sprite sprite) {
 			float halfWidth = sprite.texture.width / 2.0f;
 			float halfHeight = sprite.texture.height / 2.0f;
-			Vector2 p0 = sprite.TransformPoint(-halfWidth, -halfHeight);
-			Vector2 p1 = sprite.TransformPoint(halfWidth, -halfHeight);
-			Vector2 p2 = sprite.TransformPoint(-halfWidth, halfHeight);
-			destPoints[0] = new PointF(p0.x, p0.y);
-			destPoints[1] = new PointF(p1.x, p1.y);
-			destPoints[2] = new PointF(p2.x, p2.y);
-			graphics.DrawImage(sprite.texture.bitmap, destPoints);
+
+			destPoints = new SKRect(-halfWidth, -halfHeight, halfWidth, halfHeight);
+			graphics.DrawBitmap(sprite.texture.bitmap, destPoints);
 		}
 
 		// Called by the garbage collector

@@ -1,8 +1,7 @@
 ﻿using System;
 using GXPEngine;
 using GXPEngine.Core;
-using System.Drawing;
-using System.Drawing.Text;
+using SkiaSharp;
 using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
@@ -173,16 +172,15 @@ namespace TiledMapParser {
 			// TODO: Cache fonts?
 
 			// Set Font:
-			FontStyle f = FontStyle.Regular;
+			SKFontStyle f = SKFontStyle.Normal;
 			if (obj.textField.bold == 1 && obj.textField.italic == 1) {
-				f = FontStyle.Bold | FontStyle.Italic;
+				f = SKFontStyle.BoldItalic;
 			} else if (obj.textField.bold == 0 && obj.textField.italic == 1) {
-				f = FontStyle.Italic;
+				f = SKFontStyle.Italic;
 			} else if (obj.textField.bold == 1 && obj.textField.italic == 0) {
-				f = FontStyle.Bold;
+				f = SKFontStyle.Bold;
 			}
-			message.TextFont(new Font(obj.textField.font, Mathf.Round(obj.textField.fontSize * scaleMultiplier), f, GraphicsUnit.Pixel));
-			message.graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit; //AntiAlias;
+			message.TextFont(new SKFont(SKTypeface.FromFamilyName(obj.textField.font, f), Mathf.Round(obj.textField.fontSize * scaleMultiplier)));
 
 			// Set text alignment:
 			message.TextAlign(
@@ -192,7 +190,7 @@ namespace TiledMapParser {
 
 			// Set color:
 			uint col = obj.textField.Color;
-			message.Fill(Color.FromArgb((int)(col&255), (int)((col>>24)&255), (int)((col>>16)&255), (int)((col>>8)&255)), (int)(col&255));
+			message.Fill(new SKColor((byte)(col&255), (byte)((col>>24)&255), (byte)((col>>16)&255), (byte)((col>>8)&255)), (byte)(col&255));
 
 			return message;
 		}

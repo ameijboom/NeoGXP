@@ -1,5 +1,4 @@
-using System.Drawing;
-using System.Drawing.Text;
+using SkiaSharp;
 
 namespace GXPEngine 
 {
@@ -12,15 +11,15 @@ namespace GXPEngine
 	/// </summary>
 	public class EasyDraw : Canvas 
 	{
-		static Font defaultFont = new Font ("Noto Sans", 15);
+		static SKFont defaultFont = new SKFont (SKTypeface.FromFamilyName("Noto Sans"), 15);
 
 		public CenterMode HorizontalTextAlign=CenterMode.Min;
 		public CenterMode VerticalTextAlign=CenterMode.Max;
 		public CenterMode HorizontalShapeAlign=CenterMode.Center;
 		public CenterMode VerticalShapeAlign=CenterMode.Center;
-		public Font font		{ get; protected set;}
-		public Pen pen			{ get; protected set;}
-		public SolidBrush brush	{ get; protected set;}
+		public SKFont font		{ get; protected set;}
+		public SKPaint pen			{ get; protected set;}
+		public SKPaint brush	{ get; protected set;}
 		protected bool _stroke=true;
 		protected bool _fill=true;
 
@@ -30,7 +29,7 @@ namespace GXPEngine
 		/// <param name="width">width in pixels</param>
 		/// <param name="height">height in pixels</param>
 		/// <param name="addCollider">whether the canvas should have a collider</param>
-		public EasyDraw (int width, int height, bool addCollider=true) : base (new Bitmap (width, height),addCollider)
+		public EasyDraw (int width, int height, bool addCollider=true) : base (new SKBitmap (width, height),addCollider)
 		{
 			Initialize ();
 		}
@@ -40,7 +39,7 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="bitmap">The bitmap (image) that should be on the canvas</param>
 		/// <param name="addCollider">whether the canvas should have a collider</param>
-		public EasyDraw (System.Drawing.Bitmap bitmap, bool addCollider=true) : base (bitmap,addCollider)
+		public EasyDraw (SKBitmap bitmap, bool addCollider=true) : base (bitmap,addCollider)
 		{
 			Initialize ();
 		}
@@ -57,15 +56,22 @@ namespace GXPEngine
 
 		void Initialize() 
 		{
-			pen = new Pen (Color.White, 1);
-			brush = new SolidBrush (Color.White);
+			// pen = new Pen (Color.White, 1);
+			pen = new SKPaint {
+				IsAntialias = !game.PixelArt,
+				Color = SKColors.White,
+				Style = SKPaintStyle.Stroke,
+				HintingLevel = SKPaintHinting.Full
+			};
+
+			brush = new SKPaint {
+				IsAntialias = !game.PixelArt,
+				Color = SKColors.White,
+				Style = SKPaintStyle.Fill,
+				HintingLevel = SKPaintHinting.Full
+			};
+
 			font = defaultFont;
-			if (!game.PixelArt) {
-				graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit; //AntiAlias;
-				graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			} else {
-				graphics.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
-			}
 		}
 
 		//////////// Setting Font
@@ -74,7 +80,7 @@ namespace GXPEngine
 		/// Change the font that is used when rendering text (using the Text method).
 		/// </summary>
 		/// <param name="newFont">The new font (see also Utils.LoadFont)</param>
-		public void TextFont(Font newFont) 
+		public void TextFont(SKFont newFont) 
 		{
 			font = newFont;
 		}
@@ -85,9 +91,9 @@ namespace GXPEngine
 		/// <param name="fontName">The name of the system font (e.g. "Arial", "Verdana", "Vivaldi")</param>
 		/// <param name="pointSize">font size in points</param>
 		/// <param name="style">font style (e.g. FontStyle.Italic|FontStyle.Bold )</param>
-		public void TextFont(string fontName, float pointSize, FontStyle style = FontStyle.Regular) 
+		public void TextFont(string fontName, float pointSize, SKFontStyle style = null) 
 		{
-			font = new Font (fontName, pointSize, style);
+			font = new SKFont (SKTypeface.FromFamilyName(fontName, style == null ? SKFontStyle.Normal : style), pointSize);
 		}
 
 		/// <summary>
@@ -96,7 +102,7 @@ namespace GXPEngine
 		/// <param name="pointSize">The font size in points</param>
 		public void TextSize(float pointSize) 
 		{
-			font = new Font (font.OriginalFontName, pointSize, font.Style);
+			font = new SKFont (font.Typeface, pointSize);
 		}
 
 		//////////// Setting Alignment for text, ellipses and rects
@@ -142,9 +148,9 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="newColor">the color of the outline</param>
 		/// <param name="alpha">the opacity of the outline (from 0=transparent to 255=opaque)</param>
-		public void Stroke(Color newColor, int alpha=255) 
+		public void Stroke(SKColor newColor, byte alpha=255) 
 		{
-			pen.Color = Color.FromArgb (alpha, newColor);
+			pen.Color = new SKColor (newColor.Red, newColor.Green, newColor.Blue, alpha);
 			_stroke = true;
 		}
 
@@ -153,9 +159,9 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="grayScale">A grayscale value (from 0=black to 255=white)</param>
 		/// <param name="alpha">the opacity of the outline (from 0=transparent to 255=opaque)</param>
-		public void Stroke(int grayScale, int alpha=255) 
+		public void Stroke(byte grayScale, byte alpha=255) 
 		{
-			pen.Color = Color.FromArgb (alpha, grayScale, grayScale, grayScale);
+			pen.Color = new SKColor(grayScale, grayScale, grayScale, alpha);
 			_stroke = true;
 		}
 
@@ -166,9 +172,9 @@ namespace GXPEngine
 		/// <param name="green">The green value of the color (from 0 to 255)</param>
 		/// <param name="blue">The blue value of the color (from 0 to 255)</param>
 		/// <param name="alpha">The opacity of the outline (from 0=transparent to 255=opaque)</param>
-		public void Stroke(int red, int green, int blue, int alpha=255) 
+		public void Stroke(byte red, byte green, byte blue, byte alpha=255) 
 		{
-			pen.Color = Color.FromArgb (alpha, red, green, blue);
+			pen.Color = new SKColor(red, green, blue, alpha);
 			_stroke = true;
 		}
 
@@ -178,7 +184,7 @@ namespace GXPEngine
 		/// <param name="width">The width (in pixels)</param>
 		public void StrokeWeight(float width) 
 		{
-			pen.Width = width;
+			pen.StrokeWidth = width;
 			_stroke = true;
 		}
 
@@ -197,9 +203,9 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="newColor">the fill color</param>
 		/// <param name="alpha">the fill opacity (from 0=transparent to 255=opaque)</param>
-		public void Fill(Color newColor, int alpha=255) 
+		public void Fill(SKColor newColor, byte alpha=255) 
 		{
-			brush.Color = Color.FromArgb (alpha, newColor);
+			brush.Color = new SKColor(newColor.Red, newColor.Green, newColor.Blue, alpha);
 			_fill = true;
 		}
 
@@ -208,9 +214,9 @@ namespace GXPEngine
 		/// </summary>
 		/// <param name="grayScale">gray scale value (from 0=black to 255=white)</param>
 		/// <param name="alpha">the fill opacity (from 0=transparent to 255=opaque)</param>
-		public void Fill(int grayScale, int alpha=255) 
+		public void Fill(byte grayScale, byte alpha=255) 
 		{
-			brush.Color = Color.FromArgb (alpha, grayScale, grayScale, grayScale);
+			brush.Color = new SKColor(grayScale, grayScale, grayScale, alpha);
 			_fill = true;
 		}
 
@@ -221,9 +227,9 @@ namespace GXPEngine
 		/// <param name="green">The green value of the color (from 0 to 255)</param>
 		/// <param name="blue">The blue value of the color (from 0 to 255)</param>
 		/// <param name="alpha">The fill opacity (from 0=transparent to 255=opaque)</param>
-		public void Fill(int red, int green, int blue, int alpha=255) 
+		public void Fill(byte red, byte green, byte blue, byte alpha=255) 
 		{
-			brush.Color = Color.FromArgb (alpha, red, green, blue);
+			brush.Color = new SKColor(red, green, blue, alpha);
 			_fill = true;
 		}
 
@@ -233,7 +239,7 @@ namespace GXPEngine
 		/// Clear the canvas with a given color
 		/// </summary>
 		/// <param name="newColor">the clear color</param>
-		public void Clear(Color newColor) 
+		public void Clear(SKColor newColor) 
 		{
 			graphics.Clear (newColor);
 		}
@@ -242,9 +248,9 @@ namespace GXPEngine
 		/// Clear the canvas with a grayscale
 		/// </summary>
 		/// <param name="grayScale">the grayscale value (between 0=black and 255=white)</param>
-		public void Clear(int grayScale) 
+		public void Clear(byte grayScale) 
 		{
-			graphics.Clear(Color.FromArgb(255, grayScale, grayScale, grayScale));
+			graphics.Clear(new SKColor(grayScale, grayScale, grayScale, 255));
 		}
 
 		/// <summary>
@@ -254,9 +260,9 @@ namespace GXPEngine
 		/// <param name="green">The green value of the clear color (from 0 to 255)</param>
 		/// <param name="blue">The blue value of the clear color (from 0 to 255)</param>
 		/// <param name="alpha">The opacity of the clear color (from 0=transparent to 255=opaque)</param>
-		public void Clear(int red, int green, int blue, int alpha=255) 
+		public void Clear(byte red, byte green, byte blue, byte alpha=255) 
 		{
-			graphics.Clear(Color.FromArgb (alpha, red, green, blue));
+			graphics.Clear(new SKColor(red, green, blue, alpha));
 		}
 
 		/// <summary>
@@ -264,7 +270,7 @@ namespace GXPEngine
 		/// Note that this will fully clear the canvas, but will make the sprites behind the canvas visible.
 		/// </summary>
 		public void ClearTransparent() {
-			graphics.Clear(Color.Transparent); // same as Clear(0,0,0,0);
+			graphics.Clear(SKColor.Empty); // same as Clear(0,0,0,0);
 		}
 
 		//////////// Draw & measure Text
@@ -294,7 +300,7 @@ namespace GXPEngine
 			{
 				y -= theight / 2;
 			}
-			graphics.DrawString (text, font, brush, x, y); //left+BoundaryPadding/2,top+BoundaryPadding/2);
+			graphics.DrawText (text, x, y, font, brush); //left+BoundaryPadding/2,top+BoundaryPadding/2);
 		}
 
 		/// <summary>
@@ -307,7 +313,7 @@ namespace GXPEngine
 		/// <param name="clearRed">The red value of the clear color (0-255)</param>
 		/// <param name="clearGreen">The green value of the clear color (0-255)</param>
 		/// <param name="clearBlue">The blue value of the clear color (0-255)</param>
-		public void Text(string text, bool clear=false, int clearAlpha=0, int clearRed=0, int clearGreen=0, int clearBlue=0) {
+		public void Text(string text, bool clear=false, byte clearAlpha=0, byte clearRed=0, byte clearGreen=0, byte clearBlue=0) {
 			if (clear) Clear(clearRed, clearGreen, clearBlue, clearAlpha);
 			float tx = 0;
 			float ty = 0;
@@ -337,8 +343,7 @@ namespace GXPEngine
 		/// <returns>width in pixels</returns>
 		public float TextWidth(string text) 
 		{
-			SizeF size = graphics.MeasureString (text, font);
-			return size.Width;
+			return pen.MeasureText(text);
 		}
 
 		/// <summary>
@@ -348,8 +353,10 @@ namespace GXPEngine
 		/// <returns>height in pixels</returns>
 		public float TextHeight(string text) 
 		{
-			SizeF size = graphics.MeasureString (text, font);
-			return size.Height;
+			SKRect textBounds = new SKRect();
+			pen.MeasureText(text, ref textBounds);
+
+			return textBounds.Size.Height; 
 		}
 
 		/// <summary>
@@ -360,9 +367,11 @@ namespace GXPEngine
 		/// <param name="height">height in pixels</param>
 		public void TextDimensions(string text, out float width, out float height) 
 		{
-			SizeF size = graphics.MeasureString (text, font);
-			width = size.Width;
-			height = size.Height;
+ 			SKRect textBounds = new SKRect();
+			pen.MeasureText(text, ref textBounds);
+
+			width = textBounds.Size.Width;
+			height = textBounds.Size.Height;
 		}
 
 		//////////// Draw Shapes
@@ -376,12 +385,12 @@ namespace GXPEngine
 		/// <param name="width">width in pixels</param>
 		/// <param name="height">height in pixels</param>
 		public void Rect(float x, float y, float width, float height) {
-			ShapeAlign (ref x, ref y, width, height);
+			// ShapeAlign (ref x, ref y, width, height);
 			if (_fill) {
-				graphics.FillRectangle (brush, x, y, width, height);
+				graphics.DrawRect (x, y, width, height, brush);
 			}
 			if (_stroke) {
-				graphics.DrawRectangle (pen, x, y, width, height);
+				graphics.DrawRect (x, y, width, height, pen);
 			}
 		}
 
@@ -394,12 +403,12 @@ namespace GXPEngine
 		/// <param name="width">width in pixels</param>
 		/// <param name="height">height in pixels</param>
 		public void Ellipse(float x, float y, float width, float height) {
-			ShapeAlign (ref x, ref y, width, height);
+			// ShapeAlign (ref x, ref y, width, height);
 			if (_fill) {
-				graphics.FillEllipse (brush, x, y, width, height);
+				graphics.DrawOval (x, y, width, height, brush);
 			}
 			if (_stroke) {
-				graphics.DrawEllipse (pen, x, y, width, height);
+				graphics.DrawOval (x, y, width, height, pen);
 			}
 		}
 
@@ -415,12 +424,13 @@ namespace GXPEngine
 		/// <param name="startAngleDegrees">angle in degrees (clockwise) to start drawing</param>
 		/// <param name="sweepAngleDegrees">sweep angle in degrees, clockwise. Use e.g. 180 for a half-circle</param>
 		public void Arc(float x, float y, float width, float height, float startAngleDegrees, float sweepAngleDegrees) {
-			ShapeAlign (ref x, ref y, width, height);
+			// ShapeAlign (ref x, ref y, width, height);
 			if (_fill) {
-				graphics.FillPie (brush, x, y, width, height, startAngleDegrees, sweepAngleDegrees);
+				graphics.DrawArc (new SKRect(x, y, x+width, y+height), startAngleDegrees, sweepAngleDegrees, true, brush);
 			}
 			if (_stroke) {
-				graphics.DrawArc (pen, x, y, width, height, startAngleDegrees, sweepAngleDegrees);
+				graphics.DrawArc (new SKRect(x, y, x+width, y+height), startAngleDegrees, sweepAngleDegrees, true, pen);
+
 			}
 		}
 
@@ -433,7 +443,7 @@ namespace GXPEngine
 		/// <param name="y2">y coordinate of the end point</param>
 		public void Line(float x1, float y1, float x2, float y2) {
 			if (_stroke) {
-				graphics.DrawLine (pen, x1, y1, x2, y2);
+				graphics.DrawLine (x1, y1, x2, y2, pen);
 			}
 		}
 
@@ -457,9 +467,9 @@ namespace GXPEngine
 		/// where the odd parameters are x coordinates and even parameters are y coordinates.
 		/// </summary>
 		public void Polygon(params float[] pt) {
-			PointF[] pts = new PointF[pt.Length / 2];
+			SKPoint[] pts = new SKPoint[pt.Length / 2];
 			for (int i = 0; i < pts.Length; i++) {
-				pts [i] = new PointF (pt [2 * i], pt [2 * i + 1]);
+				pts [i] = new SKPoint (pt [2 * i], pt [2 * i + 1]);
 			}
 			Polygon (pts);
 		}
@@ -467,12 +477,12 @@ namespace GXPEngine
 		/// <summary>
 		/// Draw a polygon shape between any number of points, using the current stroke and fill settings. 
 		/// </summary>
-		public void Polygon(PointF[] pts) {
+		public void Polygon(SKPoint[] pts) {
 			if (_fill) {
-				graphics.FillPolygon (brush, pts);
+				graphics.DrawPoints (SKPointMode.Polygon, pts, brush);
 			}
 			if (_stroke) {
-				graphics.DrawPolygon (pen, pts);
+				graphics.DrawPoints (SKPointMode.Polygon, pts, pen);
 			}
 		}
 
