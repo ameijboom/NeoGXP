@@ -300,7 +300,13 @@ namespace GXPEngine
 			{
 				y -= theight / 2;
 			}
-			graphics.DrawText (text, x, y, font, brush); //left+BoundaryPadding/2,top+BoundaryPadding/2);
+			float offset = 0;
+			foreach (string line in text.Split("\n")) 
+			{
+				graphics.DrawText(line, x, y + offset, font, brush);
+				offset += (TextHeight(line) + 1.0f);
+			}
+			
 		}
 
 		/// <summary>
