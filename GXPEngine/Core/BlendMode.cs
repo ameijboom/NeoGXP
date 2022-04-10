@@ -1,5 +1,5 @@
 ﻿using System;
-using GXPEngine.OpenGL;
+using Arqan;
 
 namespace GXPEngine
 {
@@ -13,7 +13,7 @@ namespace GXPEngine
 		/// (newColor = spriteColor * spriteAlpha + oldColor * (1-spriteAlpha))
 		/// </summary>
 		public static readonly BlendMode NORMAL = new BlendMode (
-			"Normal", () => {	GL.BlendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);	}
+			"Normal", () => {	GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);	}
 		);
 
 		/// <summary>
@@ -21,7 +21,7 @@ namespace GXPEngine
 		/// (newColor = spriteColor * 1 + oldColor * (1-spriteAlpha))
 		/// </summary>
 		public static readonly BlendMode PREMULTIPLIED = new BlendMode(
-			"Premultiplied", () => { GL.BlendFunc(GL.ONE, GL.ONE_MINUS_SRC_ALPHA); }
+			"Premultiplied", () => { GL.glBlendFunc(GL.GL_ONE, GL.GL_ONE_MINUS_SRC_ALPHA); }
 		);
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace GXPEngine
 		/// (newColor = spriteColor * oldColor + oldColor * 0)
 		/// </summary>
 		public static readonly BlendMode MULTIPLY = new BlendMode (
-			"Multiply", () => {	GL.BlendFunc(GL.DST_COLOR, GL.ZERO);	}
+			"Multiply", () => {	GL.glBlendFunc(GL.GL_DST_COLOR, GL.GL_ZERO);	}
 		);
 
 		/// <summary>
@@ -37,7 +37,7 @@ namespace GXPEngine
 		/// (newColor = spriteColor * oldColor + oldColor * 1)
 		/// </summary>
 		public static readonly BlendMode LIGHTING = new BlendMode(
-			"Lighting", () => { GL.BlendFunc(GL.DST_COLOR, GL.ONE); }
+			"Lighting", () => { GL.glBlendFunc(GL.GL_ZERO, GL.GL_ONE); }
 		);
 
 		/// <summary>
@@ -45,7 +45,7 @@ namespace GXPEngine
 		/// (newColor = spriteColor * 1 + oldColor * 1)
 		/// </summary>
 		public static readonly BlendMode ADDITIVE = new BlendMode(
-			"Additive", () => { GL.BlendFunc(GL.ONE, GL.ONE); }
+			"Additive", () => { GL.glBlendFunc(GL.GL_ONE, GL.GL_ONE); }
 		);
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace GXPEngine
 		/// (newColor = spriteColor * (1-oldColorAlpha) + oldColor * oldColorAlpha)
 		/// </summary>
 		public static readonly BlendMode FILLEMPTY = new BlendMode(
-			"Fill", () => { GL.BlendFunc(GL.ONE_MINUS_DST_ALPHA, GL.DST_ALPHA); }
+			"Fill", () => { GL.glBlendFunc(GL.GL_ONE_MINUS_SRC_ALPHA, GL.GL_ONE_MINUS_DST_ALPHA); }
 		);
 
 		public delegate void Action();

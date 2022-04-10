@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing; // For Font
 using System.Drawing.Text; // For PrivateFontCollection
+using System.Runtime.InteropServices;
 
 namespace GXPEngine
 {
@@ -118,6 +119,24 @@ namespace GXPEngine
 			if (x2 > x1 + width1) return false;
 			if (y2 > y1 + height1) return false;
 			return true;
+		}
+
+		public static IntPtr ToIntPtr(this float[] src)
+		{
+            GCHandle handle = GCHandle.Alloc(src, GCHandleType.Pinned);
+            IntPtr ptr = new IntPtr(1);
+            try
+            {
+                ptr = handle.AddrOfPinnedObject();
+            }
+            finally
+            {
+                if (handle.IsAllocated)
+                    {
+                        handle.Free();
+                    }
+            }
+            return ptr;
 		}
 
 	}

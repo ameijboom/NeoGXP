@@ -67,8 +67,8 @@ namespace GXPEngine
 			_target = target;
 			_game = _target.game;
 			_game.OnAfterStep += HandleOnStep;
-			_lastX = Input.mouseX;
-			_lastY = Input.mouseY;
+			_lastX = (float)Input.mouseX;
+			_lastY = (float)Input.mouseY;
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace GXPEngine
 		void HandleOnStep ()
 		{
 			//mouse can enter/leave target without moving (the target may move!)
-			bool isOnTarget = _target.HitTestPoint (Input.mouseX, Input.mouseY);
+			bool isOnTarget = _target.HitTestPoint ((float)Input.mouseX, (float)Input.mouseY);
 			if (isOnTarget  && !_wasOnTarget) {
 				if (OnMouseOverTarget != null) OnMouseOverTarget (_target, MouseEventType.MouseOverTarget);
 			} else if (!isOnTarget  && _wasOnTarget) {
@@ -92,8 +92,8 @@ namespace GXPEngine
 				_wasMouseDownOnTarget = isOnTarget;
 
 				_offset = _target.TransformPoint (0, 0);
-				_offset.x = _offset.x - Input.mouseX;
-				_offset.y = _offset.y - Input.mouseY;
+				_offset.x = _offset.x - (float)Input.mouseX;
+				_offset.y = _offset.y - (float)Input.mouseY;
 
 			} else if (_wasMouseDown && !Input.GetMouseButton (0)) {
 				if (OnMouseUp != null) OnMouseUp(_target, MouseEventType.MouseUp);
@@ -106,8 +106,8 @@ namespace GXPEngine
 			}
 
 			if (_lastX != Input.mouseX || _lastY != Input.mouseY) {
-				_lastX = Input.mouseX;
-				_lastY = Input.mouseY;
+				_lastX = (float)Input.mouseX;
+				_lastY = (float)Input.mouseY;
 				if (OnMouseMove != null) OnMouseMove (_target, MouseEventType.MouseMove);
 				if (isOnTarget && OnMouseMoveOnTarget != null) OnMouseMoveOnTarget(_target, MouseEventType.MouseMoveOnTarget);
 			}

@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 
-using GXPEngine.OpenGL;
+using Arqan;
 
 namespace GXPEngine.Core
 {
@@ -17,7 +17,7 @@ namespace GXPEngine.Core
 		const int UNDEFINED_GLTEXTURE 	= 0;
 		
 		private Bitmap _bitmap;
-		private int[] _glTexture;
+		private uint[] _glTexture;
 		private string _filename = "";
 		private int count = 0;
 		private bool stayInCache = false;
@@ -103,7 +103,7 @@ namespace GXPEngine.Core
 		public void Bind() {
 			if (lastBound == this) return;
 			lastBound = this;
-			GL.BindTexture(GL.TEXTURE_2D, _glTexture[0]);
+			GL.glBindTexture(GL.GL_TEXTURE_2D, (uint)_glTexture[0]);
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------
@@ -145,25 +145,25 @@ namespace GXPEngine.Core
 					if (_glTexture[0] != UNDEFINED_GLTEXTURE)
 						destroyGLTexture ();
 				
-			_glTexture = new int[1];
+			_glTexture = new uint[1];
 			if (_bitmap == null)
 				_bitmap = new Bitmap (64, 64);
 
-			GL.GenTextures (1, _glTexture);
+			GL.glGenTextures (1, _glTexture);
 			
-			GL.BindTexture (GL.TEXTURE_2D, _glTexture[0]);
+			GL.glBindTexture (GL.GL_TEXTURE_2D, _glTexture[0]);
 			if (Game.main.PixelArt) {
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.NEAREST);
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.NEAREST);
+				GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (int)GL.GL_NEAREST);
+				GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (int)GL.GL_NEAREST);
 			} else {
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
+				GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (int)GL.GL_LINEAR);
+				GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (int)GL.GL_LINEAR);
 			}
-			GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE_EXT);
-			GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE_EXT);	
+			GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, (int)GL.GL_CLAMP_TO_EDGE);
+			GL.glTexParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, (int)GL.GL_CLAMP_TO_EDGE);	
 			
 			UpdateGLTexture();
-			GL.BindTexture (GL.TEXTURE_2D, 0);
+			GL.glBindTexture (GL.GL_TEXTURE_2D, 0);
 			lastBound = null;
 		}
 		
@@ -174,9 +174,9 @@ namespace GXPEngine.Core
 			BitmapData data = _bitmap.LockBits (new System.Drawing.Rectangle (0, 0, _bitmap.Width, _bitmap.Height),
 			                                     ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			               			
-			GL.BindTexture (GL.TEXTURE_2D, _glTexture[0]);
-			GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, _bitmap.Width, _bitmap.Height, 0,
-			              GL.BGRA, GL.UNSIGNED_BYTE, data.Scan0);
+			GL.glBindTexture (GL.GL_TEXTURE_2D, _glTexture[0]);
+			GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, _bitmap.Width, _bitmap.Height, 0,
+			              GL.GL_BGRA, GL.GL_UNSIGNED_BYTE, data.Scan0);
 			              
 			_bitmap.UnlockBits(data);
 			lastBound = null;
@@ -186,7 +186,7 @@ namespace GXPEngine.Core
 		//														destroyGLTexture()
 		//------------------------------------------------------------------------------------------------------------------------
 		private void destroyGLTexture() {
-			GL.DeleteTextures(1, _glTexture);
+			GL.glDeleteTextures(1, _glTexture);
 			_glTexture[0] = UNDEFINED_GLTEXTURE;
 		}
 
@@ -207,10 +207,10 @@ namespace GXPEngine.Core
 
 		public bool wrap {
 			set { 
-				GL.BindTexture (GL.TEXTURE_2D, _glTexture[0]);
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, value?GL.GL_REPEAT:GL.GL_CLAMP_TO_EDGE_EXT);
-				GL.TexParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, value?GL.GL_REPEAT:GL.GL_CLAMP_TO_EDGE_EXT);	
-				GL.BindTexture (GL.TEXTURE_2D, 0);
+				GL.glBindTexture (GL.GL_TEXTURE_2D, _glTexture[0]);
+				GL.glTextureParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, value ? (int)GL.GL_REPEAT : (int)GL.GL_CLAMP_TO_EDGE);
+				GL.glTextureParameteri (GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, value ? (int)GL.GL_REPEAT : (int)GL.GL_CLAMP_TO_EDGE);	
+				GL.glBindTexture (GL.GL_TEXTURE_2D, 0);
 				lastBound = null;
 			}
 		}
