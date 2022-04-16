@@ -412,10 +412,10 @@ namespace GXPEngine.Core
         public void DrawQuad(Vector2[] verts, float[] transform, float[] uvs)
         {
             verts = AbsoluteToRelative(verts);
-            float[] verts_reshaped = {verts[0].x, verts[0].y, 0.0f, uvs[6], uvs[7],
-                                      verts[1].x, verts[1].y, 0.0f, uvs[4], uvs[5],
-                                      verts[2].x, verts[2].y, 0.0f, uvs[2], uvs[3],
-                                      verts[3].x, verts[3].y, 0.0f, uvs[0], uvs[1]
+            float[] verts_reshaped = {verts[0].x, verts[0].y, 0.0f, uvs[6], uvs[1],
+                                      verts[1].x, verts[1].y, 0.0f, uvs[4], uvs[3],
+                                      verts[2].x, verts[2].y, 0.0f, uvs[2], uvs[5],
+                                      verts[3].x, verts[3].y, 0.0f, uvs[0], uvs[7]
                                       };
 			GL.glBindVertexArray(_data.VAO);
 
@@ -431,7 +431,7 @@ namespace GXPEngine.Core
         {
             var width = WindowSize.instance.width;
             var height = WindowSize.instance.height;
-            return verts.Select(v => new Vector2(2.0f*v.x/width - 1.0f, 2.0f*v.y/height - 1.0f)).ToArray();
+            return verts.Select(v => new Vector2(2.0f*v.x/width - 1.0f, -2.0f*v.y/height + 1.0f)).ToArray();
         }
 
         //------------------------------------------------------------------------------------------------------------------------
