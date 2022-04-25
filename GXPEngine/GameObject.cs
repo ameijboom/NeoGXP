@@ -435,14 +435,14 @@ namespace GXPEngine
 		/// If a time of impact below 1 is returned, the normal will be the collision normal 
 		///   (otherwise it is undefined).
 		/// </summary>
-		virtual public float TimeOfImpact (GameObject other, float vx, float vy, out Vector2 normal) {
-			normal = new Vector2 ();
+		virtual public float TimeOfImpact (GameObject other, float vx, float vy, out Vec2 normal) {
+			normal = new Vec2 ();
 			if (_collider == null || other._collider == null || parent==null)
 				return float.MaxValue;
 			// Compute world space velocity:
 			//Vector2 p1 = parent.TransformPoint (vx, vy);
 			//Vector2 p0 = parent.TransformPoint (0, 0);
-			Vector2 worldVelocity=parent.TransformDirection(vx,vy);
+			Vec2 worldVelocity=parent.TransformDirection(vx,vy);
 			float TOI=_collider.TimeOfImpact (other._collider, 
 				//p1.x-p0.x, p1.y-p0.y, 
 				worldVelocity.x,worldVelocity.y,
@@ -466,7 +466,7 @@ namespace GXPEngine
 			float minTOI = 1;
 			foreach (GameObject other in objectsToCheck) {
 				if (other.collider != null && other.collider.isTrigger) continue;
-				Vector2 newNormal;
+				Vec2 newNormal;
 				float newTOI = TimeOfImpact (other, vx, vy, out newNormal);
 				if (newTOI < minTOI) {
 					col = new Collision (this, other, newNormal, newTOI);
@@ -502,7 +502,7 @@ namespace GXPEngine
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Returns <c>true</c> if a 2D point (given in global / screen space) overlaps with this object.
-		/// You could use this for instance to check if the mouse (Input.mouseX, Input.mouseY) is over the object.
+		/// You could use this for instance to check if the mouse (Input.mouse.x, Input.mouse.y) is over the object.
 		/// </summary>
 		/// <param name='x'>
 		/// The x coordinate to test.
@@ -510,10 +510,21 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to test.
 		/// </param>
-		virtual public bool HitTestPoint(float x, float y) {
+		public virtual bool HitTestPoint(float x, float y) {
 			return _collider != null && _collider.HitTestPoint(x, y);
 		}		
 		
+		/// <summary>
+		/// Returns <c>true</c> if a 2D point (given in global / screen space) overlaps with this object.
+		/// You could use this for instance to check if the mouse (Input.mouse) is over the object.
+		/// </summary>
+		/// <param name='p'>
+		/// The coordinate to test.
+		/// </param>
+		public virtual bool HitTestPoint(Vec2 p) {
+			return _collider != null && _collider.HitTestPoint(p.x, p.y);
+		}
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														TransformPoint()
 		//------------------------------------------------------------------------------------------------------------------------
@@ -527,8 +538,8 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to transform.
 		/// </param>
-		public override Vector2 TransformPoint(float x, float y) {
-			Vector2 ret = base.TransformPoint (x, y);
+		public override Vec2 TransformPoint(float x, float y) {
+			Vec2 ret = base.TransformPoint (x, y);
 			if (parent == null) {
 				return ret;
 			} else {
@@ -547,8 +558,8 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to transform.
 		/// </param>
-		public override Vector2 TransformDirection(float x, float y) {
-			Vector2 ret = base.TransformDirection (x, y);
+		public override Vec2 TransformDirection(float x, float y) {
+			Vec2 ret = base.TransformDirection (x, y);
 			if (parent == null) {
 				return ret;
 			} else {
@@ -569,8 +580,8 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to transform.
 		/// </param>
-		public override Vector2 InverseTransformPoint(float x, float y) {
-			Vector2 ret = base.InverseTransformPoint (x, y);
+		public override Vec2 InverseTransformPoint(float x, float y) {
+			Vec2 ret = base.InverseTransformPoint (x, y);
 			if (parent == null) {
 				return ret;
 			} else {
@@ -589,8 +600,8 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to transform.
 		/// </param>
-		public override Vector2 InverseTransformDirection(float x, float y) {
-			Vector2 ret = base.InverseTransformDirection (x, y);
+		public override Vec2 InverseTransformDirection(float x, float y) {
+			Vec2 ret = base.InverseTransformDirection (x, y);
 			if (parent == null) {
 				return ret;
 			} else {

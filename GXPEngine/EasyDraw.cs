@@ -468,8 +468,8 @@ namespace GXPEngine
 		}
 
 		/// <summary>
-		/// Draw a polygon shape between any number of points, using the current stroke and fill settings. 
-		/// This requires passing in an even number of float coordinates, 
+		/// Draw a polygon shape between any number of points, using the current stroke and fill settings.
+		/// This requires passing in an even number of float coordinates,
 		/// where the odd parameters are x coordinates and even parameters are y coordinates.
 		/// </summary>
 		public void Polygon(params float[] pt) {
@@ -480,8 +480,10 @@ namespace GXPEngine
 			Polygon (pts);
 		}
 
+		//TODO: Make Vec2 array the main one
+
 		/// <summary>
-		/// Draw a polygon shape between any number of points, using the current stroke and fill settings. 
+		/// Draw a polygon shape between any number of points, using the current stroke and fill settings.
 		/// </summary>
 		public void Polygon(SKPoint[] pts) {
 			if (_fill) {

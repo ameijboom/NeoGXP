@@ -50,7 +50,7 @@ namespace GXPEngine {
 		/// <param name="screenX">The x coordinate of a point in screen space (like Input.mouseX) </param>
 		/// <param name="screenY">The y coordinate of a point in screen space (like Input.mouseY) </param>
 		/// <returns>Global space coordinates (to be used e.g. with HitTestPoint) </returns>
-		public Vector2 ScreenPointToGlobal(int screenX, int screenY) {
+		public Vec2 ScreenPointToGlobal(int screenX, int screenY) {
 			float camX = screenX - _renderTarget.centerX;
 			float camY = screenY - _renderTarget.centerY;
 			return TransformPoint(camX, camY);

@@ -95,11 +95,16 @@ namespace GXPEngine {
 				Instance.drawCalls.Add(new DrawLineCall(x1, y1, x2, y2, color, width));
 			} else {
 				// transform to the given parent space:
-				Vector2 start = space.TransformPoint(x1, y1);
-				Vector2 end = space.TransformPoint(x2, y2);
+				Vec2 start = space.TransformPoint(x1, y1);
+				Vec2 end = space.TransformPoint(x2, y2);
 
 				Instance.drawCalls.Add(new DrawLineCall(start.x, start.y, end.x, end.y, color, width));
 			}
+		}
+
+		public static void DrawLine(Vec2 p1, Vec2 p2)
+		{
+			DrawLine(p1.x, p1.y, p2.x, p2.y);
 		}
 
 		/// <summary>
@@ -126,6 +131,15 @@ namespace GXPEngine {
 		}
 
 		/// <summary>
+		/// Draws a line segment from (p.x, p.y) to (p.x+d.x, p.y+d.y), using DrawLine.
+		/// </summary>
+		public static void DrawRay(Vec2 p, Vec2 d)
+		{
+			DrawRay(p.x, p.y, d.x, d.y);
+		}
+
+
+		/// <summary>
 		/// Draws a line segment starting at (x,y), with the given length and angle in degrees,
 		/// using DrawLine.
 		/// </summary>
@@ -143,6 +157,11 @@ namespace GXPEngine {
 			DrawLine(x, y, x + dx, y + dy, space, color, width);
 			DrawLine(x + dx, y + dy, x + dx * (1 - relativeArrowSize) - dy * relativeArrowSize, y + dy * (1 - relativeArrowSize) + dx * relativeArrowSize, space, color, width);
 			DrawLine(x + dx, y + dy, x + dx * (1 - relativeArrowSize) + dy * relativeArrowSize, y + dy * (1 - relativeArrowSize) - dx * relativeArrowSize, space, color, width);
+		}
+
+		public static void DrawArrow(Vec2 start, Vec2 dir)
+		{
+			DrawArrow(start.x, start.y, dir.x, dir.y);
 		}
 
 		/// <summary>
@@ -165,6 +184,36 @@ namespace GXPEngine {
 			DrawLine(xCenter - width / 2, yCenter + height / 2, xCenter + width / 2, yCenter + height / 2, space, color, lineWidth);
 			DrawLine(xCenter - width / 2, yCenter - height / 2, xCenter - width / 2, yCenter + height / 2, space, color, lineWidth);
 			DrawLine(xCenter + width / 2, yCenter - height / 2, xCenter + width / 2, yCenter + height / 2, space, color, lineWidth);
+		}
+
+		/// <summary>
+		/// Draws a circle around point (x, y)
+		/// </summary>
+		/// <param name="x">Center X position</param>
+		/// <param name="y">Center Y position</param>
+		/// <param name="radius">The radius for the circle</param>
+		/// <param name="sides">How many sides the circle should have</param>
+		public static void DrawCircle(float x, float y, float radius, int sides = 8)
+		{
+			DrawCircle(new Vec2(x, y), radius, sides);
+		}
+
+		/// <summary>
+		/// Draws a circle around the center
+		/// </summary>
+		/// <param name="center">Center position</param>
+		/// <param name="radius">The radius for the circle</param>
+		/// <param name="sides">How many sides the circle should have</param>
+		public static void DrawCircle(Vec2 center, float radius, int sides = 8)
+		{
+			float stepSize = Angle.TWO_PI / sides;
+			Vec2 p1 = new(1, 0);
+			for (float i = 0; i < Angle.TWO_PI; i += stepSize)
+			{
+				Vec2 p2 = Vec2.FromAngle(Angle.FromRadians(i + stepSize));
+				DrawLine(center + p1 * radius, center + p2 * radius);
+				p1 = p2;
+			}
 		}
 
 		/// <summary>

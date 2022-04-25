@@ -2,6 +2,7 @@
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using GXPEngine.Core;
 
 namespace TiledMapParser
 {
@@ -514,16 +515,16 @@ namespace TiledMapParser
 		/// <summary>
 		/// This method converts a raw tile number read from a tile layer to a rotation value in degrees.
 		/// </summary>
-		public static float GetRotation(uint tileID) {
+		public static Angle GetRotation(uint tileID) {
 			bool flipHor = (tileID & 0x80000000) > 0;
 			bool flipVert = (tileID & 0x40000000) > 0;
 			bool flipDiag = (tileID & 0x20000000) > 0;
 			bool flipped = flipHor ^ flipVert ^ flipDiag; // flipped if odd number of flips
 			float rotation = ((tileID>>29) & 3) * 90;
 			if (flipped) {
-				return (360-rotation)%360;
+				return Angle.FromDegrees((360-rotation)%360); //TODO: Make sure this is correct.
 			} else {
-				return rotation;
+				return Angle.FromDegrees(rotation);
 			}
 		}
 

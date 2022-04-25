@@ -50,8 +50,8 @@ namespace GXPEngine.Core
 		/// <param name="vx">x velocity or translation amount.</param>
 		/// <param name="vy">y velocity or translation amount.</param>
 		/// <param name="normal">The collision normal.</param>
-		public virtual float TimeOfImpact (Collider other, float vx, float vy, out Vector2 normal) {
-			normal = new Vector2 ();
+		public virtual float TimeOfImpact (Collider other, float vx, float vy, out Vec2 normal) {
+			normal = new Vec2 ();
 			return float.MaxValue;
 		}
 

@@ -53,7 +53,7 @@ namespace GXPEngine {
 
 					BufferRenderer rend = renderers[tile.texture];
 
-					Vector2[] bounds = tile.GetExtents();
+					Vec2[] bounds = tile.GetExtents();
 					float[] uvs = tile.GetUVs(false);
 					for (int corner = 0; corner < 4; corner++) {
 						rend.AddVert(bounds[corner].x, bounds[corner].y);
@@ -83,8 +83,8 @@ namespace GXPEngine {
 		/// <returns>
 		/// The extents.
 		/// </returns>
-		public Vector2[] GetExtents() {
-			Vector2[] ret = new Vector2[4];
+		public Vec2[] GetExtents() {
+			Vec2[] ret = new Vec2[4];
 			ret[0] = TransformPoint(_bounds.left, _bounds.top);
 			ret[1] = TransformPoint(_bounds.right, _bounds.top);
 			ret[2] = TransformPoint(_bounds.right, _bounds.bottom);
@@ -106,7 +106,7 @@ namespace GXPEngine {
 
 			bool test = false;
 
-			Vector2[] bounds = GetExtents();
+			Vec2[] bounds = GetExtents();
 			float maxX = float.MinValue;
 			float maxY = float.MinValue;
 			float minX = float.MaxValue;

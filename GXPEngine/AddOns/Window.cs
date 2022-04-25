@@ -138,7 +138,7 @@ namespace GXPEngine {
 		}
 
 		void SetRenderRange() {
-			Vector2[] worldSpaceCorners = new Vector2[4];
+			Vec2[] worldSpaceCorners = new Vec2[4];
 			worldSpaceCorners[0] = camera.TransformPoint(-_width/2, -_height/2);
 			worldSpaceCorners[1] = camera.TransformPoint(-_width/2,  _height/2);
 			worldSpaceCorners[2] = camera.TransformPoint( _width/2,  _height/2);
