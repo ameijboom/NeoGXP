@@ -229,13 +229,13 @@ namespace GXPEngine.Core
 		private void InitializeShaders()
 		{
 			vertexShader = GL.glCreateShader(GL.GL_VERTEX_SHADER);
-            var shaderSource = File.ReadAllText(@".\shaders\shader.vert");
+            var shaderSource = File.ReadAllText(@"./shaders/shader.vert");
 
             GL.glShaderSource(vertexShader, 1, new string[] { shaderSource }, new int[] { shaderSource.Length });
             GL.glCompileShader(vertexShader);
 
             fragmentShader = GL.glCreateShader(GL.GL_FRAGMENT_SHADER);
-            shaderSource = File.ReadAllText(@".\shaders\shader.frag");
+            shaderSource = File.ReadAllText(@"./shaders/shader.frag");
 
             GL.glShaderSource(fragmentShader, 1, new string[] { shaderSource }, new int[] { shaderSource.Length });
             GL.glCompileShader(fragmentShader);
