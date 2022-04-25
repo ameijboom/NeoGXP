@@ -269,7 +269,7 @@ public class AnimationSprite : Sprite
 	/// The number of animation frames per second is [game.targetFps / _animationDelay].
 	/// </summary>
 	public void AnimateFixed() {
-		Animate(game.targetFps * Time.deltaMillis / 1000f);
+		Animate(game.targetFps * Time.deltaTime);
 	}
 
 	//------------------------------------------------------------------------------------------------------------------------
