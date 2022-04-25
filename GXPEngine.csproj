@@ -17,9 +17,11 @@
   </PropertyGroup>
   <ItemGroup Condition="'$(OS)' == 'UNIX'">
       <PackageReference Include="Arqan.Linux" Version="2.1.0" />
+      <PackageReference Include="SkiaSharp" Version="2.80.3" />
+      <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.80.3" />
   </ItemGroup>
   <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
       <PackageReference Include="Arqan.Windows.x64" Version="2.1.0" />
-      <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+      <PackageReference Include="SkiaSharp" Version="2.80.3" />
   </ItemGroup>
 </Project>
