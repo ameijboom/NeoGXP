@@ -236,7 +236,8 @@ public class BufferRenderer {
 		_texture.Unbind();
 	}
 
-	public void Dispose() {
-		// For this backend: nothing needed
+	public void Dispose()
+	{
+		// For this backend: nothing needed	}
 	}
 }
