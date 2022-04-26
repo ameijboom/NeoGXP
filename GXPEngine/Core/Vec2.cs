@@ -21,6 +21,12 @@ namespace GXPEngine.GXPEngine.Core
 			y = pY;
 		}
 
+		public Vec2(double pX = 0, double pY = 0)
+		{
+			x = (float) pX;
+			y = (float) pY;
+		}
+
 		// ReSharper disable once InconsistentNaming
 		public Vec2 SetXY(float newX, float newY)
 		{

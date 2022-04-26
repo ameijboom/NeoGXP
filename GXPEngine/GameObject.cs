@@ -462,8 +462,8 @@ namespace GXPEngine
 		/// As objectsToCheck, pass an array or List of game objects to check against 
 		/// (this moving game object will move through all objects that are not in the given array or list).
 		/// </summary>
-		virtual public Collision MoveUntilCollision(float vx, float vy, IEnumerable<GameObject> objectsToCheck) {
-			Collision col = null;
+		virtual public Collision? MoveUntilCollision(float vx, float vy, IEnumerable<GameObject> objectsToCheck) {
+			Collision? col = null;
 			float minTOI = 1;
 			foreach (GameObject other in objectsToCheck) {
 				if (other.collider != null && other.collider.isTrigger) continue;
@@ -489,7 +489,7 @@ namespace GXPEngine
 		/// Note: this is a very expensive method since it uses GetCollisions, and 
 		/// tunneling is possible since it uses discrete collision detection - use with care.
 		/// </summary>
-		virtual public Collision MoveUntilCollision(float vx, float vy) {
+		virtual public Collision? MoveUntilCollision(float vx, float vy) {
 			x += vx;
 			y += vy;
 			GameObject[] overlaps = GetCollisions (false,true);

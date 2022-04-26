@@ -15,14 +15,13 @@ namespace GXPEngine.StageManagement
         /// Object that holds all information about the current stage including objects
         /// </summary>
         /// <param name="givenStage">A stage from the Stages.cs list</param>
-        /// <exception cref="Exception">When the stage from Stages.cs doesn't have the same name as the file</exception>
         public Stage(Stages givenStage)
         {
             MyGame myGame = (MyGame) game;
-            myGame.AddChild(this);
+            parent = myGame;
             
             stage = givenStage;
-            string stagePath = stage + ".tmx";
+            string stagePath = "Tiled/" + stage + ".tmx";
             stageData = MapParser.ReadMap(stagePath);
             
             //TileSize is the same as width and width is the same as height
@@ -54,7 +53,11 @@ namespace GXPEngine.StageManagement
 
                 switch (tileNumbers[col, row])
                 {
-                    
+                    case 1:
+                        TestMovableBlock testMovableBlock = new TestMovableBlock();
+                        testMovableBlock.SetXY(pX,pY);
+                        AddChild(testMovableBlock);
+                        break;
                 }
             }
         }

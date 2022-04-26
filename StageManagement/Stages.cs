@@ -7,6 +7,7 @@
     public enum Stages
     {
         Tutorial, 
-        Stage1
+        Stage1,
+        Test
     }
 }
