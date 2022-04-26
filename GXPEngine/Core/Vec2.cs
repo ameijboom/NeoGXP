@@ -13,18 +13,17 @@ namespace GXPEngine.Core;
 //TODO: Polish up XML documentation
 public struct Vec2 : IVec
 {
-	private int iterationPosition = -1;
+	private int _iterationPosition = -1;
 	// ReSharper disable InconsistentNaming
 	public float x;
 	public float y;
 	// ReSharper restore InconsistentNaming
 
 	/// <summary>
-	/// When comparing values, the values can be off by this much in either direction before it gets flagged as actually two different numbers
+	/// When comparing values, the values can be off by this much in either direction
+	/// before it gets flagged as actually two different numbers
 	/// </summary>
 	private const float TOLERANCE = 0.0000001f;
-
-    public object Current => throw new NotImplementedException();
 
     /// <summary>
     /// Constructs a new vector (defaults to (0, 0) )
@@ -89,8 +88,8 @@ public struct Vec2 : IVec
 
     public float GetElement(int i)
     {
-        if (i > 1 || i < 0) throw new IndexOutOfRangeException();
-		return i == 1 ? this.x : this.y;
+        if (i is > 1 or < 0) throw new IndexOutOfRangeException();
+		return i == 1 ? x : y;
     }
 
 	/// <summary>
@@ -280,7 +279,8 @@ public struct Vec2 : IVec
 	}
 
 	/// <summary>
-	/// Calculates the square distance between this vector and another vector (so there is no slow sqrt() being called)
+	/// Calculates the square distance between this vector and another vector
+	/// (so there is no slow sqrt() being called)
 	/// </summary>
 	public float DistSq(Vec2 other)
 	{
@@ -288,7 +288,8 @@ public struct Vec2 : IVec
 	}
 
 	/// <summary>
-	/// Calculates the square distance between two vectors (so there is no slow sqrt() being called)
+	/// Calculates the square distance between two vectors
+	/// (so there is no slow sqrt() being called)
 	/// </summary>
 	public static float DistSq(Vec2 v1, Vec2 v2)
 	{
@@ -313,19 +314,20 @@ public struct Vec2 : IVec
 	}
 
 	/// <summary>
-	/// Calculates the cross product between this vector and another vector.
-	/// Note that this is equivalent to taken the cross product of two three-dimensional vectors with the third component set to zero
-	/// and taking the magnitude of the result.
+	/// Calculates the cross product between this vector and another vector
 	/// </summary>
+	/// <remarks>
+	/// This is the equivalent to taking the cross product of two three-dimensional vectors
+	/// with the third component set to zero and taking the magnitude of the result.
+	/// </remarks>
 	public float Cross(Vec2 other)
 	{
 		return Cross(this, other);
 	}
 
+	/// <inheritdoc cref="Cross(GXPEngine.Core.Vec2)"/>
 	/// <summary>
 	/// Calculates the cross product between two vectors
-	/// Note that this is equivalent to taken the cross product of two three-dimensional vectors with the third component set to zero
-	/// and taking the magnitude of the result.
 	/// </summary>
 	public static float Cross(Vec2 v1, Vec2 v2)
 	{
@@ -335,18 +337,18 @@ public struct Vec2 : IVec
 	/// <summary>
 	/// Performs vector/scalar multiplication.
 	/// </summary>
-	public Vec2 Scale(float scalar)
+	private static Vec2 Scale(Vec2 vec, float scalar)
     {
-        return new Vec2(this.x * scalar, this.y * scalar);
+        return new Vec2(vec.x * scalar, vec.y * scalar);
     }
 
 	/// <summary>
 	/// Performs vector addition.
 	/// </summary>
-    public Vec2 Add(Vec2 vector)
-    {
-		return new Vec2(this.x + vector.x, this.y + vector.y);
-    }
+	private Vec2 Add(Vec2 vector)
+	{
+		return new Vec2(x + vector.x, y + vector.y);
+	}
 
 	public static Vec2 operator +(Vec2 left, Vec2 right)
 	{
@@ -365,22 +367,28 @@ public struct Vec2 : IVec
 
 	public static Vec2 operator *(Vec2 vec, float f)
 	{
-		return vec.Scale(f);
+		return Scale(vec, f);
 	}
 
 	public static Vec2 operator *(float f, Vec2 vec)
 	{
-		return vec.Scale(f);
+		return Scale(vec, f);
 	}
 
 	/// <summary>
 	/// Element-wise multiplication
 	/// </summary>
+	/// <remarks>
+	/// This isn't really a vector operation, but it's convenient to have it here.<br/>
+	/// https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
+	/// </remarks>
 	public static Vec2 operator *(Vec2 left, Vec2 right)
 	{
 		return new Vec2(left.x * right.x, left.y * right.y);
 	}
 
+	//for the remark:
+	/// <inheritdoc cref="op_Multiply(GXPEngine.Core.Vec2,GXPEngine.Core.Vec2)"/>
 	/// <summary>
 	/// Divide a vector by a number (scalar division)
 	/// </summary>
@@ -389,6 +397,8 @@ public struct Vec2 : IVec
 		return vec / new Vec2(f);
 	}
 
+	//for the remark:
+	/// <inheritdoc cref="op_Multiply(GXPEngine.Core.Vec2,GXPEngine.Core.Vec2)"/>
 	/// <summary>
 	/// Divide a number by a vector
 	/// </summary>
@@ -397,6 +407,8 @@ public struct Vec2 : IVec
 		return new Vec2(f) / vec;
 	}
 
+	//for the remark:
+	/// <inheritdoc cref="op_Multiply(GXPEngine.Core.Vec2,GXPEngine.Core.Vec2)"/>
 	/// <summary>
 	/// Element-wise division
 	/// </summary>
@@ -442,20 +454,14 @@ public struct Vec2 : IVec
 
     public bool MoveNext()
     {
-        iterationPosition++;
-		return (iterationPosition < 2);
+        _iterationPosition++;
+		return _iterationPosition < 2;
     }
 
     public void Reset()
     {
-        iterationPosition = -1;
+        _iterationPosition = -1;
     }
 
-	object IEnumerator.Current
-	{
-		get
-		{
-			return (float)iterationPosition == 0 ? x : y;
-		}
-	}
+	object IEnumerator.Current => (float)_iterationPosition == 0 ? x : y;
 }
