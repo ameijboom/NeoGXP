@@ -1,5 +1,5 @@
 using GXPEngine.Core;
-using GXPEngine.GXPEngine.Core; // For Vector2
+using GXPEngine.GXPEngine.Core; // For Vec2
 
 namespace GXPEngine {
 	/// <summary>

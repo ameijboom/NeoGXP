@@ -211,7 +211,7 @@ namespace GXPEngine
 		//														GetExtents()
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Gets the four corners of this object as a set of 4 Vector2s.
+		/// Gets the four corners of this object as a set of 4 Vec2s.
 		/// </summary>
 		/// <returns>
 		/// The extents.

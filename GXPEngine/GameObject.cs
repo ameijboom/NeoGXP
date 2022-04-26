@@ -441,8 +441,8 @@ namespace GXPEngine
 			if (_collider == null || other._collider == null || parent==null)
 				return float.MaxValue;
 			// Compute world space velocity:
-			//Vector2 p1 = parent.TransformPoint (vx, vy);
-			//Vector2 p0 = parent.TransformPoint (0, 0);
+			//Vec2 p1 = parent.TransformPoint (vx, vy);
+			//Vec2 p0 = parent.TransformPoint (0, 0);
 			Vec2 worldVelocity=parent.TransformDirection(vx,vy);
 			float TOI=_collider.TimeOfImpact (other._collider, 
 				//p1.x-p0.x, p1.y-p0.y, 
