@@ -1,6 +1,7 @@
 using System;
 using SkiaSharp;
 using GXPEngine.Core;
+using GXPEngine.GXPEngine.Core;
 
 namespace GXPEngine
 {
@@ -167,7 +168,7 @@ namespace GXPEngine
 		//------------------------------------------------------------------------------------------------------------------------
 		override protected void RenderSelf(GLContext glContext) {
 			if (game != null) {
-				Vector2[] bounds = GetExtents();
+				Vec2[] bounds = GetExtents();
 				float maxX = float.MinValue;
 				float maxY = float.MinValue;
 				float minX = float.MaxValue;
@@ -215,8 +216,8 @@ namespace GXPEngine
 		/// <returns>
 		/// The extents.
 		/// </returns>
-		public Vector2[] GetExtents() {
-			Vector2[] ret = new Vector2[4];
+		public Vec2[] GetExtents() {
+			Vec2[] ret = new Vec2[4];
 			ret[0] = TransformPoint(_bounds.left, _bounds.top);
 			ret[1] = TransformPoint(_bounds.right, _bounds.top);
 			ret[2] = TransformPoint(_bounds.right, _bounds.bottom);

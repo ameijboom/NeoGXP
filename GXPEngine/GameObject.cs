@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GXPEngine.Core;
+using GXPEngine.GXPEngine.Core;
 
 namespace GXPEngine
 {
@@ -435,14 +436,14 @@ namespace GXPEngine
 		/// If a time of impact below 1 is returned, the normal will be the collision normal 
 		///   (otherwise it is undefined).
 		/// </summary>
-		virtual public float TimeOfImpact (GameObject other, float vx, float vy, out Vector2 normal) {
-			normal = new Vector2 ();
+		virtual public float TimeOfImpact (GameObject other, float vx, float vy, out Vec2 normal) {
+			normal = new Vec2 ();
 			if (_collider == null || other._collider == null || parent==null)
 				return float.MaxValue;
 			// Compute world space velocity:
 			//Vector2 p1 = parent.TransformPoint (vx, vy);
 			//Vector2 p0 = parent.TransformPoint (0, 0);
-			Vector2 worldVelocity=parent.TransformDirection(vx,vy);
+			Vec2 worldVelocity=parent.TransformDirection(vx,vy);
 			float TOI=_collider.TimeOfImpact (other._collider, 
 				//p1.x-p0.x, p1.y-p0.y, 
 				worldVelocity.x,worldVelocity.y,
@@ -466,7 +467,7 @@ namespace GXPEngine
 			float minTOI = 1;
 			foreach (GameObject other in objectsToCheck) {
 				if (other.collider != null && other.collider.isTrigger) continue;
-				Vector2 newNormal;
+				Vec2 newNormal;
 				float newTOI = TimeOfImpact (other, vx, vy, out newNormal);
 				if (newTOI < minTOI) {
 					col = new Collision (this, other, newNormal, newTOI);
@@ -527,8 +528,8 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to transform.
 		/// </param>
-		public override Vector2 TransformPoint(float x, float y) {
-			Vector2 ret = base.TransformPoint (x, y);
+		public override Vec2 TransformPoint(float x, float y) {
+			Vec2 ret = base.TransformPoint (x, y);
 			if (parent == null) {
 				return ret;
 			} else {
@@ -547,8 +548,8 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to transform.
 		/// </param>
-		public override Vector2 TransformDirection(float x, float y) {
-			Vector2 ret = base.TransformDirection (x, y);
+		public override Vec2 TransformDirection(float x, float y) {
+			Vec2 ret = base.TransformDirection (x, y);
 			if (parent == null) {
 				return ret;
 			} else {
@@ -569,8 +570,8 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to transform.
 		/// </param>
-		public override Vector2 InverseTransformPoint(float x, float y) {
-			Vector2 ret = base.InverseTransformPoint (x, y);
+		public override Vec2 InverseTransformPoint(float x, float y) {
+			Vec2 ret = base.InverseTransformPoint (x, y);
 			if (parent == null) {
 				return ret;
 			} else {
@@ -589,8 +590,8 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate to transform.
 		/// </param>
-		public override Vector2 InverseTransformDirection(float x, float y) {
-			Vector2 ret = base.InverseTransformDirection (x, y);
+		public override Vec2 InverseTransformDirection(float x, float y) {
+			Vec2 ret = base.InverseTransformDirection (x, y);
 			if (parent == null) {
 				return ret;
 			} else {

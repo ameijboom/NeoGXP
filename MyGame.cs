@@ -1,15 +1,12 @@
-﻿namespace GXPEngine;
+﻿
+namespace GXPEngine;
 
 public class MyGame : Game
 {
-    private Player player;
-    
-    
     private MyGame() : base(800, 600, false)
     {
-        player = new Player();
+        Player player = new Player();
         AddChild(player);
-
     }
 
     private void Update()

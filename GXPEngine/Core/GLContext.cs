@@ -8,6 +8,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using GXPEngine.Core;
 using System.Linq;
+using GXPEngine.GXPEngine.Core;
 
 namespace GXPEngine.Core
 {
@@ -401,7 +402,7 @@ namespace GXPEngine.Core
         //------------------------------------------------------------------------------------------------------------------------
         //														DrawQuad()
         //------------------------------------------------------------------------------------------------------------------------
-        public void DrawQuad(Vector2[] verts, float[] uvs)
+        public void DrawQuad(Vec2[] verts, float[] uvs)
         {
             DrawQuad(verts, new float[16] { 
 			1.0f, 0.0f, 0.0f, 0.0f,
@@ -409,7 +410,7 @@ namespace GXPEngine.Core
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f }, uvs);
         }
-        public void DrawQuad(Vector2[] verts, float[] transform, float[] uvs)
+        public void DrawQuad(Vec2[] verts, float[] transform, float[] uvs)
         {
             verts = AbsoluteToRelative(verts);
             float[] verts_reshaped = {verts[0].x, verts[0].y, 0.0f, uvs[6], uvs[1],
@@ -427,11 +428,11 @@ namespace GXPEngine.Core
 			GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, IntPtr.Zero);
         }
 
-        public Vector2[] AbsoluteToRelative(Vector2[] verts) 
+        public Vec2[] AbsoluteToRelative(Vec2[] verts) 
         {
             var width = WindowSize.instance.width;
             var height = WindowSize.instance.height;
-            return verts.Select(v => new Vector2(2.0f*v.x/width - 1.0f, -2.0f*v.y/height + 1.0f)).ToArray();
+            return verts.Select(v => new Vec2(2.0f*v.x/width - 1.0f, -2.0f*v.y/height + 1.0f)).ToArray();
         }
 
         //------------------------------------------------------------------------------------------------------------------------

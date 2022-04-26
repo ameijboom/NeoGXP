@@ -1,5 +1,6 @@
 ﻿using System;
 using GXPEngine.Core;
+using GXPEngine.GXPEngine.Core;
 
 namespace GXPEngine
 {
@@ -56,7 +57,7 @@ namespace GXPEngine
 		//position.Set (Input.mouseX, Input.mouseY);
 		//you can do
 		//position.Set (Input.mouseX + _mouseHandler.offsetToTarget.x, Input.mouseY + _mouseHandler.offsetToTarget.y);
-		private Vector2 _offset = new Vector2();
+		private Vec2 _offset = new Vec2();
 
 		/// <summary>
 		/// Create a new MouseHandler for the given target.
@@ -116,7 +117,7 @@ namespace GXPEngine
 		}
 
 		//contains offset from mouse to target on click
-		public Vector2 offsetToTarget {
+		public Vec2 offsetToTarget {
 			get { return _offset;}
 		}
 

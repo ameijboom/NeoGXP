@@ -5,6 +5,7 @@ using SkiaSharp;
 using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
+using GXPEngine.GXPEngine.Core;
 
 namespace TiledMapParser {
 	/// <summary>
@@ -230,7 +231,7 @@ namespace TiledMapParser {
 
 			float imageWidth = spr.width/spr.scaleX;
 			float imageHeight = spr.height/spr.scaleY;
-			Vector2 newCenter = spr.TransformPoint((newOriginRelativeX-oldOriginX) * imageWidth, (newOriginRelativeY-oldOriginY) * imageHeight);
+			Vec2 newCenter = spr.TransformPoint((newOriginRelativeX-oldOriginX) * imageWidth, (newOriginRelativeY-oldOriginY) * imageHeight);
 			//Console.WriteLine("Setting origin. x={0} y={1} w={2} h={3} r={4} tx={5} ty={6}. nO={7},{8}",
 			//	spr.x,spr.y,spr.width,spr.height,spr.rotation,newCenter.x,newCenter.y,newOriginRelativeX,newOriginRelativeY);
 			spr.x=newCenter.x;
