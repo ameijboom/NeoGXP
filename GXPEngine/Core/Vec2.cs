@@ -96,7 +96,7 @@ public struct Vec2
 	/// Calculates the magnitude of the vector (using sqrt)
 	/// </summary>
 	/// <returns>The magnitude of the vector</returns>
-	public float Length()
+	public float Mag()
 	{
 		return (float) Math.Sqrt(x * x + y * y);
 	}
@@ -105,7 +105,7 @@ public struct Vec2
 	/// Calculates the square magnitude of the vector (so there is no slow sqrt() being called)
 	/// </summary>
 	/// <returns>The square magnitude of the vector</returns>
-	public float LengthSq()
+	public float MagSq()
 	{
 		return x * x + y * y;
 	}
@@ -116,8 +116,8 @@ public struct Vec2
 	/// <returns>A normalized copy of the vector</returns>
 	public Vec2 Normalized()
 	{
-		float length = Length();
-		return length == 0 ? new Vec2() : new Vec2(x / length, y / length);
+		float mag = Mag();
+		return mag == 0 ? new Vec2() : new Vec2(x / mag, y / mag);
 	}
 
 	/// <summary>
@@ -130,48 +130,48 @@ public struct Vec2
 	}
 
 	/// <summary>
-	/// Sets the length of this vector
+	/// Sets the magnitude of this vector
 	/// </summary>
-	/// <param name="length">The desired length for this vector</param>
+	/// <param name="mag">The desired magnitude for this vector</param>
 	/// <returns>The modified vector</returns>
-	public Vec2 SetLength(float length)
+	public Vec2 SetMag(float mag)
 	{
 		Normalize();
-		return this *= length;
+		return this *= mag;
 	}
 
 	/// <summary>
-	/// Limit the length of this vector
+	/// Limit the magnitude of this vector
 	/// </summary>
-	/// <param name="max">The maximum length the vector may be</param>
+	/// <param name="max">The maximum magnitude the vector may be</param>
 	/// <returns>The modified vector</returns>
 	public Vec2 Limit(float max)
 	{
-		return LengthSq() < max * max ? this : SetLength(max);
+		return MagSq() < max * max ? this : SetMag(max);
 	}
 
 	/// <summary>
-	/// Set vector angle to the given direction in radians (length doesn't change)
+	/// Set vector heading angle (magnitude doesn't change)
 	/// </summary>
 	/// <returns>The modified vector</returns>
-	public Vec2 SetAngle(Angle angle)
+	public Vec2 SetHeading(Angle angle)
 	{
-		float m = Length();
+		float m = Mag();
 		x = (float) (m * Math.Cos(angle));
 		y = (float) (m * Math.Sin(angle));
 		return this;
 	}
 
 	/// <summary>
-	/// Gets the vector's angle
+	/// Gets the vector's heading angle
 	/// </summary>
-	public Angle GetAngle()
+	public Angle Heading()
 	{
 		return Angle.FromRadians((float) Math.Atan2(y, x));
 	}
 
 	/// <summary>
-	/// Rotate the vector over the given angle in radians
+	/// Rotate the vector over the given angle
 	/// </summary>
 	/// <returns>The modified vector</returns>
 	public Vec2 Rotate(Angle angle)
@@ -180,7 +180,7 @@ public struct Vec2
 	}
 
 	/// <summary>
-	/// Rotate the vector over the given angle in radians
+	/// Rotate the vector over the given angle
 	/// </summary>
 	/// <returns>The modified vector</returns>
 	public static Vec2 Rotate(Vec2 vec, Angle angle)
@@ -192,7 +192,7 @@ public struct Vec2
 	}
 
 	/// <summary>
-	/// Rotate the vector around the given point over the given angle in radians
+	/// Rotate the vector around the given point over the given angle
 	/// </summary>
 	/// <returns></returns>
 	public Vec2 RotateAround(Vec2 rotateAround, Angle angle)
@@ -234,7 +234,7 @@ public struct Vec2
 	public static float Dist(Vec2 v1, Vec2 v2)
 	{
 		Vec2 d = v1 - v2;
-		return d.Length();
+		return d.Mag();
 	}
 
 	/// <summary>
@@ -251,7 +251,7 @@ public struct Vec2
 	public static float DistSq(Vec2 v1, Vec2 v2)
 	{
 		Vec2 d = v1 - v2;
-		return d.LengthSq();
+		return d.MagSq();
 	}
 
 	/// <summary>
