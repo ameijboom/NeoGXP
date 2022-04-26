@@ -114,7 +114,7 @@ namespace GXPEngine
 		//------------------------------------------------------------------------------------------------------------------------
 		//														createCollider
 		//------------------------------------------------------------------------------------------------------------------------
-		protected override Collider createCollider() {
+		protected override Collider CreateCollider() {
 			return new BoxCollider (this);
 		}
 
@@ -221,7 +221,7 @@ namespace GXPEngine
 			ret[1] = TransformPoint(_bounds.right, _bounds.top);
 			ret[2] = TransformPoint(_bounds.right, _bounds.bottom);
 			ret[3] = TransformPoint(_bounds.left, _bounds.bottom);
-			return ret;			
+			return ret;
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------

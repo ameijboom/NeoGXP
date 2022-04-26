@@ -121,9 +121,9 @@ namespace GXPEngine.Core
 			if ((t > 1) || (t < 0)) return false;
 
 			return true;			
-		}	
+		}
 
-		public override float TimeOfImpact (Collider other, float vx, float vy, out Vec2 normal) {
+		public override float TimeOfImpact (Collider other, Vec2 v, out Vec2 normal) {
 			normal = new Vec2 ();
 			if (other is BoxCollider) {
 				Vec2[] c = _owner.GetExtents();
@@ -138,7 +138,7 @@ namespace GXPEngine.Core
 				float ny = -c [1].x + c [0].x;
 				if (updateImpactExitTime (
 					    c [0].x, c [0].y, nx, ny, 
-					    c [3].x - c [0].x, c [3].y - c [0].y, d, -vx, -vy, ref maxTOI, ref minTOE)) {
+					    c [3].x - c [0].x, c [3].y - c [0].y, d, -v.x, -v.y, ref maxTOI, ref minTOE)) {
 					normal.x = nx;
 					normal.y = ny;
 				}
@@ -148,7 +148,7 @@ namespace GXPEngine.Core
 				ny = c [3].x - c [0].x;
 				if (updateImpactExitTime (
 					    c [0].x, c [0].y, nx, ny, 
-					    c [1].x - c [0].x, c [1].y - c [0].y, d, -vx, -vy, ref maxTOI, ref minTOE)) {
+					    c [1].x - c [0].x, c [1].y - c [0].y, d, -v.x, -v.y, ref maxTOI, ref minTOE)) {
 					normal.x = nx;
 					normal.y = ny;
 				}
@@ -159,8 +159,8 @@ namespace GXPEngine.Core
 				nx = -d [0].y + d [1].y;
 				ny = -d [1].x + d [0].x;
 				if (updateImpactExitTime (
-					    d [0].x, d [0].y, nx, ny, 
-					    d [3].x - d [0].x, d [3].y - d [0].y, c, vx, vy, ref maxTOI, ref minTOE)) {
+					    d [0].x, d [0].y, nx, ny,
+					    d [3].x - d [0].x, d [3].y - d [0].y, c, v.x, v.y, ref maxTOI, ref minTOE)) {
 					normal.x = nx;
 					normal.y = ny;
 				}
@@ -170,8 +170,8 @@ namespace GXPEngine.Core
 				nx = d [0].y - d [3].y;
 				ny = d [3].x - d [0].x;
 				if (updateImpactExitTime (
-					    d [0].x, d [0].y, nx, ny, 
-					    d [1].x - d [0].x, d [1].y - d [0].y, c, vx, vy, ref maxTOI, ref minTOE)) {
+					    d [0].x, d [0].y, nx, ny,
+					    d [1].x - d [0].x, d [1].y - d [0].y, c, v.x, v.y, ref maxTOI, ref minTOE)) {
 					normal.x = nx;
 					normal.y = ny;
 				}
@@ -181,7 +181,7 @@ namespace GXPEngine.Core
 				float nLen = Mathf.Sqrt (normal.x * normal.x + normal.y * normal.y);
 				normal.x /= nLen;
 				normal.y /= nLen;
-				if (normal.x * vx + normal.y * vy > 0) {
+				if (normal.x * v.x + normal.y * v.y > 0) {
 					normal.x *= -1;
 					normal.y *= -1;
 				}

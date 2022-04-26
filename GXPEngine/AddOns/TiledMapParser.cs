@@ -264,7 +264,7 @@ namespace TiledMapParser
 		public int Width;
 		[XmlAttribute("height")]	// height in pixels
 		public int Height;
-		[XmlAttribute("source")]	// AnimSprite file name
+		[XmlAttribute("source")]	// AnimationSprite file name
 		public string FileName;
 
 		override public string ToString() {

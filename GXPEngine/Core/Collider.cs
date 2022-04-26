@@ -47,10 +47,9 @@ namespace GXPEngine.Core
 		/// </summary>
 		/// <returns>The time of impact.</returns>
 		/// <param name="other">Another collider.</param>
-		/// <param name="vx">x velocity or translation amount.</param>
-		/// <param name="vy">y velocity or translation amount.</param>
+		/// <param name="v">velocity or translation amount.</param>
 		/// <param name="normal">The collision normal.</param>
-		public virtual float TimeOfImpact (Collider other, float vx, float vy, out Vec2 normal) {
+		public virtual float TimeOfImpact (Collider other, Vec2 v, out Vec2 normal) {
 			normal = new Vec2 ();
 			return float.MaxValue;
 		}
@@ -65,7 +64,7 @@ namespace GXPEngine.Core
 		public virtual Collision GetCollisionInfo (Collider other)
 		{
 			return null;
-		}			
+		}
 	}
 }
 

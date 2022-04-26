@@ -13,7 +13,6 @@ public struct Vec2
 {
 	// ReSharper disable InconsistentNaming
 	public float x;
-
 	public float y;
 	// ReSharper restore InconsistentNaming
 

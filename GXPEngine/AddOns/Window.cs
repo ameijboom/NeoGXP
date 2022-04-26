@@ -11,10 +11,8 @@ namespace GXPEngine {
 		/// <summary>
 		/// The x coordinate of the window's left side
 		/// </summary>
-		public int windowX {
-			get {
-				return _windowX;
-			}
+		private int windowX {
+			get => _windowX;
 			set {
 				_windowX = value;
 				_dirty = true;
@@ -23,35 +21,45 @@ namespace GXPEngine {
 		/// <summary>
 		/// The y coordinate of the window's top
 		/// </summary>
-		public int windowY {
-			get {
-				return _windowY;
-			}
+		private int windowY {
+			get => _windowY;
 			set {
 				_windowY = value;
 				_dirty = true;
 			}
 		}
+
+		/// <summary>
+		/// The position of the window's top-left corner
+		/// </summary>
+		public Vec2 windowPos
+		{
+			get => new(windowX, windowY);
+			set {
+				windowX = (int)value.x;
+				windowY = (int)value.y;
+			}
+		}
+
 		/// <summary>
 		/// The x coordinate of the window center
 		/// </summary>
-		public float centerX {
-			get {
-				return _windowX + _width / 2f;
-			}
-		}
+		private float centerX => _windowX + _width / 2f;
+
 		/// <summary>
 		/// The y coordinate of the window center
 		/// </summary>
-		public float centerY {
-			get {
-				return _windowY + _height / 2f;
-			}
-		}
+		private float centerY => _windowY + _height / 2f;
+
+		/// <summary>
+		/// The position of the window's center
+		/// </summary>
+		public Vec2 centerPos => new(centerX, centerY);
+
 		/// <summary>
 		/// The window's width
 		/// </summary>
-		public int width {
+		private int width {
 			get {
 				return _width;
 			}
@@ -63,13 +71,25 @@ namespace GXPEngine {
 		/// <summary>
 		/// The window's height
 		/// </summary>
-		public int height {
+		private int height {
 			get {
 				return _height;
 			}
 			set {
 				_height = value;
 				_dirty = true;
+			}
+		}
+
+		/// <summary>
+		/// The window's size
+		/// </summary>
+		public Vec2 size
+		{
+			get => new(width, height);
+			set {
+				width = (int)value.x;
+				height = (int)value.y;
 			}
 		}
 
@@ -104,17 +124,17 @@ namespace GXPEngine {
 		/// </summary>
 		public void RenderWindow(GLContext glContext) {
 			if (_dirty) {
-				window.x = _windowX + _width / 2;
-				window.y = _windowY + _height / 2;
+				window.position = new Vec2(
+					_windowX + _width / 2,
+					_windowY + _height / 2);
 				_dirty = false;
 			}
 			glContext.PushMatrix (window.matrix);
 
 			int pushes = 1;
 			GameObject current = camera;
-			Transformable cameraInverse;
 			while (true) {
-				cameraInverse = current.Inverse ();
+				Transformable cameraInverse = current.Inverse ();
 				glContext.PushMatrix (cameraInverse.matrix);
 				pushes++;
 				if (current.parent == null)
@@ -124,7 +144,7 @@ namespace GXPEngine {
 
 			if (current is Game) {// otherwise, the camera is not in the scene hierarchy, so render nothing - not even a black background
 				Game main=Game.main;
-				var oldRange = main.RenderRange;
+				Rectangle oldRange = main.RenderRange;
 				SetRenderRange();
 				main.SetViewport (_windowX, _windowY, _width, _height, false);
 				GL.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -132,12 +152,12 @@ namespace GXPEngine {
 				main.SetViewport ((int)oldRange.left, (int)oldRange.top, (int)oldRange.width, (int)oldRange.height);
 			}
 			
-			for (int i=0; i<pushes; i++) {
+			for (int i = 0; i < pushes; i++) {
 				glContext.PopMatrix ();
 			}
 		}
 
-		void SetRenderRange() {
+		private void SetRenderRange() {
 			Vec2[] worldSpaceCorners = new Vec2[4];
 			worldSpaceCorners[0] = camera.TransformPoint(-_width/2, -_height/2);
 			worldSpaceCorners[1] = camera.TransformPoint(-_width/2,  _height/2);

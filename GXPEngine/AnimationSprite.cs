@@ -23,10 +23,10 @@ namespace GXPEngine
 		private float _animationFrameCounter = 0;
 		
 		//------------------------------------------------------------------------------------------------------------------------
-		//														AnimSprite()
+		//													AnimationSprite()
 		//------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
-		/// Initializes a new instance of the <see cref="GXPEngine.AnimSprite"/> class.
+		/// Initializes a new instance of the <see cref="GXPEngine.AnimationSprite"/> class.
 		/// </summary>
 		/// <param name='filename'>
 		/// The name of the file to be loaded. Files are cached internally.
@@ -57,7 +57,7 @@ namespace GXPEngine
 		}
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="GXPEngine.AnimSprite"/> class.
+		/// Initializes a new instance of the <see cref="GXPEngine.AnimationSprite"/> class.
 		/// </summary>
 		/// <param name='bitmap'>
 		/// The Bitmap object to be used to create the sprite. 
@@ -292,12 +292,6 @@ namespace GXPEngine
 		public int frameCount {
 			get { return _frames; }
 		}
-
 	}
-
-	//legacy, sorry Hans
-	public class AnimSprite : AnimationSprite {
-		public AnimSprite (string filename, int cols, int rows, int frames=-1) : base(filename, cols, rows, frames) {}
-	};
 }
 
