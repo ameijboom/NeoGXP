@@ -95,9 +95,27 @@ public struct Vec2
 	/// Calculates the magnitude of the vector (using sqrt)
 	/// </summary>
 	/// <returns>The magnitude of the vector</returns>
+	public static float Mag(Vec2 v)
+	{
+		return (float) Math.Sqrt(v.x * v.x + v.y * v.y);
+	}
+
+	/// <summary>
+	/// Calculates the magnitude of the vector (using sqrt)
+	/// </summary>
+	/// <returns>The magnitude of the vector</returns>
 	public float Mag()
 	{
-		return (float) Math.Sqrt(x * x + y * y);
+		return Mag(this);
+	}
+
+	/// <summary>
+	/// Calculates the square magnitude of the vector (so there is no slow sqrt() being called)
+	/// </summary>
+	/// <returns>The square magnitude of the vector</returns>
+	public static float MagSq(Vec2 v)
+	{
+		return v.x * v.x + v.y * v.y;
 	}
 
 	/// <summary>
@@ -106,7 +124,7 @@ public struct Vec2
 	/// <returns>The square magnitude of the vector</returns>
 	public float MagSq()
 	{
-		return x * x + y * y;
+		return MagSq(this);
 	}
 
 	/// <summary>
@@ -115,8 +133,17 @@ public struct Vec2
 	/// <returns>A normalized copy of the vector</returns>
 	public Vec2 Normalized()
 	{
-		float mag = Mag();
-		return mag == 0 ? new Vec2() : new Vec2(x / mag, y / mag);
+		return Normalized(this);
+	}
+
+	/// <summary>
+	/// Calculates a normalized version of the vector
+	/// </summary>
+	/// <returns>A normalized copy of the vector</returns>
+	public static Vec2 Normalized(Vec2 v)
+	{
+		float mag = v.Mag();
+		return mag == 0 ? new Vec2() : new Vec2(v.x / mag, v.y / mag);
 	}
 
 	/// <summary>
