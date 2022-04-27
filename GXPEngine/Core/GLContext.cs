@@ -52,10 +52,7 @@ namespace GXPEngine.Core
         public static IntPtr Window;
 
         private GLData _data;
-
-        private uint vertexShader;
-        private uint fragmentShader;
-        private uint shaderProgram;
+        private uint[] shaderPrograms;
 
         private static readonly uint[] indices = {
                 0, 1, 3, // first triangle
@@ -198,24 +195,25 @@ namespace GXPEngine.Core
             GL.glEnable(GL.GL_BLEND);
             GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
             _data = new GLData();
-            uint[] VBO = { 0 };
-            uint[] VAO = { 0 };
-            uint[] EBO = { 0 };
-            GL.glGenVertexArrays(1, VAO);
+            uint[] VBO = { 0, 0 };
+            uint[] VAO = { 0, 0 };
+            uint[] EBO = { 0, 0 };
+            GL.glGenVertexArrays(2, VAO);
 
-            GL.glGenBuffers(1, VBO);
+            GL.glGenBuffers(2, VBO);
 
-            GL.glGenBuffers(1, EBO);
+            GL.glGenBuffers(2, EBO);
 
-			_data.VAO = VAO[0];
-			_data.VBO = VBO[0];
-			_data.EBO = EBO[0];
+			_data.VAOs = VAO;
+			_data.VBOs = VBO;
+			_data.EBOs = EBO;
 
-            GL.glBindVertexArray(_data.VAO);
+            // DrawQuad
+            GL.glBindVertexArray(_data.VAOs[0]);
             
-            GL.glBindBuffer(GL.GL_ARRAY_BUFFER, _data.VBO);
+            GL.glBindBuffer(GL.GL_ARRAY_BUFFER, _data.VBOs[0]);
 
-			GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, _data.EBO);
+			GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, _data.EBOs[0]);
 
             GL.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 5 * sizeof(float), IntPtr.Zero);
             GL.glEnableVertexAttribArray(0);
@@ -223,28 +221,58 @@ namespace GXPEngine.Core
             GL.glEnableVertexAttribArray(1);
             GL.glEnableVertexAttribArray(0);
 
+            // Redundant, but kept in for safety (ensures we don't accidentally overwrite a different VAO)
             GL.glBindVertexArray(0);
+
+            //DrawLine
+            GL.glBindVertexArray(_data.VAOs[1]);
+
+            GL.glBindBuffer(GL.GL_ARRAY_BUFFER, _data.VBOs[1]);
+
+            GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, _data.EBOs[1]);
+
+            GL.glVertexAttribPointer(0, 2, GL.GL_FLOAT, false, 0, IntPtr.Zero);
+            GL.glEnableVertexAttribArray(0);
+
+            GL.glBindVertexArray(0);
+
         }
 
 		private void InitializeShaders()
 		{
-			vertexShader = GL.glCreateShader(GL.GL_VERTEX_SHADER);
+            shaderPrograms = new uint[2];
+			uint vertexShader = GL.glCreateShader(GL.GL_VERTEX_SHADER);
             var shaderSource = File.ReadAllText(@"./shaders/shader.vert");
 
             GL.glShaderSource(vertexShader, 1, new string[] { shaderSource }, new int[] { shaderSource.Length });
             GL.glCompileShader(vertexShader);
 
-            fragmentShader = GL.glCreateShader(GL.GL_FRAGMENT_SHADER);
+            uint fragmentShader = GL.glCreateShader(GL.GL_FRAGMENT_SHADER);
             shaderSource = File.ReadAllText(@"./shaders/shader.frag");
 
             GL.glShaderSource(fragmentShader, 1, new string[] { shaderSource }, new int[] { shaderSource.Length });
             GL.glCompileShader(fragmentShader);
 
-            shaderProgram = GL.glCreateProgram();
-            GL.glAttachShader(shaderProgram, vertexShader);
-            GL.glAttachShader(shaderProgram, fragmentShader);
-            GL.glLinkProgram(shaderProgram);
-            GL.glUseProgram(shaderProgram);
+            shaderPrograms[0] = GL.glCreateProgram();
+            GL.glAttachShader(shaderPrograms[0], vertexShader);
+            GL.glAttachShader(shaderPrograms[0], fragmentShader);
+            GL.glLinkProgram(shaderPrograms[0]);
+
+
+            uint lineVertShader = GL.glCreateShader(GL.GL_VERTEX_SHADER);
+            string lineVertShaderSource = File.ReadAllText(@"./shaders/line.vert");
+            GL.glShaderSource(lineVertShader, 1, new string[] {lineVertShaderSource}, new int[] {lineVertShaderSource.Length});
+            GL.glCompileShader(lineVertShader);
+
+            uint lineFragShader = GL.glCreateShader(GL.GL_FRAGMENT_SHADER);
+            string lineFragShaderSource = File.ReadAllText(@"./shaders/line.frag");
+            GL.glShaderSource(lineFragShader, 1, new string[] {lineFragShaderSource}, new int[] {lineFragShaderSource.Length});
+            GL.glCompileShader(lineFragShader);
+
+            shaderPrograms[1] = GL.glCreateProgram();
+            GL.glAttachShader(shaderPrograms[1], lineVertShader);
+            GL.glAttachShader(shaderPrograms[1], lineFragShader);
+            GL.glLinkProgram(shaderPrograms[1]);
 
 			GL.glDisable(GL.GL_CULL_FACE);
 		}
@@ -411,18 +439,19 @@ namespace GXPEngine.Core
         }
         public void DrawQuad(Vec2[] verts, float[] transform, float[] uvs)
         {
+            GL.glUseProgram(shaderPrograms[0]);
             verts = AbsoluteToRelative(verts);
             float[] verts_reshaped = {verts[0].x, verts[0].y, 0.0f, uvs[6], uvs[1],
                                       verts[1].x, verts[1].y, 0.0f, uvs[4], uvs[3],
                                       verts[2].x, verts[2].y, 0.0f, uvs[2], uvs[5],
                                       verts[3].x, verts[3].y, 0.0f, uvs[0], uvs[7]
                                       };
-			GL.glBindVertexArray(_data.VAO);
+			GL.glBindVertexArray(_data.VAOs[0]);
 
             GL.glBufferData(GL.GL_ARRAY_BUFFER, verts_reshaped.Length * sizeof(float), verts_reshaped, GL.GL_STATIC_DRAW);
             GL.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL.GL_STATIC_DRAW);
 
-            GL.glUniformMatrix4fv(GL.glGetUniformLocation(shaderProgram, "transform"), 1, false, transform);
+            GL.glUniformMatrix4fv(GL.glGetUniformLocation(shaderPrograms[0], "transform"), 1, false, transform);
 
 			GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, IntPtr.Zero);
         }
@@ -432,6 +461,32 @@ namespace GXPEngine.Core
             var width = WindowSize.instance.width;
             var height = WindowSize.instance.height;
             return verts.Select(v => new Vec2(2.0f*v.x/width - 1.0f, -2.0f*v.y/height + 1.0f)).ToArray();
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------
+        //													   DrawLine()
+        //------------------------------------------------------------------------------------------------------------------------
+
+        public void DrawLine(Vec2 start, Vec2 end, uint color, byte width)
+        {
+            GL.glUseProgram(shaderPrograms[1]);
+            start = AbsoluteToRelative(new Vec2[]{start})[0];
+            end = AbsoluteToRelative(new Vec2[]{end})[0];
+
+            float[] verts = {
+                start.x, start.y,
+                end.x, end.y
+            };
+            
+            GL.glBindVertexArray(_data.VAOs[1]);
+
+            GL.glBufferData(GL.GL_ARRAY_BUFFER, verts.Length * sizeof(float), verts, GL.GL_STATIC_DRAW);
+
+            uint color_location = GL.glGetUniformLocation(shaderPrograms[1], "color");
+            GL.glUniform4f(color_location, ((color >> 16) & 0xff)/255.0f, ((color >> 8) & 0xff)/255.0f, ((color >> 24) & 0xff)/255.0f, 1.0f);
+
+			GL.glDrawArrays(GL.GL_LINES, 0, 2);
+
         }
 
         //------------------------------------------------------------------------------------------------------------------------

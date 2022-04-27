@@ -80,7 +80,7 @@ namespace GXPEngine {
 		/// You can give color and line width. If no values are given (=0), the default values are
 		/// used. These can be set using SetStyle, SetColor and SetWidth.
 		/// </summary>
-		public static void DrawLine(Vec2 start, Vec2 end = new(), GameObject space = null, uint color = 0, byte width = 0) {
+		public static void DrawLine(Vec2 start, Vec2 end = new(), GameObject space = null, uint color = 0xffffff, byte width = 0) {
 			if (Game.main == null) {
 				throw new Exception("Cannot draw lines before creating a game");
 			}
@@ -291,24 +291,12 @@ namespace GXPEngine {
 		/// You can give color and line width. If no values are given (=0), the default values are
 		/// used. These can be set using SetStyle, SetColor and SetWidth.
 		/// </summary>
-		public static void RenderLine(float x1, float y1, float x2, float y2, uint pColor = 0xffffffff, uint pLineWidth = 1, bool pGlobalCoords = false) {
-			if (pGlobalCoords) GL.glLoadIdentity();
-			GL.glDisable(GL.GL_TEXTURE_2D);
-			GL.glLineWidth(pLineWidth);
-			GL.glColor4ub((byte)((pColor >> 16) & 0xff), (byte)((pColor >> 8) & 0xff), (byte)((pColor) & 0xff), (byte)((pColor >> 24) & 0xff));
-			float[] vertices = { x1, y1, x2, y2 };
-			GL.glEnableClientState(GL.GL_VERTEX_ARRAY);
-			GL.glVertexPointer(2, GL.GL_FLOAT, 0, vertices.ToIntPtr());
-			GL.glDrawArrays(GL.GL_LINES, 0, 2);
-			GL.glDisableClientState(GL.GL_VERTEX_ARRAY);
-			GL.glEnable(GL.GL_TEXTURE_2D);
-		}
 
 		private static void DrawLines(GLContext glContext)
 		{
 			if (DrawCalls.Count <= 0) return;
 			foreach (DrawLineCall dc in DrawCalls) {
-				RenderLine(dc.start.x, dc.start.y, dc.end.x, dc.end.y, dc.color, dc.width, true);
+				glContext.DrawLine(dc.start, dc.end, dc.color, dc.width);
 			}
 			DrawCalls.Clear();
 		}

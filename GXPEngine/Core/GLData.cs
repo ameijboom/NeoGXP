@@ -2,8 +2,8 @@ namespace GXPEngine.Core
 {
     public class GLData
     {
-        public uint VBO;
-        public uint VAO;
-        public uint EBO;
+        public uint[] VBOs;
+        public uint[] VAOs;
+        public uint[] EBOs;
     }
 }
