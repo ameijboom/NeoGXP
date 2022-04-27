@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Security;
-using System.Threading.Channels;
-using System.Xml;
+using GXPEngine.BodyParts;
 using GXPEngine.Core;
 using GXPEngine.GXPEngine.Core;
 
@@ -10,8 +7,6 @@ namespace GXPEngine;
 
 public class Player : Sprite
 {
-    private AnimationSprite model;
-
     private Vec2 velocity;
     private State currentState;
     private bool isGrounded;
@@ -23,28 +18,47 @@ public class Player : Sprite
 
     private Collision? horizontalCollision;
     private Collision? verticalCollision;
+
+    private LowerBodyPart lowerBodyPart;
+    private UpperBodyPart upperBodyPart;
     
     public Vec2 position => new Vec2(x, y);
     
-    public Player(float pX, float pY) : base("squareSmall.png")
+    public Player(float pX, float pY) : base("hitboxes/playerHitbox.png")
     {
         SetXY(pX,pY);
-        model = new AnimationSprite("barry.png", 7, 1, 7, addCollider:false);
-        model.SetCycle(0, 2, 100);
-        AddChild(model);
-        
+
         velocity = new Vec2(0, 0);
 
         horizontalCollision = null;
         verticalCollision = null;
 
         speed = 5;
-
         gravitationalForce = 0.5f;
-        
         jumpForce = 15;
-        
+
+        upperBodyPart = new PlaceHolderUpperBodyPart();
+        lowerBodyPart = new PlaceHolderLowerBodyPart();
+        lowerBodyPart.y = 16;
+        AddChild(upperBodyPart);
+        AddChild(lowerBodyPart);
+
         CheckIfGrounded();
+    }
+
+    public void SetUpperBodyPart(UpperBodyPart newBodyPart)
+    {
+        RemoveChild(upperBodyPart);
+        upperBodyPart = newBodyPart;
+        AddChild(upperBodyPart);
+    }
+
+    public void SetLowerBodyPart(LowerBodyPart newBodyPart)
+    {
+        RemoveChild(lowerBodyPart);
+        lowerBodyPart = newBodyPart;
+        lowerBodyPart.y = 16;
+        AddChild(lowerBodyPart);
     }
 
     private void Update()
@@ -52,8 +66,8 @@ public class Player : Sprite
         wasGrounded = isGrounded;
 
 
-        Console.WriteLine($"vel {velocity}");
-        Console.WriteLine( currentState);
+        // Console.WriteLine($"vel {velocity}");
+        // Console.WriteLine( currentState);
         
         horizontalCollision = MoveUntilCollision(velocity.x,0);
         verticalCollision = MoveUntilCollision(0, velocity.y);

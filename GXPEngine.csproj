@@ -33,4 +33,7 @@
       <PackageReference Include="Arqan.Windows.x64" Version="2.1.0" />
       <PackageReference Include="SkiaSharp" Version="2.80.3" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\glfw3.dll" />
+  </ItemGroup>
 </Project>
