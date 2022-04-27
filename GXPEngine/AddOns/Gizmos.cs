@@ -1,30 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using GXPEngine;
 using GXPEngine.Core;
-using Arqan;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace GXPEngine {
 	/// <summary>
 	/// This class can be used to easily draw line based shapes (like arrows and rectangles),
-	/// mostly for debug purposes (it is not made for efficiency). 
-	/// For each draw call, shapes are drawn for one frame only, after rendering all sprites. 
+	/// mostly for debug purposes (it is not made for efficiency).
+	/// For each draw call, shapes are drawn for one frame only, after rendering all sprites.
 	/// See the DrawLine method for more information.
 	/// </summary>
 	public static class Gizmos {
 		private struct DrawLineCall
 		{
-			public Vec2 start, end;
-			public byte width;
-			public uint color;
+			public readonly Vec2 Start, End;
+			public readonly byte Width;
+			public readonly uint Color;
 
 			public DrawLineCall(Vec2 start, Vec2 end, uint color, byte width) {
-				this.start = start;
-				this.end = end;
-				this.color = color;
-				this.width = width;
+				Start = start;
+				End = end;
+				Color = color;
+				Width = width;
 			}
 		}
 
@@ -80,7 +78,7 @@ namespace GXPEngine {
 		/// You can give color and line width. If no values are given (=0), the default values are
 		/// used. These can be set using SetStyle, SetColor and SetWidth.
 		/// </summary>
-		public static void DrawLine(Vec2 start, Vec2 end = new(), GameObject space = null, uint color = 0xffffff, byte width = 0) {
+		public static void DrawLine(Vec2 start, Vec2 end = new(), GameObject? space = null, uint color = 0xffffff, byte width = 0) {
 			if (Game.main == null) {
 				throw new Exception("Cannot draw lines before creating a game");
 			}
@@ -102,7 +100,7 @@ namespace GXPEngine {
 			}
 		}
 
-		public static void DrawLine(float x1, float y1, float x2 = 0f, float y2 = 0f, GameObject space = null, uint color = 0, byte width = 0) {
+		public static void DrawLine(float x1, float y1, float x2 = 0f, float y2 = 0f, GameObject? space = null, uint color = 0, byte width = 0) {
 			DrawLine(new Vec2(x1, y1), new Vec2(x2, y2), space, color, width);
 		}
 
@@ -113,7 +111,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws a plus shape centered at the center point, with given radius, using DrawLine.
 		/// </summary>
-		public static void DrawPlus(Vec2 center, float radius, GameObject space = null, uint color = 0, byte width = 0)
+		public static void DrawPlus(Vec2 center, float radius, GameObject? space = null, uint color = 0, byte width = 0)
 		{
 			DrawPlus(center.x, center.y, radius, space, color, width);
 		}
@@ -121,7 +119,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws a plus shape centered at the point x,y, with given radius, using DrawLine.
 		/// </summary>
-		public static void DrawPlus(float x, float y, float radius, GameObject space = null, uint color = 0, byte width = 0)
+		public static void DrawPlus(float x, float y, float radius, GameObject? space = null, uint color = 0, byte width = 0)
 		{
 			DrawLine(x - radius, y, x + radius, y, space, color, width);
 			DrawLine(x, y - radius, x, y + radius, space, color, width);
@@ -134,7 +132,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws a cross shape centered at the center point, with given radius, using DrawLine.
 		/// </summary>
-		public static void DrawCross(Vec2 center, float radius, GameObject space = null, uint color = 0, byte width = 0)
+		public static void DrawCross(Vec2 center, float radius, GameObject? space = null, uint color = 0, byte width = 0)
 		{
 			DrawCross(center.x, center.y, radius, space, color, width);
 		}
@@ -142,7 +140,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws a cross shape centered at the point x,y, with given radius, using DrawLine.
 		/// </summary>
-		public static void DrawCross(float x, float y, float radius, GameObject space = null, uint color = 0, byte width = 0) {
+		public static void DrawCross(float x, float y, float radius, GameObject? space = null, uint color = 0, byte width = 0) {
 			DrawLine(x - radius, y - radius, x + radius, y + radius, space, color, width);
 			DrawLine(x - radius, y + radius, x + radius, y - radius, space, color, width);
 		}
@@ -154,7 +152,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws a line segment from point p to p+d, using DrawLine.
 		/// </summary>
-		public static void DrawRay(Vec2 p, Vec2 d, GameObject space = null, uint color = 0, byte width = 0)
+		public static void DrawRay(Vec2 p, Vec2 d, GameObject? space = null, uint color = 0, byte width = 0)
 		{
 			DrawLine(p, p + d);
 		}
@@ -162,7 +160,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws a line segment from (x,y) to (x+dx, y+dy), using DrawLine.
 		/// </summary>
-		public static void DrawRay(float x, float y, float dx, float dy, GameObject space = null, uint color = 0, byte width = 0)
+		public static void DrawRay(float x, float y, float dx, float dy, GameObject? space = null, uint color = 0, byte width = 0)
 		{
 			DrawRay(new Vec2(x, y), new Vec2(dx, dy), space, color, width);
 		}
@@ -170,7 +168,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws a line segment starting at point p, with the given length and angle using DrawLine.
 		/// </summary>
-		public static void DrawRayAngle(Vec2 p, Angle angle, float length, GameObject space = null, uint color = 0, byte width = 0) {
+		public static void DrawRayAngle(Vec2 p, Angle angle, float length, GameObject? space = null, uint color = 0, byte width = 0) {
 			Vec2 d = Vec2.FromAngle(angle) * length;
 			DrawRay(p, d, space, color, width);
 		}
@@ -178,7 +176,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws a line segment starting at point p, with the given length and angle using DrawLine.
 		/// </summary>
-		public static void DrawRayAngle(float x, float y, Angle angle, float length, GameObject space = null, uint color = 0, byte width = 0)
+		public static void DrawRayAngle(float x, float y, Angle angle, float length, GameObject? space = null, uint color = 0, byte width = 0)
 		{
 			Vec2 d = Vec2.FromAngle(angle) * length;
 			DrawRay(x, y, d.x, d.y, space, color, width);
@@ -192,7 +190,7 @@ namespace GXPEngine {
 		/// Draws an arrow from (x,y) to (x+dx, y+dy), using DrawLine.
 		/// The relativeArrowSize is the size of the arrow head compared to the arrow length.
 		/// </summary>
-		public static void DrawArrow(float x, float y, float dx, float dy, float relativeArrowSize = 0.25f, GameObject space = null, uint color = 0, byte width = 0) {
+		public static void DrawArrow(float x, float y, float dx, float dy, float relativeArrowSize = 0.25f, GameObject? space = null, uint color = 0, byte width = 0) {
 			DrawLine(x, y, x + dx, y + dy, space, color, width);
 			DrawLine(x + dx, y + dy,
 				x + dx * (1 - relativeArrowSize) - dy * relativeArrowSize,
@@ -204,7 +202,7 @@ namespace GXPEngine {
 				space, color, width);
 		}
 
-		public static void DrawArrow(Vec2 p, Vec2 d, float relativeArrowSize = 0.25f, GameObject space = null, uint color = 0, byte width = 0) {
+		public static void DrawArrow(Vec2 p, Vec2 d, float relativeArrowSize = 0.25f, GameObject? space = null, uint color = 0, byte width = 0) {
 			DrawRay(p, d, space, color, width);
 			DrawLine(p + d, p + d * (1 - relativeArrowSize) - d.GetNormal() * relativeArrowSize, space, color, width);
 		}
@@ -214,7 +212,7 @@ namespace GXPEngine {
 		/// using DrawLine.
 		/// The relativeArrowSize is the size of the arrow head compared to the arrow length.
 		/// </summary>
-		public static void DrawArrowAngle(float x, float y, float angleDegrees, float length, float relativeArrowSize = 0.25f, GameObject space = null, uint color = 0, byte width = 0) {
+		public static void DrawArrowAngle(float x, float y, float angleDegrees, float length, float relativeArrowSize = 0.25f, GameObject? space = null, uint color = 0, byte width = 0) {
 			float dx = Mathf.Cos(angleDegrees * Mathf.PI / 180) * length;
 			float dy = Mathf.Sin(angleDegrees * Mathf.PI / 180) * length;
 			DrawArrow(x, y, dx, dy, relativeArrowSize, space, color, width);
@@ -228,7 +226,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws an axis-aligned rectangle centered at a given point, with a given size, using DrawLine.
 		/// </summary>
-		public static void DrawRectangle(Vec2 center, Vec2 size, GameObject space = null, uint color = 0, byte lineWidth = 0)
+		public static void DrawRectangle(Vec2 center, Vec2 size, GameObject? space = null, uint color = 0, byte lineWidth = 0)
 		{
 			DrawRectangle(center.x, center.y, size.x, size.y, space, color, lineWidth);
 		}
@@ -236,7 +234,7 @@ namespace GXPEngine {
 		/// <summary>
 		/// Draws an axis-aligned rectangle centered at a given (x, y) coordinate, with given width and height, using DrawLine.
 		/// </summary>
-		public static void DrawRectangle(float xCenter, float yCenter, float width, float height, GameObject space = null, uint color = 0, byte lineWidth = 0) {
+		public static void DrawRectangle(float xCenter, float yCenter, float width, float height, GameObject? space = null, uint color = 0, byte lineWidth = 0) {
 			DrawLine(xCenter - width / 2, yCenter - height / 2, xCenter + width / 2, yCenter - height / 2, space, color, lineWidth);
 			DrawLine(xCenter - width / 2, yCenter + height / 2, xCenter + width / 2, yCenter + height / 2, space, color, lineWidth);
 			DrawLine(xCenter - width / 2, yCenter - height / 2, xCenter - width / 2, yCenter + height / 2, space, color, lineWidth);
@@ -255,9 +253,9 @@ namespace GXPEngine {
 		/// <param name="sides">How many sides the circle should have</param>
 		public static void DrawCircle(Vec2 center, float radius, int sides = 8)
 		{
-			float stepSize = Angle.TWO_PI / sides;
+			float stepSize = Mathf.TWO_PI / sides;
 			Vec2 p1 = new(1, 0);
-			for (float i = 0; i < Angle.TWO_PI; i += stepSize)
+			for (float i = 0; i < Mathf.TWO_PI; i += stepSize)
 			{
 				Vec2 p2 = Vec2.FromAngle(Angle.FromRadians(i + stepSize));
 				DrawLine(center + p1 * radius, center + p2 * radius);
@@ -284,9 +282,9 @@ namespace GXPEngine {
 		/// <summary>
 		/// This method should typically be called from the RenderSelf method of a GameObject,
 		/// or from the game's OnAfterRender event.
-		/// The line from (x1,y1) to (x2,y2) is then drawn immediately, 
+		/// The line from (x1,y1) to (x2,y2) is then drawn immediately,
 		/// behind objects that are drawn later.
-		/// It is drawn in the space of the game object itself if called from RenderSelf with 
+		/// It is drawn in the space of the game object itself if called from RenderSelf with
 		/// pGlobalCoords=false, and in screen space otherwise.
 		/// You can give color and line width. If no values are given (=0), the default values are
 		/// used. These can be set using SetStyle, SetColor and SetWidth.
@@ -296,7 +294,7 @@ namespace GXPEngine {
 		{
 			if (DrawCalls.Count <= 0) return;
 			foreach (DrawLineCall dc in DrawCalls) {
-				glContext.DrawLine(dc.start, dc.end, dc.color, dc.width);
+				glContext.DrawLine(dc.Start, dc.End, dc.Color, dc.Width);
 			}
 			DrawCalls.Clear();
 		}
