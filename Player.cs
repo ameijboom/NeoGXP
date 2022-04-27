@@ -87,7 +87,7 @@ public class Player : Sprite
                 {
                     currentState = State.Walk;
                 }
-                else if (Input.GetKeyDown(Key.SPACE))
+                else if (Input.GetKey(Key.SPACE))
                 {
                     Jump();
                     currentState = State.Jump;
