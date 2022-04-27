@@ -15,6 +15,7 @@ public class Player : Sprite
     private Vec2 velocity;
     private State currentState;
     private bool isGrounded;
+    private bool wasGrounded;
     
     private float speed;
     private float jumpForce;
@@ -48,6 +49,8 @@ public class Player : Sprite
 
     private void Update()
     {
+        wasGrounded = isGrounded;
+
 
         Console.WriteLine($"vel {velocity}");
         Console.WriteLine( currentState);
@@ -80,6 +83,7 @@ public class Player : Sprite
             
             case State.Walk:
                 CheckIfGrounded();
+
                 if (Input.GetKey(Key.A) == Input.GetKey(Key.D))
                 {
                     currentState = State.Stand;
@@ -94,12 +98,12 @@ public class Player : Sprite
                     velocity.x = speed;
                 }
 
-                if (Input.GetKeyDown(Key.SPACE))
+                if (Input.GetKey(Key.SPACE))
                 {
                     Jump();
                     currentState = State.Jump;
                 }
-                else if (!isGrounded)
+                else if (!isGrounded && !wasGrounded)
                 {
                     currentState = State.Jump;
                 }
