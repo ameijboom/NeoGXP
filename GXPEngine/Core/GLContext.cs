@@ -452,9 +452,8 @@ namespace GXPEngine.Core
                 verts[2].x, verts[2].y, 0.0f, uvs[2], uvs[5],
                 verts[3].x, verts[3].y, 0.0f, uvs[0], uvs[7]
             };
-            GL.glBindVertexArray(_data.VAOs[0]);
-            GL.glBindBuffer(GL.GL_ARRAY_BUFFER, _data.VBOs[0]);
-            GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, _data.EBOs[0]);
+            
+            _data.bindBuffer(0);
 
             GL.glBufferData(GL.GL_ARRAY_BUFFER, verts_reshaped.Length * sizeof(float), verts_reshaped, GL.GL_STATIC_DRAW);
             GL.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL.GL_STATIC_DRAW);
@@ -487,9 +486,7 @@ namespace GXPEngine.Core
                 end.x, end.y
             };
 
-            GL.glBindVertexArray(_data.VAOs[1]);
-            GL.glBindBuffer(GL.GL_ARRAY_BUFFER, _data.VBOs[1]);
-            GL.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, _data.EBOs[1]);
+            _data.bindBuffer(1);
 
             GL.glBufferData(GL.GL_ARRAY_BUFFER, verts.Length * sizeof(float), verts, GL.GL_STATIC_DRAW);
 
