@@ -223,14 +223,25 @@ namespace GXPEngine {
 
 		public void DrawBuffers(GLContext glContext) {
 			_texture.Bind();
-
-			GL.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-			GL.glEnableClientState(GL.GL_VERTEX_ARRAY);
-			GL.glTexCoordPointer(2, GL.GL_VERTEX_ARRAY, 0, uvs.ToIntPtr());
-			GL.glVertexPointer(2, GL.GL_VERTEX_ARRAY, 0, verts.ToIntPtr());
-			GL.glDrawArrays(GL.GL_QUADS, 0, numberOfVertices);
-			GL.glDisableClientState(GL.GL_VERTEX_ARRAY);
-			GL.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+			float[] vertArray = vertList.ToArray();
+			for (int i = 0; i < vertArray.Length; i += 8)
+			{
+				Vec2[] verts = new Vec2[] 
+				{
+					new Vec2(vertArray[0], vertArray[1]),
+					new Vec2(vertArray[2], vertArray[3]),
+					new Vec2(vertArray[4], vertArray[5]),
+					new Vec2(vertArray[6], vertArray[7])
+				};
+				float[] uvs = new float[]
+				{
+					this.uvs[0], this.uvs[1],
+					this.uvs[2], this.uvs[3],
+					this.uvs[4], this.uvs[5],
+					this.uvs[6], this.uvs[7],
+				};
+				glContext.DrawQuad(verts, uvs);
+			}
 
 			_texture.Unbind();
 		}
