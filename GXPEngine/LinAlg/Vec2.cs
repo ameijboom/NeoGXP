@@ -19,12 +19,6 @@ public struct Vec2 : IVec
 	public float y;
 	// ReSharper restore InconsistentNaming
 
-	/// <summary>
-	/// When comparing values, the values can be off by this much in either direction
-	/// before it gets flagged as actually two different numbers
-	/// </summary>
-	private const float TOLERANCE = 0.0000001f;
-
     /// <summary>
     /// Constructs a new vector (defaults to (0, 0) )
     /// </summary>
@@ -419,19 +413,19 @@ public struct Vec2 : IVec
 
 	public static bool operator ==(Vec2 left, Vec2 right)
 	{
-		return Math.Abs(left.x - right.x) < TOLERANCE && Math.Abs(left.y - right.y) < TOLERANCE;
+		return Math.Abs(left.x - right.x) < Mathf.TOLERANCE && Math.Abs(left.y - right.y) < Mathf.TOLERANCE;
 	}
 
 	public static bool operator !=(Vec2 left, Vec2 right)
 	{
-		return Math.Abs(left.x - right.x) > TOLERANCE || Math.Abs(left.y - right.y) > TOLERANCE;
+		return Math.Abs(left.x - right.x) > Mathf.TOLERANCE || Math.Abs(left.y - right.y) > Mathf.TOLERANCE;
 	}
 
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
 		if (obj is not Vec2 vec2)
 			return false;
-		return Math.Abs(x - vec2.x) < TOLERANCE && Math.Abs(y - vec2.y) < TOLERANCE;
+		return Math.Abs(x - vec2.x) < Mathf.TOLERANCE && Math.Abs(y - vec2.y) < Mathf.TOLERANCE;
 	}
 
 	public override int GetHashCode()

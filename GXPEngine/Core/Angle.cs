@@ -12,11 +12,6 @@ namespace GXPEngine.Core;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public readonly struct Angle
 {
-	/// <summary>
-	/// When comparing values, the values can be off by this much in either direction before it gets flagged as actually two different numbers
-	/// </summary>
-	private const float TOLERANCE = 0.0000001f;
-
 	// ReSharper disable InconsistentNaming
 	public static readonly Angle ZERO = new(0);
 	public static readonly Angle PI = new(Mathf.PI);
@@ -169,12 +164,12 @@ public readonly struct Angle
 
 	public static bool operator ==(Angle left, Angle right)
 	{
-		return Math.Abs(left.GetRadians() - right.GetRadians()) < TOLERANCE;
+		return Math.Abs(left.GetRadians() - right.GetRadians()) < Mathf.TOLERANCE;
 	}
 
 	public static bool operator !=(Angle left, Angle right)
 	{
-		return Math.Abs(left.GetRadians() - right.GetRadians()) > TOLERANCE;
+		return Math.Abs(left.GetRadians() - right.GetRadians()) > Mathf.TOLERANCE;
 	}
 
 	//TODO: make this check if the right angle is counter-clockwise in regards to the left angle
@@ -209,7 +204,7 @@ public readonly struct Angle
 	{
 		if (obj is not Angle angle)
 			return false;
-		return Math.Abs(GetRadians() - angle.GetRadians()) < TOLERANCE;
+		return Math.Abs(GetRadians() - angle.GetRadians()) < Mathf.TOLERANCE;
 	}
 
 	public override int GetHashCode()
