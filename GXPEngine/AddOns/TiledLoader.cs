@@ -117,10 +117,10 @@ namespace TiledMapParser {
 		/// <param name="highQualityText">start value for highQualityText.</param>
 		/// <param name="autoInstance">start value for autoInstance.</param>
 		/// <param name="callback">A method to be called by the OnObjectCreated event.</param>
-		public TiledLoader(string filename,  
+		public TiledLoader(string filename,
 			GameObject rootObject = null, bool addColliders = true,
-			float defaultOriginX = 0.5f, float defaultOriginY = 0.5f, 
-			bool highQualityText = true, bool autoInstance=false, ObjectCreateCallback callback=null) 
+			float defaultOriginX = 0.5f, float defaultOriginY = 0.5f,
+			bool highQualityText = true, bool autoInstance=false, ObjectCreateCallback callback=null)
 		{
 
 			_foldername=Path.GetDirectoryName(filename);
@@ -230,11 +230,10 @@ namespace TiledMapParser {
 
 			float imageWidth = spr.width/spr.scaleX;
 			float imageHeight = spr.height/spr.scaleY;
-			Vector2 newCenter = spr.TransformPoint((newOriginRelativeX-oldOriginX) * imageWidth, (newOriginRelativeY-oldOriginY) * imageHeight);
+			Vec2 newCenter = spr.TransformPoint((newOriginRelativeX-oldOriginX) * imageWidth, (newOriginRelativeY-oldOriginY) * imageHeight);
 			//Console.WriteLine("Setting origin. x={0} y={1} w={2} h={3} r={4} tx={5} ty={6}. nO={7},{8}",
 			//	spr.x,spr.y,spr.width,spr.height,spr.rotation,newCenter.x,newCenter.y,newOriginRelativeX,newOriginRelativeY);
-			spr.x=newCenter.x;
-			spr.y=newCenter.y;
+			spr.position=newCenter;
 			spr.SetOrigin(newOriginRelativeX * imageWidth, newOriginRelativeY * imageHeight);
 
 			spr.parent=parent;
@@ -255,9 +254,8 @@ namespace TiledMapParser {
 			newSprite.SetOrigin(0, originY * newSprite.height);
 
 			// Set transform data using this origin:
-			newSprite.x = obj.X;
-			newSprite.y = obj.Y;
-			newSprite.rotation = obj.Rotation;
+			newSprite.position = new Vec2(obj.X, obj.Y);
+			newSprite.rotation = Angle.FromDegrees(obj.Rotation);
 			newSprite.scaleX=obj.Width / newSprite.width;
 			newSprite.scaleY=obj.Height / newSprite.height;
 
@@ -428,33 +426,35 @@ namespace TiledMapParser {
 					if (tileSet==null || tileSet.Image==null)
 						throw new Exception("The Tiled map contains unembedded tilesets (.tsx files) - please embed them in the map");
 
-					AnimationSprite Tile = new AnimationSprite(
+					AnimationSprite tile = new(
 						Path.Combine(_foldername, tileSet.Image.FileName),
 						tileSet.Columns, tileSet.Rows,
 						-1, false, addColliders
 					);
-					Tile.SetFrame(frame-tileSet.FirstGId);
-					Tile.x = c * map.TileWidth;
+					tile.SetFrame(frame-tileSet.FirstGId);
+					float x = c * map.TileWidth;
 					// Adapting to Tiled's weird and inconsistent conventions again:
-					Tile.y = r * map.TileHeight - (Tile.height - map.TileHeight);
-					ChangeOrigin(Tile, 0.5f, 0.5f);
-					Tile.rotation=TiledUtils.GetRotation(rawTileInfo);
-					Tile.Mirror(TiledUtils.GetMirrorX(rawTileInfo), false);
-					ChangeOrigin(Tile, defaultOriginX, defaultOriginY, 0.5f, 0.5f);
+					float y = r * map.TileHeight - (tile.height - map.TileHeight);
+					tile.position = new Vec2(x, y);
+					ChangeOrigin(tile, 0.5f, 0.5f);
+					tile.rotation=TiledUtils.GetRotation(rawTileInfo);
+					tile.Mirror(TiledUtils.GetMirrorX(rawTileInfo), false);
+					ChangeOrigin(tile, defaultOriginX, defaultOriginY, 0.5f, 0.5f);
 
-					rootObject.AddChild(Tile);
+					rootObject.AddChild(tile);
 				}
 			}
 		}
 
-		void LoadImageLayer(int index) {
+		private void LoadImageLayer(int index) {
 			if (map.ImageLayers.Length<=index) return;
 			ImageLayer layer = map.ImageLayers[index];
 			Console.WriteLine("Loading image: "+layer.Image);
-			Sprite image = new Sprite(Path.Combine(_foldername, layer.Image.FileName), false, addColliders);
-			image.x=layer.offsetX;
-			image.y=layer.offsetY;
-			image.alpha=layer.Opacity;
+			Sprite image = new(Path.Combine(_foldername, layer.Image.FileName), false, addColliders)
+			{
+				position = new Vec2(layer.offsetX, layer.offsetY),
+				alpha = layer.Opacity,
+			};
 
 			ChangeOrigin(image, defaultOriginX, defaultOriginY);
 

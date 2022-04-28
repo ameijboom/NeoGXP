@@ -19,9 +19,9 @@ namespace GXPEngine.Core
 		//------------------------------------------------------------------------------------------------------------------------		
 		public override bool HitTest (Collider other) {
 			if (other is BoxCollider) {
-				Vector2[] c = _owner.GetExtents();
+				Vec2[] c = _owner.GetExtents();
 				if (c == null) return false;
-				Vector2[] d = ((BoxCollider)other)._owner.GetExtents();
+				Vec2[] d = ((BoxCollider)other)._owner.GetExtents();
 				if (d == null) return false;
 				if (!areaOverlap(c, d)) return false;
 				return areaOverlap(d, c);
@@ -34,16 +34,16 @@ namespace GXPEngine.Core
 		//														HitTest()
 		//------------------------------------------------------------------------------------------------------------------------		
 		public override bool HitTestPoint (float x, float y) {
-			Vector2[] c = _owner.GetExtents();
+			Vec2[] c = _owner.GetExtents();
 			if (c == null) return false;
-			Vector2 p = new Vector2(x, y);
+			Vec2 p = new Vec2(x, y);
 			return pointOverlapsArea(p, c);
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
 		//														areaOverlap()
 		//------------------------------------------------------------------------------------------------------------------------
-		private bool areaOverlap(Vector2[] c, Vector2[] d) {
+		private bool areaOverlap(Vec2[] c, Vec2[] d) {
 			// normal 1:
 			float ny = c[1].x - c[0].x;
 			float nx = c[0].y - c[1].y;
@@ -100,7 +100,7 @@ namespace GXPEngine.Core
 		//														pointOverlapsArea()
 		//------------------------------------------------------------------------------------------------------------------------
 		//ie. for hittestpoint and mousedown/up/out/over
-		private bool pointOverlapsArea(Vector2 p, Vector2[] c) {
+		private bool pointOverlapsArea(Vec2 p, Vec2[] c) {
 			float dx1 = c[1].x - c[0].x;
 			float dy1 = c[1].y - c[0].y;
 			float dx2 = c[3].x - c[0].x;
@@ -121,14 +121,14 @@ namespace GXPEngine.Core
 			if ((t > 1) || (t < 0)) return false;
 
 			return true;			
-		}	
+		}
 
-		public override float TimeOfImpact (Collider other, float vx, float vy, out Vector2 normal) {
-			normal = new Vector2 ();
+		public override float TimeOfImpact (Collider other, Vec2 v, out Vec2 normal) {
+			normal = new Vec2 ();
 			if (other is BoxCollider) {
-				Vector2[] c = _owner.GetExtents();
+				Vec2[] c = _owner.GetExtents();
 				if (c == null) return float.MaxValue;
-				Vector2[] d = ((BoxCollider)other)._owner.GetExtents();
+				Vec2[] d = ((BoxCollider)other)._owner.GetExtents();
 				if (d == null) return float.MaxValue;
 
 				float maxTOI = float.MinValue;
@@ -138,7 +138,7 @@ namespace GXPEngine.Core
 				float ny = -c [1].x + c [0].x;
 				if (updateImpactExitTime (
 					    c [0].x, c [0].y, nx, ny, 
-					    c [3].x - c [0].x, c [3].y - c [0].y, d, -vx, -vy, ref maxTOI, ref minTOE)) {
+					    c [3].x - c [0].x, c [3].y - c [0].y, d, -v.x, -v.y, ref maxTOI, ref minTOE)) {
 					normal.x = nx;
 					normal.y = ny;
 				}
@@ -148,7 +148,7 @@ namespace GXPEngine.Core
 				ny = c [3].x - c [0].x;
 				if (updateImpactExitTime (
 					    c [0].x, c [0].y, nx, ny, 
-					    c [1].x - c [0].x, c [1].y - c [0].y, d, -vx, -vy, ref maxTOI, ref minTOE)) {
+					    c [1].x - c [0].x, c [1].y - c [0].y, d, -v.x, -v.y, ref maxTOI, ref minTOE)) {
 					normal.x = nx;
 					normal.y = ny;
 				}
@@ -159,8 +159,8 @@ namespace GXPEngine.Core
 				nx = -d [0].y + d [1].y;
 				ny = -d [1].x + d [0].x;
 				if (updateImpactExitTime (
-					    d [0].x, d [0].y, nx, ny, 
-					    d [3].x - d [0].x, d [3].y - d [0].y, c, vx, vy, ref maxTOI, ref minTOE)) {
+					    d [0].x, d [0].y, nx, ny,
+					    d [3].x - d [0].x, d [3].y - d [0].y, c, v.x, v.y, ref maxTOI, ref minTOE)) {
 					normal.x = nx;
 					normal.y = ny;
 				}
@@ -170,8 +170,8 @@ namespace GXPEngine.Core
 				nx = d [0].y - d [3].y;
 				ny = d [3].x - d [0].x;
 				if (updateImpactExitTime (
-					    d [0].x, d [0].y, nx, ny, 
-					    d [1].x - d [0].x, d [1].y - d [0].y, c, vx, vy, ref maxTOI, ref minTOE)) {
+					    d [0].x, d [0].y, nx, ny,
+					    d [1].x - d [0].x, d [1].y - d [0].y, c, v.x, v.y, ref maxTOI, ref minTOE)) {
 					normal.x = nx;
 					normal.y = ny;
 				}
@@ -181,7 +181,7 @@ namespace GXPEngine.Core
 				float nLen = Mathf.Sqrt (normal.x * normal.x + normal.y * normal.y);
 				normal.x /= nLen;
 				normal.y /= nLen;
-				if (normal.x * vx + normal.y * vy > 0) {
+				if (normal.x * v.x + normal.y * v.y > 0) {
 					normal.x *= -1;
 					normal.y *= -1;
 				}
@@ -205,7 +205,7 @@ namespace GXPEngine.Core
 		// TOI/TOE: time of impact/exit. Updated when we find better values along this normal.
 		//
 		// Returns true if the TOI is updated.
-		private bool updateImpactExitTime(float cx, float cy, float nx, float ny, float dx, float dy, Vector2[] d, float vx, float vy, ref float maxTOI, ref float minTOE) {
+		private bool updateImpactExitTime(float cx, float cy, float nx, float ny, float dx, float dy, Vec2[] d, float vx, float vy, ref float maxTOI, ref float minTOE) {
 			float dot = (dy * ny + dx * nx);
 
 			if (dot == 0.0f) dot = 1.0f; // hm
@@ -257,13 +257,13 @@ namespace GXPEngine.Core
 		public override Collision GetCollisionInfo (Collider other) 
 		{
 			float penetrationDepth = float.MaxValue;
-			Vector2 normal=new Vector2();
-			Vector2 point=new Vector2();
+			Vec2 normal=new Vec2();
+			Vec2 point=new Vec2();
 			if (other is BoxCollider) {
 				//Console.WriteLine ("\n\n===== Computing collision data:\n");
-				Vector2[] c = _owner.GetExtents();
+				Vec2[] c = _owner.GetExtents();
 				if (c == null) return null;
-				Vector2[] d = ((BoxCollider)other)._owner.GetExtents();
+				Vec2[] d = ((BoxCollider)other)._owner.GetExtents();
 				if (d == null) return null;
 
 				//Console.WriteLine ("\nSide vectors of this:\n {0},{1} and {2},{3}",
@@ -323,15 +323,15 @@ namespace GXPEngine.Core
 		}
 	
 		private bool updateCollisionPoint(
-			float cx, float cy, float nx, float ny, float dx, float dy, Vector2[] d, bool invertNormal,
-			ref float minPenetrationDepth, ref Vector2 normal, ref Vector2 point
+			float cx, float cy, float nx, float ny, float dx, float dy, Vec2[] d, bool invertNormal,
+			ref float minPenetrationDepth, ref Vec2 normal, ref Vec2 point
 		) {
 			float dot = (dy * ny + dx * nx);
 
 			if (dot == 0.0f) dot = 1.0f; // hm
 
-			Vector2 argMin=new Vector2();
-			Vector2 argMax=new Vector2();
+			Vec2 argMin=new Vec2();
+			Vec2 argMax=new Vec2();
 			float minT=float.MaxValue;
 			float maxT=float.MinValue;
 			for (int i = 0; i < d.Length; i++) {

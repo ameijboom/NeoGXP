@@ -34,10 +34,10 @@ namespace GXPEngine {
 		/// </summary>
 		public bool ScreenPointInWindow(int screenX, int screenY) {
 			return
-				screenX >= _renderTarget.windowX &&
-				screenX <= _renderTarget.windowX + _renderTarget.width &&
-				screenY >= _renderTarget.windowY &&
-				screenY <= _renderTarget.windowY + _renderTarget.height;
+				screenX >= _renderTarget.windowPos.x &&
+				screenX <= _renderTarget.windowPos.x + _renderTarget.size.x &&
+				screenY >= _renderTarget.windowPos.y &&
+				screenY <= _renderTarget.windowPos.y + _renderTarget.size.y;
 		}
 
 		/// <summary>
@@ -50,10 +50,10 @@ namespace GXPEngine {
 		/// <param name="screenX">The x coordinate of a point in screen space (like Input.mouseX) </param>
 		/// <param name="screenY">The y coordinate of a point in screen space (like Input.mouseY) </param>
 		/// <returns>Global space coordinates (to be used e.g. with HitTestPoint) </returns>
-		public Vector2 ScreenPointToGlobal(int screenX, int screenY) {
-			float camX = screenX - _renderTarget.centerX;
-			float camY = screenY - _renderTarget.centerY;
-			return TransformPoint(camX, camY);
+		public Vec2 ScreenPointToGlobal(int screenX, int screenY) {
+			Vec2 screenPos = new(screenX, screenY);
+			Vec2 cam = screenPos - _renderTarget.centerPos;
+			return TransformPoint(cam);
 		}
 
 		protected override void OnDestroy() {

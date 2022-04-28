@@ -101,10 +101,9 @@ namespace GXPEngine
 
 			if (PixelArt) {
 				// offset should be smaller than 1/(2 * "pixelsize"), but not zero:
-				x = 0.01f;
-				y = 0.01f;
+				position += new Vec2(0.01f);
 			}
-			
+
 			if (main != null) {
 				throw new Exception ("Only a single instance of Game is allowed");
 			} else {

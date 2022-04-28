@@ -15,7 +15,7 @@ namespace GXPEngine
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0f, 0.0f, 0.0f, 1.0f };
 			
-		protected float _rotation = 0.0f;
+		private float _rotation = 0.0f;
 		protected float _scaleX = 1.0f;
 		protected float _scaleY = 1.0f;
 		
@@ -54,11 +54,24 @@ namespace GXPEngine
 		/// <value>
 		/// The x.
 		/// </value>
-		public float x {
+		private float x {
 			get { return _matrix[12]; }
 			set { _matrix[12] = value; }
 		}
-		
+
+		//------------------------------------------------------------------------------------------------------------------------
+		//												position vector
+		//------------------------------------------------------------------------------------------------------------------------
+
+		public Vec2 position
+		{
+			get => new(x, y);
+			set {
+				x = value.x;
+				y = value.y;
+			}
+		}
+
 		//------------------------------------------------------------------------------------------------------------------------
 		//														y
 		//------------------------------------------------------------------------------------------------------------------------
@@ -68,7 +81,7 @@ namespace GXPEngine
 		/// <value>
 		/// The y.
 		/// </value>
-		public float y {
+		private float y {
 			get { return _matrix[13]; }
 			set { _matrix[13] = value; }
 		}
@@ -105,26 +118,36 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate.
 		/// </param>
-		public virtual Vector2 InverseTransformPoint (float x, float y)
+		private Vec2 InverseTransformPoint (float x, float y)
 		{
-			Vector2 ret = new Vector2 ();
+			Vec2 ret = new Vec2 ();
 			x -= _matrix [12];
 			y -= _matrix [13];
-			if (_scaleX != 0) ret.x = ((x * _matrix[0] + y * _matrix[1]) / _scaleX); else ret.x = 0;
-			if (_scaleY != 0) ret.y = ((x * _matrix[4] + y * _matrix[5]) / _scaleY); else ret.y = 0;
+			if (_scaleX != 0) ret.x = (x * _matrix[0] + y * _matrix[1]) / _scaleX; else ret.x = 0;
+			if (_scaleY != 0) ret.y = (x * _matrix[4] + y * _matrix[5]) / _scaleY; else ret.y = 0;
 			return ret;
+		}
+
+		protected virtual Vec2 InverseTransformPoint(Vec2 point)
+		{
+			return InverseTransformPoint(point.x, point.y);
 		}
 
 		/// <summary>
 		/// Transforms the direction vector (x,y) from the game's global space to this object's local space.
 		/// This means that rotation and scaling is applied, but translation is not.
 		/// </summary>
-		public virtual Vector2 InverseTransformDirection (float x, float y)
+		private Vec2 InverseTransformDirection (float x, float y)
 		{
-			Vector2 ret = new Vector2 ();
-			if (_scaleX != 0) ret.x = ((x * _matrix[0] + y * _matrix[1]) / _scaleX); else ret.x = 0;
-			if (_scaleY != 0) ret.y = ((x * _matrix[4] + y * _matrix[5]) / _scaleY); else ret.y = 0;
+			Vec2 ret = new();
+			if (_scaleX != 0) ret.x = (x * _matrix[0] + y * _matrix[1]) / _scaleX; else ret.x = 0;
+			if (_scaleY != 0) ret.y = (x * _matrix[4] + y * _matrix[5]) / _scaleY; else ret.y = 0;
 			return ret;
+		}
+
+		protected virtual Vec2 InverseTransformDirection(Vec2 dir)
+		{
+			return InverseTransformDirection(dir.x, dir.y);
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------
@@ -156,22 +179,36 @@ namespace GXPEngine
 		/// <param name='y'>
 		/// The y coordinate.
 		/// </param>
-		public virtual Vector2 TransformPoint(float x, float y) {
-			Vector2 ret = new Vector2();
-			ret.x = (_matrix[0] * x * _scaleX + _matrix[4] * y * _scaleY + _matrix[12]);
-			ret.y = (_matrix[1] * x * _scaleX + _matrix[5] * y * _scaleY + _matrix[13]);
+		public Vec2 TransformPoint(float x, float y) {
+			Vec2 ret = new()
+			{
+				x = _matrix[0] * x * _scaleX + _matrix[4] * y * _scaleY + _matrix[12],
+				y = _matrix[1] * x * _scaleX + _matrix[5] * y * _scaleY + _matrix[13],
+			};
 			return ret;
+		}
+
+		public virtual Vec2 TransformPoint(Vec2 p)
+		{
+			return TransformPoint(p.x, p.y);
 		}
 
 		/// <summary>
 		/// Transforms a direction vector (x,y) from this object's local space to the game's global space. 
 		/// This means that rotation and scaling is applied, but translation is not.
 		/// </summary>
-		public virtual Vector2 TransformDirection(float x, float y) {
-			Vector2 ret = new Vector2();
-			ret.x = (_matrix[0] * x * _scaleX + _matrix[4] * y * _scaleY);
-			ret.y = (_matrix[1] * x * _scaleX + _matrix[5] * y * _scaleY);
+		public Vec2 TransformDirection(float x, float y) {
+			Vec2 ret = new()
+			{
+				x = _matrix[0] * x * _scaleX + _matrix[4] * y * _scaleY,
+				y = _matrix[1] * x * _scaleX + _matrix[5] * y * _scaleY,
+			};
 			return ret;
+		}
+
+		public virtual Vec2 TransformDirection(Vec2 dir)
+		{
+			return TransformDirection(dir.x, dir.y);
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------
@@ -183,13 +220,15 @@ namespace GXPEngine
 		/// <value>
 		/// The rotation.
 		/// </value>
-		public float rotation {
-			get { return _rotation; }
-			set {
-				_rotation = value;
-				float r = _rotation * Mathf.PI / 180.0f;
-				float cs = Mathf.Cos (r);
-				float sn = Mathf.Sin (r);
+		public Angle rotation
+		{
+			get => Angle.FromDegrees(_rotation);
+			set
+			{
+				_rotation = value.GetTotalDegrees();
+				float r = Angle.Deg2Rad(_rotation);
+				float cs = Mathf.Cos(r);
+				float sn = Mathf.Sin(r);
 				_matrix[0] = cs;
 				_matrix[1] = sn;
 				_matrix[4] = -sn;
@@ -206,8 +245,8 @@ namespace GXPEngine
 		/// <param name='angle'>
 		/// Angle.
 		/// </param>
-		public void Turn (float angle) {
-			rotation = _rotation + angle;
+		public void Turn (Angle angle) {
+			rotation += angle;
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
@@ -224,10 +263,10 @@ namespace GXPEngine
 		/// </param>
 		public void Move (float stepX, float stepY) {
 			float r = _rotation * Mathf.PI / 180.0f;
-			float cs = Mathf.Cos (r);
-			float sn = Mathf.Sin (r);
-			_matrix[12] = (_matrix[12] + cs * stepX - sn * stepY);
-			_matrix[13] = (_matrix[13] + sn * stepX + cs * stepY);
+			float cs = Mathf.Cos(r);
+			float sn = Mathf.Sin(r);
+			_matrix[12] = _matrix[12] + cs * stepX - sn * stepY;
+			_matrix[13] = _matrix[13] + sn * stepX + cs * stepY;
 		}
 		
 		//------------------------------------------------------------------------------------------------------------------------
@@ -242,7 +281,7 @@ namespace GXPEngine
 		/// <param name='stepY'>
 		/// Step y.
 		/// </param>
-		public void Translate (float stepX, float stepY) {
+		public void Translate(float stepX, float stepY) {
 			_matrix[12] += stepX;
 			_matrix[13] += stepY;
 		}
@@ -332,7 +371,7 @@ namespace GXPEngine
 		/// (Use this e.g. for cameras used by sub windows)
 		/// </summary>
 		public Transformable Inverse() {
-			Transformable inv=new Transformable();
+			Transformable inv=new();
 			if (scaleX == 0 || scaleY == 0)
 				throw new Exception ("Cannot invert a transform with scale 0");
 			float cs = _matrix [0];

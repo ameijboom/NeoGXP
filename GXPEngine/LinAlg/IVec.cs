@@ -1,14 +1,12 @@
+using System.Collections;
+
 namespace NeoGXP.GXPEngine.LinAlg
 {
-    public interface IVec
+    public interface IVec : IEnumerable, IEnumerator
     {
-        public float GetElement();
-        public float Magnitude();
-        public float MagnitudeSquared();
-        public IVec Scale(float scalar);
-        public IVec Add(IVec vector);
-        public float Dot(IVec vector);
-        public float Cross(IVec vector);
-        public IVec Multiply(IMatrix matrix);
+        public int GetSize();
+        public float GetElement(int i);
+        public float Mag();
+        public float MagSq();
     }
 }

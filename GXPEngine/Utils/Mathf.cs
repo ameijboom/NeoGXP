@@ -11,6 +11,10 @@ namespace GXPEngine
 		/// Constant PI
 		/// </summary>
 		public const float PI = (float)Math.PI;
+		public const float HALF_PI = (float) (Math.PI / 2.0);
+		public const float THIRD_PI = (float) (Math.PI / 3.0);
+		public const float QUARTER_PI = (float) (Math.PI / 4.0);
+		public const float TWO_PI = (float) (2.0 * Math.PI);
 
 		/// <summary>
 		/// Returns the absolute value of specified number
@@ -204,6 +208,27 @@ namespace GXPEngine
 		/// </summary>
 		public static float Clamp(float f, float min, float max) {
 			return f < min ? min : (f > max ? max : f);
+		}
+
+		/// <summary>
+		/// Wraps a number between 0 and the maximum value.
+		/// Like modulo, but this also includes the negative numbers
+		/// </summary>
+		public static float Wrap(float f, float max)
+		{
+			//https://stackoverflow.com/a/3417242/8109619
+			return (f % max + max) % max;
+		}
+
+		/// <summary>
+		/// Maps value that is in range (start1, stop1) to between (start2, stop2)
+		/// </summary>
+		public static float Map(float value,
+			float start1, float stop1,
+			float start2, float stop2)
+		{
+			//Processing
+			return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 		}
 
 	}
