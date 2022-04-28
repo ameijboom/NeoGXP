@@ -292,6 +292,23 @@ public struct Vec2 : IVec
 	}
 
 	/// <summary>
+	/// Reflect this vector around the given normal
+	/// </summary>
+	public Vec2 Reflect(Vec2 normal)
+	{
+		return this = Reflect(this, normal);
+	}
+
+	/// <summary>
+	/// Reflects a vector around a normal
+	/// </summary>
+	public static Vec2 Reflect(Vec2 toReflect, Vec2 normal)
+	{
+		normal.Normalize();
+		return toReflect - 2 * Dot(toReflect, normal) * normal;
+	}
+
+	/// <summary>
 	/// Calculates the dot product between this vector and another vector
 	/// </summary>
 	public float Dot(Vec2 v)
