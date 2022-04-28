@@ -7,20 +7,21 @@ namespace GXPEngine;
 
 public class Player : Sprite
 {
-    private Vec2 velocity;
-    private State currentState;
-    private bool isGrounded;
-    private bool wasGrounded;
-    
-    private float speed;
+    public Vec2 velocity;
+    public State currentState;
+    public bool isGrounded;
+    public bool wasGrounded;
+
+    public float speed;
     private float jumpForce;
-    private float gravitationalForce;
+    public float gravitationalForce;
 
-    private Collision? horizontalCollision;
-    private Collision? verticalCollision;
+    public Collision? horizontalCollision;
+    public Collision? verticalCollision;
 
-    private LowerBodyPart lowerBodyPart;
-    private UpperBodyPart upperBodyPart;
+    public LowerBodyPart? lowerBodyPart;
+    public UpperBodyPart? upperBodyPart;
+    
     
     public Vec2 position => new Vec2(x, y);
     
@@ -33,157 +34,64 @@ public class Player : Sprite
         horizontalCollision = null;
         verticalCollision = null;
 
-        speed = 5;
-        gravitationalForce = 0.5f;
-        jumpForce = 15;
+        lowerBodyPart = null;
+        upperBodyPart = null;
 
-        upperBodyPart = new PlaceHolderUpperBodyPart();
-        lowerBodyPart = new PlaceHolderLowerBodyPart();
-        lowerBodyPart.y = 16;
-        AddChild(upperBodyPart);
-        AddChild(lowerBodyPart);
-
-        CheckIfGrounded();
+        SetUpperBodyPart(new PlaceHolderUpperBodyPart(this));
+        SetLowerBodyPart(new PlaceHolderLowerBodyPart(this));
     }
 
-    public void SetUpperBodyPart(UpperBodyPart newBodyPart)
+    public void SetUpperBodyPart(UpperBodyPart? newBodyPart)
     {
-        RemoveChild(upperBodyPart);
+        if (upperBodyPart?.model.height > MyGame.partBaseSize.y)
+        {
+            int temp = upperBodyPart.model.height - (int) MyGame.partBaseSize.y;
+            height -= temp;
+            lowerBodyPart.y -= temp;
+        }
+        
+        upperBodyPart?.Destroy();
         upperBodyPart = newBodyPart;
-        AddChild(upperBodyPart);
+        upperBodyPart.SetXY(x,y);
     }
 
-    public void SetLowerBodyPart(LowerBodyPart newBodyPart)
+    public void SetLowerBodyPart(LowerBodyPart? newBodyPart)
     {
-        RemoveChild(lowerBodyPart);
+        if (lowerBodyPart?.model.height > MyGame.partBaseSize.y)
+        {
+            height -= lowerBodyPart.model.height - (int)MyGame.partBaseSize.y;
+        }
+        
+        lowerBodyPart?.Destroy();
         lowerBodyPart = newBodyPart;
-        lowerBodyPart.y = 16;
-        AddChild(lowerBodyPart);
+        lowerBodyPart.SetXY(x,y+16);
+        lowerBodyPart.CheckIfGrounded();
     }
+    
 
     private void Update()
     {
         wasGrounded = isGrounded;
-
-
-        // Console.WriteLine($"vel {velocity}");
-        // Console.WriteLine( currentState);
-        
-        horizontalCollision = MoveUntilCollision(velocity.x,0);
-        verticalCollision = MoveUntilCollision(0, velocity.y);
-        
-        switch (currentState)
-        {
-            case State.Stand:
-                velocity.SetXY(0, 0);
-
-                if (!isGrounded)
-                {
-                    currentState = State.Jump;
-                    break;
-                }
-
-                if (Input.GetKey(Key.A) != Input.GetKey(Key.D))
-                {
-                    currentState = State.Walk;
-                }
-                else if (Input.GetKey(Key.SPACE))
-                {
-                    Jump();
-                    currentState = State.Jump;
-                }
-                
-                break;
-            
-            case State.Walk:
-                CheckIfGrounded();
-
-                if (Input.GetKey(Key.A) == Input.GetKey(Key.D))
-                {
-                    currentState = State.Stand;
-                    break;
-                }
-                else if (Input.GetKey(Key.A))
-                {
-                    velocity.x = -speed;
-                }
-                else if (Input.GetKey(Key.D))
-                {
-                    velocity.x = speed;
-                }
-
-                if (Input.GetKey(Key.SPACE))
-                {
-                    Jump();
-                    currentState = State.Jump;
-                }
-                else if (!isGrounded && !wasGrounded)
-                {
-                    currentState = State.Jump;
-                }
-                
-                break;
-            
-            case State.Jump:
-                CheckIfGrounded();
-                velocity.y += gravitationalForce;
-
-                if (Input.GetKey(Key.D) == Input.GetKey(Key.A))
-                {
-                    velocity.x = 0;
-                }
-                else if (Input.GetKey(Key.D))
-                {
-                    velocity.x = speed;
-                }
-                else if (Input.GetKey(Key.A))
-                {
-                    velocity.x = -speed;
-                }
-
-                if (isGrounded && Input.GetKey(Key.A) != Input.GetKey(Key.D))
-                {
-                    velocity.y = 0;
-                    currentState = State.Walk;
-                }
-                else if (isGrounded)
-                {
-                    velocity.y = 0;
-                    currentState = State.Stand;
-                }
-                else if (verticalCollision != null && Math.Abs(verticalCollision.normal.y - 1) < 0.001f) velocity.y = 0;
-
-                break;
-        }
+        lowerBodyPart.HandleMovement();
     }
 
     /// <summary>
     /// Makes the player jump :O
     /// </summary>
-    private void Jump()
+    public void Jump()
     {
-        velocity.y -= jumpForce;
+        //y = -100/60X + 1
+        //y = 100/60X + 0.01f
+        // if (Time.deltaTime >= 1) velocity.y -= jumpForce * (1 / 60 * Time.deltaTime);
     }
 
-    /// <summary>
-    /// Checks if the player is grounded based on if the collision normal y has a value lower than -0.5f to ensure jumping works on 45 deg slopes
-    /// </summary>
-    private void CheckIfGrounded()
-    {
-        if (verticalCollision != null)
-        {
-            Console.WriteLine($"Normal {verticalCollision.normal}");
-            if (verticalCollision.normal.y < -0.5f) isGrounded = true;
-        }
-        else isGrounded = false;
-    }
 
     /// <summary>
     /// The player has three states: Stand, Walk and Jump, these states are used in movement and
     /// to determine when gravity should be applied and when certain animations
     /// should be played.
     /// </summary>
-    private enum State
+    public enum State
     {
         Stand,
         Walk,
