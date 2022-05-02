@@ -474,9 +474,10 @@ namespace GXPEngine.Core
         //													   DrawLine()
         //------------------------------------------------------------------------------------------------------------------------
 
-        public void DrawLine(Vec2 start, Vec2 end, uint color, byte width)
+        public void DrawLine(Vec2 start, Vec2 end, uint color, float width)
         {
             GL.glUseProgram(shaderPrograms[1]);
+            GL.glLineWidth(width);
             start = AbsoluteToRelative(new Vec2[] {start})[0];
             end = AbsoluteToRelative(new Vec2[] {end})[0];
 
@@ -494,7 +495,7 @@ namespace GXPEngine.Core
             GL.glUniform4f(color_location, ((color >> 16) & 0xff) / 255.0f, ((color >> 8) & 0xff) / 255.0f, ((color >> 24) & 0xff) / 255.0f, 1.0f);
 
             GL.glDrawArrays(GL.GL_LINES, 0, 2);
-
+            GL.glLineWidth(1.0f);
         }
 
         //------------------------------------------------------------------------------------------------------------------------

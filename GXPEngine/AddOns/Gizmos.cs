@@ -17,10 +17,10 @@ public static class Gizmos
 	private struct DrawLineCall
 	{
 		public readonly Vec2 Start, End;
-		public readonly byte Width;
+		public readonly float Width;
 		public readonly uint Color;
 
-		public DrawLineCall(Vec2 start, Vec2 end, uint color, byte width)
+		public DrawLineCall(Vec2 start, Vec2 end, uint color, float width)
 		{
 			Start = start;
 			End = end;
@@ -30,7 +30,7 @@ public static class Gizmos
 	}
 
 	private static uint _defaultColor = 0xffffffff;
-	private static byte _defaultWidth = 3;
+	private static float _defaultWidth = 3;
 
 	private static readonly List<DrawLineCall> DrawCalls;
 
@@ -44,7 +44,7 @@ public static class Gizmos
 	/// Set a default color and line width for the subsequent draw calls.
 	/// The color should be given as a uint consisting of four byte values, in the order ARGB.
 	/// </summary>
-	public static void SetStyle(uint color, byte width)
+	public static void SetStyle(uint color, float width)
 	{
 		_defaultColor = color;
 		_defaultWidth = width;
@@ -54,7 +54,7 @@ public static class Gizmos
 	/// Set a default line width for the subsequent draw calls.
 	/// </summary>
 	/// <param name="width"></param>
-	public static void SetWidth(byte width)
+	public static void SetWidth(float width)
 	{
 		_defaultWidth = width;
 	}
@@ -86,7 +86,7 @@ public static class Gizmos
 	/// You can give color and line width. If no values are given (=0), the default values are
 	/// used. These can be set using SetStyle, SetColor and SetWidth.
 	/// </summary>
-	public static void DrawLine(Vec2 start, Vec2 end = new(), GameObject? space = null, uint color = 0xffffff, byte width = 0)
+	public static void DrawLine(Vec2 start, Vec2 end = new(), GameObject? space = null, uint color = 0xffffff, float width = 0)
 	{
 		if (Game.main == null)
 		{
@@ -117,7 +117,7 @@ public static class Gizmos
 		}
 	}
 
-	public static void DrawLine(float x1, float y1, float x2 = 0f, float y2 = 0f, GameObject? space = null, uint color = 0xffffff, byte width = 0)
+	public static void DrawLine(float x1, float y1, float x2 = 0f, float y2 = 0f, GameObject? space = null, uint color = 0xffffff, float width = 0)
 	{
 		DrawLine(new Vec2(x1, y1), new Vec2(x2, y2), space, color, width);
 	}
@@ -129,7 +129,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws a plus shape centered at the center point, with given radius, using DrawLine.
 	/// </summary>
-	public static void DrawPlus(Vec2 center, float radius, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawPlus(Vec2 center, float radius, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		DrawPlus(center.x, center.y, radius, space, color, width);
 	}
@@ -137,7 +137,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws a plus shape centered at the point x,y, with given radius, using DrawLine.
 	/// </summary>
-	public static void DrawPlus(float x, float y, float radius, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawPlus(float x, float y, float radius, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		DrawLine(x - radius, y, x + radius, y, space, color, width);
 		DrawLine(x, y - radius, x, y + radius, space, color, width);
@@ -150,7 +150,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws a cross shape centered at the center point, with given radius, using DrawLine.
 	/// </summary>
-	public static void DrawCross(Vec2 center, float radius, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawCross(Vec2 center, float radius, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		DrawCross(center.x, center.y, radius, space, color, width);
 	}
@@ -158,7 +158,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws a cross shape centered at the point x,y, with given radius, using DrawLine.
 	/// </summary>
-	public static void DrawCross(float x, float y, float radius, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawCross(float x, float y, float radius, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		DrawLine(x - radius, y - radius, x + radius, y + radius, space, color, width);
 		DrawLine(x - radius, y + radius, x + radius, y - radius, space, color, width);
@@ -171,7 +171,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws a line segment from point p to p+d, using DrawLine.
 	/// </summary>
-	public static void DrawRay(Vec2 p, Vec2 d, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawRay(Vec2 p, Vec2 d, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		DrawLine(p, p + d);
 	}
@@ -179,7 +179,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws a line segment from (x,y) to (x+dx, y+dy), using DrawLine.
 	/// </summary>
-	public static void DrawRay(float x, float y, float dx, float dy, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawRay(float x, float y, float dx, float dy, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		DrawRay(new Vec2(x, y), new Vec2(dx, dy), space, color, width);
 	}
@@ -187,7 +187,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws a line segment starting at point p, with the given length and angle using DrawLine.
 	/// </summary>
-	public static void DrawRayAngle(Vec2 p, Angle angle, float length, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawRayAngle(Vec2 p, Angle angle, float length, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		Vec2 d = Vec2.FromAngle(angle) * length;
 		DrawRay(p, d, space, color, width);
@@ -196,7 +196,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws a line segment starting at point p, with the given length and angle using DrawLine.
 	/// </summary>
-	public static void DrawRayAngle(float x, float y, Angle angle, float length, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawRayAngle(float x, float y, Angle angle, float length, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		Vec2 d = Vec2.FromAngle(angle) * length;
 		DrawRay(x, y, d.x, d.y, space, color, width);
@@ -211,7 +211,7 @@ public static class Gizmos
 	/// The relativeArrowSize is the size of the arrow head compared to the arrow length.
 	/// </summary>
 	public static void DrawArrow(float x, float y, float dx, float dy, float relativeArrowSize = 0.25f, GameObject? space = null, uint color = 0,
-		byte width = 0)
+		float width = 0)
 	{
 		DrawLine(x, y, x + dx, y + dy, space, color, width);
 		DrawLine(x + dx, y + dy,
@@ -224,7 +224,7 @@ public static class Gizmos
 			space, color, width);
 	}
 
-	public static void DrawArrow(Vec2 p, Vec2 d, float relativeArrowSize = 0.25f, GameObject? space = null, uint color = 0, byte width = 0)
+	public static void DrawArrow(Vec2 p, Vec2 d, float relativeArrowSize = 0.25f, GameObject? space = null, uint color = 0, float width = 0)
 	{
 		DrawRay(p, d, space, color, width);
 		DrawLine(p + d, p + d * (1 - relativeArrowSize) - d.GetNormal() * relativeArrowSize, space, color, width);
@@ -236,7 +236,7 @@ public static class Gizmos
 	/// The relativeArrowSize is the size of the arrow head compared to the arrow length.
 	/// </summary>
 	public static void DrawArrowAngle(float x, float y, float angleDegrees, float length, float relativeArrowSize = 0.25f,
-		GameObject? space = null, uint color = 0, byte width = 0)
+		GameObject? space = null, uint color = 0, float width = 0)
 	{
 		float dx = Mathf.Cos(angleDegrees * Mathf.PI / 180) * length;
 		float dy = Mathf.Sin(angleDegrees * Mathf.PI / 180) * length;
@@ -251,7 +251,7 @@ public static class Gizmos
 	/// <summary>
 	/// Draws an axis-aligned rectangle centered at a given point, with a given size, using DrawLine.
 	/// </summary>
-	public static void DrawRectangle(Vec2 center, Vec2 size, GameObject? space = null, uint color = 0, byte lineWidth = 0)
+	public static void DrawRectangle(Vec2 center, Vec2 size, GameObject? space = null, uint color = 0, float lineWidth = 0)
 	{
 		DrawRectangle(center.x, center.y, size.x, size.y, space, color, lineWidth);
 	}
@@ -260,7 +260,7 @@ public static class Gizmos
 	/// Draws an axis-aligned rectangle centered at a given (x, y) coordinate, with given width and height, using DrawLine.
 	/// </summary>
 	public static void DrawRectangle(float xCenter, float yCenter, float width, float height, GameObject? space = null, uint color = 0,
-		byte lineWidth = 0)
+		float lineWidth = 0)
 	{
 		DrawLine(xCenter - width / 2, yCenter - height / 2, xCenter + width / 2, yCenter - height / 2, space, color, lineWidth);
 		DrawLine(xCenter - width / 2, yCenter + height / 2, xCenter + width / 2, yCenter + height / 2, space, color, lineWidth);
