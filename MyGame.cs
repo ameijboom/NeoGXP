@@ -24,22 +24,14 @@ public class MyGame : Game
     private MyGame() : base(1200, 720, false)
     {
         scrollX = width / 2;
-
-
+        
         targetFps = 60;
         
         EasyDraw background = new EasyDraw(width, height, false);
         background.Clear(SKColors.LightCyan);
         AddChild(background);
         
-        
-        
         StageLoader.LoadStage(Stages.Test);
-        // player = new Player(width/2.0f,height/2.0f)
-        // {
-        //     parent = this
-        // };
- 
     }
 
     private void Update()

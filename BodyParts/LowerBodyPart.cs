@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.Text;
 
 namespace GXPEngine.BodyParts;
 
@@ -9,9 +7,12 @@ public class LowerBodyPart : BodyPart
     protected float speedMultiplier;
     protected float speed;
     protected float jumpMultiplier;
+
+    public bool disableKeyAndGravityMovement;
     
-    protected LowerBodyPart(string modelPath, int cols, int rows, int frames, Player target_) : base(modelPath, cols, rows, frames, target_)
+    protected LowerBodyPart(string modelPath, int cols, int rows, int frames, Player player_) : base(modelPath, cols, rows, frames, player_)
     {
+        disableKeyAndGravityMovement = false;
     }
 
     protected override void Update()
@@ -26,78 +27,83 @@ public class LowerBodyPart : BodyPart
 
     public virtual void HandleMovement()
     {
-        if (target.horizontalCollision != null) target.lastHorizontalCollision = target.horizontalCollision;
-        if (target.verticalCollision != null) target.lastVerticalCollision = target.verticalCollision;
+        if (player.horizontalCollision != null) player.lastHorizontalCollision = player.horizontalCollision;
+        if (player.verticalCollision != null) player.lastVerticalCollision = player.verticalCollision;
         
-        target.horizontalCollision = target.MoveUntilCollision(target.velocity.x * Time.deltaTime, 0);
-        target.verticalCollision = target.MoveUntilCollision(0, target.velocity.y * Time.deltaTime);
+        player.horizontalCollision = player.MoveUntilCollision(player.velocity.x * Time.deltaTime, 0);
+        player.verticalCollision = player.MoveUntilCollision(0, player.velocity.y * Time.deltaTime);
 
-        switch (target.currentState)
+        if (!disableKeyAndGravityMovement)
         {
-            case Player.State.Stand:
-                StandState();
-                break;
+            switch (player.currentState)
+            {
+                case Player.State.Stand:
+                    StandState();
+                    break;
 
-            case Player.State.Walk:
-                WalkState();
-                break;
+                case Player.State.Walk:
+                    WalkState();
+                    break;
 
-            case Player.State.Jump:
-                JumpState();
-                break;
+                case Player.State.Jump:
+                    JumpState();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
     
     protected virtual void JumpState()
     {
-        target.velocity.y += MyGame.globalGravity * Time.deltaTime;
+        player.velocity.y += MyGame.globalGravity * Time.deltaTime;
         CheckIfGrounded();
 
 
-        if (Input.GetKey(Key.D) == Input.GetKey(Key.A))
+        if (Input.GetKey(Key.D) && Input.GetKey(Key.A))
         {
-            target.velocity.x = 0;
-        }
-        else if (Input.GetKey(Key.D))
+            player.velocity.x = 0;
+        } 
+        if (Input.GetKey(Key.D))
         {
-            target.velocity.x = speed;
+            player.velocity.x = speed;
         }
         else if (Input.GetKey(Key.A))
         {
-            target.velocity.x = -speed;
+            player.velocity.x = -speed;
         }
 
-        if (target.isGrounded && Input.GetKey(Key.A) != Input.GetKey(Key.D))
+        if (player.isGrounded && Input.GetKey(Key.A) != Input.GetKey(Key.D))
         {
-            target.velocity.y = 0;
-            target.currentState = Player.State.Walk;
+            player.velocity.y = 0;
+            player.currentState = Player.State.Walk;
         }
-        else if (target.isGrounded)
+        else if (player.isGrounded)
         {
-            target.velocity.y = 0;
-            target.currentState = Player.State.Stand;
+            player.velocity.y = 0;
+            player.currentState = Player.State.Stand;
         }
-        else if (target.verticalCollision is {normal.y: > 0.5f}) target.velocity.y = 0;
+        else if (player.verticalCollision is {normal.y: > 0.5f}) player.velocity.y = 0;
     }
 
     protected virtual void StandState()
     {
-        target.velocity.SetXY(0, 0);
+        player.velocity.SetXY(0, 0);
 
-        if (!target.isGrounded)
+        if (!player.isGrounded)
         {
-            target.currentState = Player.State.Jump;
+            player.currentState = Player.State.Jump;
             return;
         }
 
         if (Input.GetKey(Key.A) != Input.GetKey(Key.D))
         {
-            target.currentState = Player.State.Walk;
+            player.currentState = Player.State.Walk;
         }
         else if (Input.GetKeyDown(Key.SPACE))
         {
             Jump();
-            target.currentState = Player.State.Jump;
+            player.currentState = Player.State.Jump;
         }
     }
 
@@ -107,48 +113,48 @@ public class LowerBodyPart : BodyPart
 
         if (Input.GetKey(Key.A) == Input.GetKey(Key.D))
         {
-            target.currentState = Player.State.Stand;
+            player.currentState = Player.State.Stand;
             return;
         }
         else if (Input.GetKey(Key.A))
         {
             // if (target.horizontalCollision != null) DoSlopedMovementIfPossible();
             // else target.velocity.x = -speed;
-            target.velocity.x = -speed;
+            player.velocity.x = -speed;
         }
         else if (Input.GetKey(Key.D))
         {
             // if (target.horizontalCollision != null) DoSlopedMovementIfPossible();
             // else target.velocity.x = speed;
-            target.velocity.x = speed;
+            player.velocity.x = speed;
         }
 
         if (Input.GetKey(Key.SPACE))
         {
             Jump();
-            target.currentState = Player.State.Jump;
+            player.currentState = Player.State.Jump;
         }
-        else if (!target.isGrounded && !target.wasGrounded)
+        else if (!player.isGrounded && !player.wasGrounded)
         {
-            target.currentState = Player.State.Jump;
+            player.currentState = Player.State.Jump;
         }
     }
 
     private void DoSlopedMovementIfPossible()
     {
-        if (target.horizontalCollision == null) return;
+        if (player.horizontalCollision == null) return;
         
-        if (target.horizontalCollision.normal.x is < -0.5f and > -1 && target.horizontalCollision.normal.y < -0.5f)
+        if (player.horizontalCollision.normal.x is < -0.5f and > -1 && player.horizontalCollision.normal.y < -0.5f)
         {
-            target.velocity.x = speed; 
-            target.velocity.y = -speed;
+            player.velocity.x = speed; 
+            player.velocity.y = -speed;
         }
-        else if (target.horizontalCollision.normal.x is > 0.5f and < 1 && target.horizontalCollision.normal.y < -0.5f)
+        else if (player.horizontalCollision.normal.x is > 0.5f and < 1 && player.horizontalCollision.normal.y < -0.5f)
         {
-            target.velocity.x = -speed;
-            target.velocity.y = -speed;
+            player.velocity.x = -speed;
+            player.velocity.y = -speed;
         }
-        else target.velocity.y = 0;
+        else player.velocity.y = 0;
         
         // switch (target.horizontalCollision.normal.x)
         // {
@@ -168,7 +174,7 @@ public class LowerBodyPart : BodyPart
     /// </summary>
     protected virtual void Jump()
     {
-        target.velocity.y -= MyGame.globalJumpForce * jumpMultiplier;
+        player.velocity.y -= MyGame.globalJumpForce * jumpMultiplier;
     }
     
     
@@ -177,18 +183,18 @@ public class LowerBodyPart : BodyPart
     /// </summary>
     public virtual void CheckIfGrounded()
     {
-        if (target.verticalCollision != null)
+        if (player.verticalCollision != null)
         {
             // Console.WriteLine($"Vertical Normal {target.verticalCollision.normal}");
-            if (target.verticalCollision.normal.y < -0.5f) target.isGrounded = true;
-            else target.isGrounded = false;
+            if (player.verticalCollision.normal.y < -0.5f) player.isGrounded = true;
+            else player.isGrounded = false;
         }
-        else target.isGrounded = false;
+        else player.isGrounded = false;
     }
 
     public override void UpdatePosition()
     {
-        SetXY(target.x,target.y + 16);
+        SetXY(player.x,player.y + 16);
     }
     
 } 

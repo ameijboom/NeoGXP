@@ -1,8 +1,8 @@
 ﻿using GXPEngine.GXPEngine.Core;
 
-namespace GXPEngine;
+namespace GXPEngine.Blocks;
 
-public class MovableBlock : Sprite
+public class MovableBlock : Block
 {
     private bool held;
     private Vec2 relative;
@@ -12,7 +12,7 @@ public class MovableBlock : Sprite
     private Vec2 mousePos;
 
 
-    protected MovableBlock(string filePath) : base(filePath)
+    protected MovableBlock(string filePath) : base(filePath, movable_:true)
     {
         canvas = new EasyDraw(width, height);
         // AddChild(canvas);

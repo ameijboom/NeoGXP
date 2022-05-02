@@ -3,12 +3,12 @@
 public abstract class BodyPart : GameObject
 {
     public AnimationSprite model;
-    protected MyGame myGame;
-    protected Player target;
+    protected readonly MyGame myGame;
+    protected Player player;
     
-    protected BodyPart(string modelPath, int cols, int rows, int frames, Player target_)
+    protected BodyPart(string modelPath, int cols, int rows, int frames, Player player_)
     {
-        target = target_;
+        player = player_;
         myGame = (MyGame) game;
         parent = myGame;
         model = new AnimationSprite(modelPath, cols, rows, frames, true, false);

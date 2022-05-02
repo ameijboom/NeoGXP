@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GXPEngine.Blocks;
 
 namespace GXPEngine.StageManagement
 {
@@ -10,7 +11,7 @@ namespace GXPEngine.StageManagement
     {
         public static Stage? currentStage;
         public static Pivot? stageContainer;
-        
+
         /// <summary>
         /// Load in a new stage and get rid of the previous one if there is still one
         /// </summary>
@@ -18,7 +19,6 @@ namespace GXPEngine.StageManagement
         public static void LoadStage(Stages stage)
         {
             currentStage?.Destroy();
-
             currentStage = new Stage(stage);
             
         }
@@ -35,18 +35,13 @@ namespace GXPEngine.StageManagement
             else Console.WriteLine("There aren't any stages to get rid of I'm afraid");
         }
 
-        /// <returns>A list of children of the current active stage</returns>
-        public static List<GameObject> GetChildren()
-        {
-            return currentStage.GetChildren();
-        }
-
         /// <summary>
         /// Adds a given GameObject to this stages hierarchy
         /// </summary>
         public static void AddObject(GameObject gameObject)
         {
             currentStage?.AddChild(gameObject);
+            currentStage?.RefreshLists();
         }
 
         /// <summary>
@@ -55,25 +50,7 @@ namespace GXPEngine.StageManagement
         public static void AddObjectAt(GameObject gameObject, int index)
         {
             currentStage?.AddChildAt(gameObject, index);
-        }
-
-        /// <summary>
-        /// Get list of climbables in the stage
-        /// </summary>
-        /// <returns></returns>
-        public static List<Climbable> GetClimbables()
-        {
-            List<Climbable> climbables = new List<Climbable>();
-            
-            foreach (GameObject gameObject in currentStage.GetChildren())
-            {
-                if (gameObject is Climbable climbable)
-                {
-                    climbables.Add(climbable);
-                }
-            }
-
-            return climbables;
+            currentStage?.RefreshLists();
         }
     }
     

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using GXPEngine.Blocks;
 using GXPEngine.GXPEngine.Core;
 using TiledMapParser;
 
@@ -13,6 +15,9 @@ namespace GXPEngine.StageManagement
         public readonly int stageHeight;
 
         public Stages stage { get;}
+
+
+        public List<Block> blocks;
 
         private MyGame myGame;
 
@@ -114,6 +119,25 @@ namespace GXPEngine.StageManagement
                         break;
                 }
             }
+            
+            RefreshLists();
         }
+
+        public void RefreshLists()
+        {
+            blocks = new List<Block>();
+
+            foreach (GameObject gameObject in GetChildren())
+            {
+                if (gameObject is Block block)
+                {
+                    blocks.Add(block);
+                }
+            }
+        }
+        
+        
+        
     }
+    
 }

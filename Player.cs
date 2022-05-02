@@ -22,6 +22,7 @@ public class Player : Sprite
 
 
     public Vec2 position => new Vec2(x, y);
+    public Vec2 centerPosition => new Vec2(x + width / 2.0f, y + height / 2.0f);
     
     public Player(float pX, float pY) : base("hitboxes/playerHitbox.png")
     {
@@ -37,8 +38,8 @@ public class Player : Sprite
         lowerBodyPart = null;
         upperBodyPart = null;
 
-        SetUpperBodyPart(new GrapplingHook(this));
         SetLowerBodyPart(new JumpingLegs(this));
+        SetUpperBodyPart(new GrapplingHook(this));
     }
 
     public void SetUpperBodyPart(UpperBodyPart? newBodyPart)
@@ -81,6 +82,12 @@ public class Player : Sprite
         lowerBodyPart?.HandleMovement();
         lowerBodyPart?.UpdatePosition();
         upperBodyPart?.UpdatePosition();
+
+        if (lowerBodyPart != null && upperBodyPart != null)
+        {
+            MyGame myGame = (MyGame) game;
+            myGame.SetChildIndex(upperBodyPart,lowerBodyPart.Index + 1);
+        }
     }
 
     /// <summary>
