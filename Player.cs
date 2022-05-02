@@ -12,17 +12,15 @@ public class Player : Sprite
     public bool isGrounded;
     public bool wasGrounded;
 
-    public float speed;
-    private float jumpForce;
-    public float gravitationalForce;
-
     public Collision? horizontalCollision;
     public Collision? verticalCollision;
+    public Collision? lastHorizontalCollision;
+    public Collision? lastVerticalCollision;
 
     public LowerBodyPart? lowerBodyPart;
     public UpperBodyPart? upperBodyPart;
-    
-    
+
+
     public Vec2 position => new Vec2(x, y);
     
     public Player(float pX, float pY) : base("hitboxes/playerHitbox.png")
@@ -33,12 +31,14 @@ public class Player : Sprite
 
         horizontalCollision = null;
         verticalCollision = null;
+        lastHorizontalCollision = null;
+        lastVerticalCollision = null;
 
         lowerBodyPart = null;
         upperBodyPart = null;
 
-        SetUpperBodyPart(new PlaceHolderUpperBodyPart(this));
-        SetLowerBodyPart(new PlaceHolderLowerBodyPart(this));
+        SetUpperBodyPart(new GrapplingHook(this));
+        SetLowerBodyPart(new JumpingLegs(this));
     }
 
     public void SetUpperBodyPart(UpperBodyPart? newBodyPart)
@@ -47,44 +47,41 @@ public class Player : Sprite
         {
             int temp = upperBodyPart.model.height - (int) MyGame.partBaseSize.y;
             height -= temp;
-            lowerBodyPart.y -= temp;
+            if (lowerBodyPart != null) lowerBodyPart.y -= temp;
         }
         
         upperBodyPart?.Destroy();
         upperBodyPart = newBodyPart;
-        upperBodyPart.SetXY(x,y);
+        upperBodyPart?.SetXY(x, y);
     }
 
     public void SetLowerBodyPart(LowerBodyPart? newBodyPart)
     {
-        if (lowerBodyPart?.model.height > MyGame.partBaseSize.y)
+        if (lowerBodyPart?.model.height > MyGame.partBaseSize.y || lowerBodyPart?.model.height < MyGame.partBaseSize.y)
         {
             height -= lowerBodyPart.model.height - (int)MyGame.partBaseSize.y;
         }
         
         lowerBodyPart?.Destroy();
         lowerBodyPart = newBodyPart;
-        lowerBodyPart.SetXY(x,y+16);
-        lowerBodyPart.CheckIfGrounded();
+        lowerBodyPart?.SetXY(x,y+MyGame.partBaseSize.y);
+        
+        if (lastVerticalCollision != null) Console.WriteLine(lastVerticalCollision.normal.y);
+        
+        if (lowerBodyPart != null && lastVerticalCollision != null && HitTest(lastVerticalCollision.other)) y -= MyGame.partBaseSize.y;
+        
+        lowerBodyPart?.CheckIfGrounded();
     }
     
 
     private void Update()
     {
         wasGrounded = isGrounded;
-        lowerBodyPart.HandleMovement();
+        
+        lowerBodyPart?.HandleMovement();
+        lowerBodyPart?.UpdatePosition();
+        upperBodyPart?.UpdatePosition();
     }
-
-    /// <summary>
-    /// Makes the player jump :O
-    /// </summary>
-    public void Jump()
-    {
-        //y = -100/60X + 1
-        //y = 100/60X + 0.01f
-        // if (Time.deltaTime >= 1) velocity.y -= jumpForce * (1 / 60 * Time.deltaTime);
-    }
-
 
     /// <summary>
     /// The player has three states: Stand, Walk and Jump, these states are used in movement and

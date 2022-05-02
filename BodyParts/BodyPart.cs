@@ -16,7 +16,7 @@ public abstract class BodyPart : GameObject
     }
 
     protected abstract void Update();
-    protected abstract void UpdatePosition();
+    public abstract void UpdatePosition();
     protected void SetModel(string modelPath, int cols, int rows, int frames)
     {
         model = new AnimationSprite(modelPath, cols, rows, frames, true, false);

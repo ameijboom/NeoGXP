@@ -49,7 +49,7 @@ namespace GXPEngine.GXPEngine.Core
 
 		public Vec2 Reflect(Vec2 normal, float bounciness = 1)
 		{
-			this -= (1 + bounciness) * (Dot(normal)) * normal;
+			this -= (1 + bounciness) * Dot(normal) * normal;
 
 			return this;
 		}

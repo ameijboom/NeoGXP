@@ -1,11 +1,8 @@
-﻿using System.Buffers.Text;
-using System.Reflection.Metadata;
-using GXPEngine.GXPEngine.Core;
-using GXPEngine.StageManagement;
+﻿using GXPEngine.GXPEngine.Core;
 
 namespace GXPEngine;
 
-public class TestMovableBlock : Sprite
+public class MovableBlock : Sprite
 {
     private bool held;
     private Vec2 relative;
@@ -15,13 +12,13 @@ public class TestMovableBlock : Sprite
     private Vec2 mousePos;
 
 
-    public TestMovableBlock() : base("squareSmall.png")
+    protected MovableBlock(string filePath) : base(filePath)
     {
         canvas = new EasyDraw(width, height);
-        AddChild(canvas);
+        // AddChild(canvas);
     }
 
-    private void Update()
+    protected void Update()
     {
         mousePos = new Vec2(Input.mouseX, Input.mouseY);
         
@@ -38,5 +35,11 @@ public class TestMovableBlock : Sprite
             canvas.ClearTransparent();
             canvas.Text($"{x}, {y}");
         }
+
+        if (Input.GetMouseButtonDown(1) && HitTestPoint(mousePos.x, mousePos.y))
+        {
+            rotation = 45;
+        }
+
     }
 }

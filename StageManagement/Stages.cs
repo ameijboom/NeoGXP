@@ -6,8 +6,6 @@
     /// </summary>
     public enum Stages
     {
-        Tutorial, 
-        Stage1,
         Test
     }
 }

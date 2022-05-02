@@ -1,13 +1,14 @@
 ﻿using System;
-using GXPEngine.Core;
+using System.Globalization;
+using System.Text;
 
 namespace GXPEngine.BodyParts;
 
 public class LowerBodyPart : BodyPart
 {
+    protected float speedMultiplier;
     protected float speed;
-    protected float gravitationalForce;
-    protected float jumpForce;
+    protected float jumpMultiplier;
     
     protected LowerBodyPart(string modelPath, int cols, int rows, int frames, Player target_) : base(modelPath, cols, rows, frames, target_)
     {
@@ -15,13 +16,21 @@ public class LowerBodyPart : BodyPart
 
     protected override void Update()
     {
-        UpdatePosition();
+        // Console.WriteLine($"State: {target.currentState}");
+        //
+        // if (target.verticalCollision != null)
+        //     Console.WriteLine($"Horizontal Normal: {target.verticalCollision.normal}");
+
+
     }
 
     public virtual void HandleMovement()
     {
-        target.horizontalCollision = target.MoveUntilCollision(target.velocity.x, 0);
-        target.verticalCollision = target.MoveUntilCollision(0, target.velocity.y);
+        if (target.horizontalCollision != null) target.lastHorizontalCollision = target.horizontalCollision;
+        if (target.verticalCollision != null) target.lastVerticalCollision = target.verticalCollision;
+        
+        target.horizontalCollision = target.MoveUntilCollision(target.velocity.x * Time.deltaTime, 0);
+        target.verticalCollision = target.MoveUntilCollision(0, target.velocity.y * Time.deltaTime);
 
         switch (target.currentState)
         {
@@ -41,8 +50,9 @@ public class LowerBodyPart : BodyPart
     
     protected virtual void JumpState()
     {
+        target.velocity.y += MyGame.globalGravity * Time.deltaTime;
         CheckIfGrounded();
-        target.velocity.y += gravitationalForce;
+
 
         if (Input.GetKey(Key.D) == Input.GetKey(Key.A))
         {
@@ -67,7 +77,7 @@ public class LowerBodyPart : BodyPart
             target.velocity.y = 0;
             target.currentState = Player.State.Stand;
         }
-        else if (target.verticalCollision != null && Math.Abs(target.verticalCollision.normal.y - 1) < 0.001f) target.velocity.y = 0;
+        else if (target.verticalCollision is {normal.y: > 0.5f}) target.velocity.y = 0;
     }
 
     protected virtual void StandState()
@@ -84,7 +94,7 @@ public class LowerBodyPart : BodyPart
         {
             target.currentState = Player.State.Walk;
         }
-        else if (Input.GetKey(Key.SPACE))
+        else if (Input.GetKeyDown(Key.SPACE))
         {
             Jump();
             target.currentState = Player.State.Jump;
@@ -102,10 +112,14 @@ public class LowerBodyPart : BodyPart
         }
         else if (Input.GetKey(Key.A))
         {
+            // if (target.horizontalCollision != null) DoSlopedMovementIfPossible();
+            // else target.velocity.x = -speed;
             target.velocity.x = -speed;
         }
         else if (Input.GetKey(Key.D))
         {
+            // if (target.horizontalCollision != null) DoSlopedMovementIfPossible();
+            // else target.velocity.x = speed;
             target.velocity.x = speed;
         }
 
@@ -120,12 +134,41 @@ public class LowerBodyPart : BodyPart
         }
     }
 
+    private void DoSlopedMovementIfPossible()
+    {
+        if (target.horizontalCollision == null) return;
+        
+        if (target.horizontalCollision.normal.x is < -0.5f and > -1 && target.horizontalCollision.normal.y < -0.5f)
+        {
+            target.velocity.x = speed; 
+            target.velocity.y = -speed;
+        }
+        else if (target.horizontalCollision.normal.x is > 0.5f and < 1 && target.horizontalCollision.normal.y < -0.5f)
+        {
+            target.velocity.x = -speed;
+            target.velocity.y = -speed;
+        }
+        else target.velocity.y = 0;
+        
+        // switch (target.horizontalCollision.normal.x)
+        // {
+        //     case < 0.5f and > 0:
+        //         target.velocity.x = speed;
+        //         target.velocity.y = -speed;
+        //         break;
+        //     case > -0.5f and < 0:
+        //         target.velocity.x = -speed;
+        //         target.velocity.y = -speed;
+        //         break;
+        // }
+    }
+
     /// <summary>
     /// Might as well jump
     /// </summary>
     protected virtual void Jump()
     {
-        target.velocity.y -= jumpForce;
+        target.velocity.y -= MyGame.globalJumpForce * jumpMultiplier;
     }
     
     
@@ -136,13 +179,14 @@ public class LowerBodyPart : BodyPart
     {
         if (target.verticalCollision != null)
         {
-            Console.WriteLine($"Normal {target.verticalCollision.normal}");
+            // Console.WriteLine($"Vertical Normal {target.verticalCollision.normal}");
             if (target.verticalCollision.normal.y < -0.5f) target.isGrounded = true;
+            else target.isGrounded = false;
         }
         else target.isGrounded = false;
     }
 
-    protected override void UpdatePosition()
+    public override void UpdatePosition()
     {
         SetXY(target.x,target.y + 16);
     }

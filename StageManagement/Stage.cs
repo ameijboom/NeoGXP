@@ -1,4 +1,5 @@
 ﻿using System;
+using GXPEngine.GXPEngine.Core;
 using TiledMapParser;
 
 namespace GXPEngine.StageManagement
@@ -6,9 +7,15 @@ namespace GXPEngine.StageManagement
     public class Stage : GameObject
     {
         private readonly Map stageData;
-        private readonly int tileSize;
+        public readonly int tileWidth;
+        public readonly int tileHeight;
+        public readonly int stageWidth;
+        public readonly int stageHeight;
 
         public Stages stage { get;}
+
+        private MyGame myGame;
+
         
 
         /// <summary>
@@ -17,7 +24,7 @@ namespace GXPEngine.StageManagement
         /// <param name="givenStage">A stage from the Stages.cs list</param>
         public Stage(Stages givenStage)
         {
-            MyGame myGame = (MyGame) game;
+            myGame = (MyGame) game;
             parent = myGame;
             
             stage = givenStage;
@@ -25,7 +32,10 @@ namespace GXPEngine.StageManagement
             stageData = MapParser.ReadMap(stagePath);
             
             //TileSize is the same as width and width is the same as height
-            tileSize = stageData.TileWidth;
+            tileWidth = stageData.TileWidth;
+            tileHeight = stageData.TileHeight;
+            stageWidth = stageData.Width * tileWidth;
+            stageHeight = stageData.Height * tileHeight;
 
             if (stageData.Layers == null || stageData.Layers.Length <= 0)
             {
@@ -48,15 +58,59 @@ namespace GXPEngine.StageManagement
             for (int col = 0; col < mainLayer.Width; col++)
             for (int row = 0; row < mainLayer.Height; row++)
             {
-                int pX = col * tileSize;
-                int pY = row * tileSize;
+                int pX = col * tileWidth;
+                int pY = row * tileHeight;
 
                 switch (tileNumbers[col, row])
                 {
                     case 1:
-                        TestMovableBlock testMovableBlock = new TestMovableBlock();
-                        testMovableBlock.SetXY(pX,pY);
-                        AddChild(testMovableBlock);
+                        TempSquare tempSquare = new TempSquare();
+                        tempSquare.SetXY(pX,pY);
+                        AddChild(tempSquare);
+                        break;
+                    
+                    case 2:
+                        Climbable climbable = new Climbable();
+                        climbable.SetXY(pX,pY);
+                        AddChildAt(climbable, 0);
+                        break;
+                    
+                    case 3:
+                        WoodenBlock woodenBlock = new WoodenBlock();
+                        woodenBlock.SetXY(pX,pY);
+                        AddChild(woodenBlock);
+                        break;
+                    
+                    case 4:
+                        BlueBrick blueBrick = new BlueBrick();
+                        blueBrick.SetXY(pX,pY);
+                        AddChild(blueBrick);
+                        break;
+                    
+                    case 5:
+                        GreenBrick greenBrick = new GreenBrick();
+                        greenBrick.SetXY(pX,pY);
+                        AddChild(greenBrick);
+                        break;
+                    
+                    case 6:
+                        RedBrick redBrick = new RedBrick();
+                        redBrick.SetXY(pX,pY);
+                        AddChild(redBrick);
+                        break;
+                    
+                    case 7:
+                        YellowBrick yellowBrick = new YellowBrick();
+                        yellowBrick.SetXY(pX,pY);
+                        AddChild(yellowBrick);
+                        break;
+                    
+                    case 8:
+                        myGame.player = new Player(pX, pY-13)
+                        {
+                            parent = game
+                        };
+                        MyGame.initialPlayerPosition = new Vec2(pX, pY - 13);
                         break;
                 }
             }

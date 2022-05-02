@@ -79,7 +79,7 @@ namespace GXPEngine
 		{
 			List<GameObject> list = new List<GameObject>();
 			for (int j=colliderList.Count-1; j>=0; j--) {
-				if (j >= colliderList.Count) continue; //fix for removal in loop				
+				if (j >= colliderList.Count) continue; //fix for removal in loop	
 				GameObject other = colliderList[j];
 				if (other.collider == null || (other.collider.isTrigger && !includeTriggers) || (!other.collider.isTrigger && !includeSolid)) continue;
 				if (gameObject != other) {

@@ -56,6 +56,25 @@ namespace GXPEngine.StageManagement
         {
             currentStage?.AddChildAt(gameObject, index);
         }
+
+        /// <summary>
+        /// Get list of climbables in the stage
+        /// </summary>
+        /// <returns></returns>
+        public static List<Climbable> GetClimbables()
+        {
+            List<Climbable> climbables = new List<Climbable>();
+            
+            foreach (GameObject gameObject in currentStage.GetChildren())
+            {
+                if (gameObject is Climbable climbable)
+                {
+                    climbables.Add(climbable);
+                }
+            }
+
+            return climbables;
+        }
     }
     
 }

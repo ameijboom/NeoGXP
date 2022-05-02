@@ -1,6 +1,7 @@
 ﻿//In this file are all classes for the different body parts
 
 using GXPEngine.Core;
+using GXPEngine.StageManagement;
 
 namespace GXPEngine.BodyParts
 {
@@ -10,20 +11,33 @@ namespace GXPEngine.BodyParts
     public class JumpingLegs : LowerBodyPart {
         public JumpingLegs(Player target_) : base("bodyParts/test/red/lower.png", 1, 1, 1, target_)
         {
-            speed = 8;
-            gravitationalForce = 1;
-            jumpForce = 25;        
+            jumpMultiplier = 1;
+            speedMultiplier = 1;
+
+            speed = speedMultiplier * MyGame.globalSpeed;
         }
     }
-    public class RedUpperBodyPart : UpperBodyPart {public RedUpperBodyPart(Player target_) : base("bodyParts/test/red/upper.png", 1, 1,1, target_){}}
+
+    public class GrapplingHook : UpperBodyPart
+    {
+        public GrapplingHook(Player target_) : base("bodyParts/test/red/upper.png", 1, 1, 1, target_)
+        {
+            
+        }
+    }
 
     //Blue
-    public class ExtendyLegs : LowerBodyPart {
+    public class ExtendyLegs : LowerBodyPart
+    {
+        private int extendSpeed;
+        private float crouchIntensity;
         public ExtendyLegs(Player target_) : base("bodyParts/test/blue/lower.png", 1, 1, 1, target_)
         {
-            speed = 8;
-            gravitationalForce = 1;
-            jumpForce = 0;
+            jumpMultiplier = 0;
+            speedMultiplier = 1;
+            speed = MyGame.globalSpeed * speedMultiplier;
+            extendSpeed = 2;
+            crouchIntensity = 0.2f;
         }
 
         public override void HandleMovement()
@@ -35,20 +49,20 @@ namespace GXPEngine.BodyParts
 
             if (Input.GetKey(Key.UP))
             {
-                boundaryCollision = target.MoveUntilCollision(0, -1);
+                boundaryCollision = target.MoveUntilCollision(0, -extendSpeed);
                 if (boundaryCollision == null)
                 {
-                    target.height += 1;
-                    model.height += 1;
+                    target.height += extendSpeed;
+                    model.height += extendSpeed;
                 }
             }
             else if (Input.GetKey(Key.DOWN))
             {
-                boundaryCollision = target.MoveUntilCollision(0,1);
-                if (boundaryCollision is {normal: {y: < -0.5f}} && target.height > MyGame.partBaseSize.y*1.5f)
+                boundaryCollision = target.MoveUntilCollision(0,extendSpeed);
+                if (boundaryCollision is {normal: {y: < -0.5f}} && target.height > MyGame.partBaseSize.y*(1+crouchIntensity))
                 {
-                    target.height -= 1;
-                    model.height -= 1;
+                    target.height -= extendSpeed;
+                    model.height -= extendSpeed;
                 }
 
 
@@ -58,7 +72,63 @@ namespace GXPEngine.BodyParts
     public class BlueUpperBodyPart : UpperBodyPart {public BlueUpperBodyPart(Player target_) : base("bodyParts/test/blue/upper.png", 1, 1, 1, target_){}}
 
     //Green
-    public class GreenLowerBodyPart : LowerBodyPart {public GreenLowerBodyPart(Player target_) : base("bodyParts/test/green/lower.png",1,1,1, target_){}}
+    public class SpiderLegs : LowerBodyPart
+    {
+        private bool inSpiderForm;
+        private float climbSpeed;
+
+        public SpiderLegs(Player target_) : base("bodyParts/test/green/lower.png", 1, 1, 1, target_)
+        {
+            jumpMultiplier = 0;
+            inSpiderForm = false;
+            speedMultiplier = 1;
+
+            speed = MyGame.globalSpeed * speedMultiplier;
+
+            const float climbMultiplier = 0.3f;
+            climbSpeed = climbMultiplier * speed;
+        }
+
+        public override void HandleMovement()
+        {
+
+            inSpiderForm = false;
+            foreach (Climbable climbable in StageLoader.GetClimbables())
+            {
+                if (climbable.HitTest(target))
+                {
+                     inSpiderForm = true;
+                }
+            }
+            
+            if (!inSpiderForm) base.HandleMovement();
+
+            
+            if (inSpiderForm)
+            {
+                if (Input.GetKey(Key.W))
+                {
+                    target.MoveUntilCollision(0, -climbSpeed * Time.deltaTime);
+                }
+
+                if (Input.GetKey(Key.A))
+                {
+                    target.MoveUntilCollision(-climbSpeed * Time.deltaTime, 0);
+                }
+
+                if (Input.GetKey(Key.D))
+                {
+                    target.MoveUntilCollision(climbSpeed * Time.deltaTime, 0);
+                }
+
+                if (Input.GetKey(Key.S))
+                {
+                    target.MoveUntilCollision(0, climbSpeed * Time.deltaTime);
+                }
+            }
+            
+        }
+    }
     public class GreenUpperBodyPart : UpperBodyPart {public GreenUpperBodyPart(Player target_) : base("bodyParts/test/green/upper.png",1,1,1, target_){}}
     
     //PlaceHolder
