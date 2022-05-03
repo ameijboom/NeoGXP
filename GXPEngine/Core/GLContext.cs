@@ -6,6 +6,7 @@ using System.IO;
 using Arqan;
 using System.Text;
 using System.Linq;
+using GXPEngine.GXPEngine.Core;
 
 namespace GXPEngine.Core
 {
@@ -403,11 +404,11 @@ namespace GXPEngine.Core
         }
 
         //------------------------------------------------------------------------------------------------------------------------
-        //														SetColor()
+        //														SetColour()
         //------------------------------------------------------------------------------------------------------------------------
-        public void SetColor(byte r, byte g, byte b, byte a)
+        public void SetColour(Colour colour)
         {
-            GL.glColor4ub(r, g, b, a);
+            GL.glColor4ub(colour.r, colour.g, colour.b, colour.a);
         }
 
         //------------------------------------------------------------------------------------------------------------------------
@@ -474,12 +475,12 @@ namespace GXPEngine.Core
         //													   DrawLine()
         //------------------------------------------------------------------------------------------------------------------------
 
-        public void DrawLine(Vec2 start, Vec2 end, uint color, float width)
+        public void DrawLine(Vec2 start, Vec2 end, Colour colour, float width)
         {
             GL.glUseProgram(shaderPrograms[1]);
             GL.glLineWidth(width);
-            start = AbsoluteToRelative(new Vec2[] {start})[0];
-            end = AbsoluteToRelative(new Vec2[] {end})[0];
+            start = AbsoluteToRelative(new[] {start})[0];
+            end = AbsoluteToRelative(new[] {end})[0];
 
             float[] verts =
             {
@@ -491,8 +492,8 @@ namespace GXPEngine.Core
 
             GL.glBufferData(GL.GL_ARRAY_BUFFER, verts.Length * sizeof(float), verts, GL.GL_STATIC_DRAW);
 
-            uint color_location = GL.glGetUniformLocation(shaderPrograms[1], "color");
-            GL.glUniform4f(color_location, ((color >> 16) & 0xff) / 255.0f, ((color >> 8) & 0xff) / 255.0f, (color & 0xff) / 255.0f, ((color >> 24) & 0xff) / 255.0f);
+            uint colorLocation = GL.glGetUniformLocation(shaderPrograms[1], "color");
+            GL.glUniform4f(colorLocation, colour.rf, colour.gf, colour.bf, colour.af);
 
             GL.glDrawArrays(GL.GL_LINES, 0, 2);
             GL.glLineWidth(1.0f);
