@@ -72,16 +72,16 @@ namespace GXPEngine
 		}
 
 		//------------------------------------------------------------------------------------------------------------------------
-		//														alpha
+		//														DrawSprite
 		//------------------------------------------------------------------------------------------------------------------------
+		private SKRect destPoints;
 		/// <summary>
 		/// Draws a Sprite onto this Canvas.
-		/// It will ignore Sprite properties, such as color and animation.
+		/// It will ignore Sprite properties, such as colour and animation.
 		/// </summary>
 		/// <param name='sprite'>
 		/// The Sprite that should be drawn.
 		/// </param>
-		private SKRect destPoints;
 		public void DrawSprite(Sprite sprite) {
 			float halfWidth = sprite.texture.width / 2.0f;
 			float halfHeight = sprite.texture.height / 2.0f;

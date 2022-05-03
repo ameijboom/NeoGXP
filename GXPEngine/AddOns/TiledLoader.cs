@@ -162,7 +162,7 @@ namespace TiledMapParser {
 
 		/// <summary>
 		/// Creates an EasyDraw for displaying text, based on the configuration parameters of a 
-		/// Tiled object. (Including font, text alignment, color)
+		/// Tiled object. (Including font, text alignment, colour)
 		/// </summary>
 		/// <param name="obj">The Tiled (text) object</param>
 		/// <returns></returns>
@@ -188,9 +188,8 @@ namespace TiledMapParser {
 				obj.textField.verticalAlign == "top" ? CenterMode.Min : (obj.textField.verticalAlign == "bottom" ? CenterMode.Max : CenterMode.Center)
 			);
 
-			// Set color:
-			uint col = obj.textField.Color;
-			message.Fill(new SKColor((byte)(col&255), (byte)((col>>24)&255), (byte)((col>>16)&255), (byte)((col>>8)&255)), (byte)(col&255));
+			// Set colour:
+			message.Fill(obj.textField.colour);
 
 			return message;
 		}
@@ -453,7 +452,7 @@ namespace TiledMapParser {
 			Sprite image = new(Path.Combine(_foldername, layer.Image.FileName), false, addColliders)
 			{
 				position = new Vec2(layer.offsetX, layer.offsetY),
-				alpha = layer.Opacity,
+				alpha = (byte)(layer.Opacity*255),
 			};
 
 			ChangeOrigin(image, defaultOriginX, defaultOriginY);

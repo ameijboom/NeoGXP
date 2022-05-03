@@ -175,7 +175,7 @@ namespace GXPEngine {
 				if (worldSpaceCorners[i].y < minY) minY = worldSpaceCorners[i].y;
 			}
 
-			Game.main.RenderRange = new GXPEngine.Core.Rectangle (minX, minY, maxX - minX, maxY - minY);
+			Game.main.RenderRange = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 		}
 	}
 }

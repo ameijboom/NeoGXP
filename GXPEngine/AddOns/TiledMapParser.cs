@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using GXPEngine.Core;
+using GXPEngine.GXPEngine.Core;
 
 namespace TiledMapParser
 {
@@ -223,19 +224,21 @@ namespace TiledMapParser
 		}
 
 		/// <summary>
-		/// Returns the value of this object's color property with name [key], if it has such a property.
+		/// Returns the value of this object's colour property with name [key], if it has such a property.
 		/// Otherwise, it returns the default value that you can pass as second parameter.
-		/// The returned color can be set directly as color value of a GXPEngine Sprite.
+		/// The returned colour can be set directly as colour value of a GXPEngine Sprite.
 		/// </summary>
-		public uint GetColorProperty(string key, uint defaultvalue=0xffffffff) {
+		public Colour GetColourProperty(string key, Colour defaultValue=new())
+		{
+			if (defaultValue.Equals(new Colour())) defaultValue = Colour.White;
 			if (propertyList==null)
-				return defaultvalue;
+				return defaultValue;
 			foreach (Property p in propertyList.properties) {
 				if (p.Name == key && p.Type == "color") {
-					return TiledUtils.GetColor (p.Value);
+					return TiledUtils.GetColour (p.Value);
 				}
 			}
-			return defaultvalue;
+			return defaultValue;
 		}
 	}
 
@@ -425,13 +428,9 @@ namespace TiledMapParser
 		[XmlAttribute("color")]
 		public string color="#FF000000"; // Tiled default
 
-		public uint Color {
-			get {
-				return TiledUtils.GetColor (color);
-			}
-		}
+		public Colour colour => TiledUtils.GetColour (color);
 
-		override public string ToString() {
+		public override string ToString() {
 			return text;
 		}
 	}
@@ -480,26 +479,28 @@ namespace TiledMapParser
 		}
 	}
 
-	public class TiledUtils {
+	public static class TiledUtils {
 		/// <summary>
-		/// This translates a Tiled color string to a uint that can be used as a GXPEngine Sprite color.
+		/// This translates a Tiled color string to a GXP Colour that can be used as a Sprite colour.
 		/// </summary>
-		public static uint GetColor(string htmlColor) {
-			if (htmlColor.Length == 9) {
-				return (uint)(
-				    (Convert.ToInt32 (htmlColor.Substring (3, 2), 16) << 24) +		// R
-				    (Convert.ToInt32 (htmlColor.Substring (5, 2), 16) << 16) +		// G
-				    (Convert.ToInt32 (htmlColor.Substring (7, 2), 16) << 8) +		// B
-				    (Convert.ToInt32 (htmlColor.Substring (1, 2), 16)));			// Alpha
-			} else if (htmlColor.Length == 7) {
-				return (uint)(
-				    (Convert.ToInt32 (htmlColor.Substring (1, 2), 16) << 24) +		// R
-				    (Convert.ToInt32 (htmlColor.Substring (3, 2), 16) << 16) +		// G
-				    (Convert.ToInt32 (htmlColor.Substring (5, 2), 16) << 8) +		// B
-					0xFF);															// Alpha
-			} else {
-				throw new Exception ("Cannot recognize color string: " + htmlColor);
+		public static Colour GetColour(string htmlColour)
+		{
+			if (htmlColour.Length == 9) {
+				return new Colour(
+				    (byte) (Convert.ToInt32(htmlColour.Substring (3, 2), 16) << 24),		// R
+				    (byte) (Convert.ToInt32(htmlColour.Substring (5, 2), 16) << 16),		// G
+				    (byte) (Convert.ToInt32(htmlColour.Substring (7, 2), 16) << 8),		// B
+				    (byte) (Convert.ToInt32(htmlColour.Substring (1, 2), 16)));			// Alpha
 			}
+
+			if (htmlColour.Length == 7) {
+				return new Colour(
+					(byte) (Convert.ToInt32(htmlColour.Substring(1, 2), 16) << 24), // R
+					(byte) (Convert.ToInt32(htmlColour.Substring(3, 2), 16) << 16), // G
+					(byte) (Convert.ToInt32(htmlColour.Substring(5, 2), 16) << 8)); // B
+			}
+
+			throw new Exception ("Cannot recognize colour string: " + htmlColour);
 		}
 
 		/// <summary>
