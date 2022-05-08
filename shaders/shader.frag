@@ -1,9 +1,15 @@
 ﻿#version 330 core
-out vec4 FragColor;
-in vec2 TexCoord;
-uniform sampler2D ourTexture;
-uniform vec4 tint;
+// NOTICE: Shaders use the American spelling of color.
 
-void main(){
+//OUTPUTS
+out vec4 FragColor;
+
+//INPUTS
+uniform sampler2D ourTexture;
+in vec2 TexCoord; //from the vertex shader
+uniform vec4 tint; //from GXP
+
+void main()
+{
     FragColor = texture(ourTexture, TexCoord) * tint;
 }
