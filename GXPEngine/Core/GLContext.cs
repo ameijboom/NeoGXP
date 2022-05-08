@@ -488,7 +488,7 @@ namespace GXPEngine.Core
 
             GL.glBufferData(GL.GL_ARRAY_BUFFER, verts.Length * sizeof(float), verts, GL.GL_STATIC_DRAW);
 
-            uint colorLocation = GL.glGetUniformLocation(shaderPrograms[1], "color");
+            uint colorLocation = GL.glGetUniformLocation(shaderPrograms[1], "kleur");
             GL.glUniform4f(colorLocation, colour.rf, colour.gf, colour.bf, colour.af);
 
             GL.glDrawArrays(GL.GL_LINES, 0, 2);
