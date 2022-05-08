@@ -13,6 +13,13 @@ namespace GXPEngine;
 /// </summary>
 public class SpriteBatch : GameObject {
 	Dictionary<Texture2D, BufferRenderer> renderers;
+
+	/// <summary>
+	/// Set this to anything other than white to tint this sprite batch.
+	/// </summary>
+	/// <remarks>
+	/// The entire spritebatch will be tinted with this colour!
+	/// </remarks>
 	public Colour Colour = Colour.White;
 
 	/// <summary>
@@ -131,13 +138,10 @@ public class SpriteBatch : GameObject {
 
 		if (test == false) {
 			if (blendMode != null) blendMode.enable();
-			glContext.SetColour(Colour);
 
 			foreach (BufferRenderer rend in renderers.Values) {
-				rend.DrawBuffers(glContext);
+				rend.DrawBuffers(glContext, Colour);
 			}
-
-			glContext.SetColour(Colour.White);
 
 			if (blendMode != null) BlendMode.NORMAL.enable();
 		} else {
@@ -178,7 +182,7 @@ public class BufferRenderer {
 		numberOfVertices = verts.Length / 2;
 	}
 
-	public void DrawBuffers(GLContext glContext) {
+	public void DrawBuffers(GLContext glContext, Colour colour) {
 		_texture.Bind();
 		float[] vertArray = vertList.ToArray();
 		for (int i = 0; i < vertArray.Length; i += 8)
@@ -188,7 +192,7 @@ public class BufferRenderer {
 				new Vec2(vertArray[0], vertArray[1]),
 				new Vec2(vertArray[2], vertArray[3]),
 				new Vec2(vertArray[4], vertArray[5]),
-				new Vec2(vertArray[6], vertArray[7])
+				new Vec2(vertArray[6], vertArray[7]),
 			};
 			float[] uvs = new float[]
 			{
@@ -197,7 +201,7 @@ public class BufferRenderer {
 				this.uvs[4], this.uvs[5],
 				this.uvs[6], this.uvs[7],
 			};
-			glContext.DrawQuad(verts, uvs);
+			glContext.DrawQuad(verts, uvs, colour);
 		}
 
 		_texture.Unbind();

@@ -404,14 +404,6 @@ namespace GXPEngine.Core
         }
 
         //------------------------------------------------------------------------------------------------------------------------
-        //														SetColour()
-        //------------------------------------------------------------------------------------------------------------------------
-        public void SetColour(Colour colour)
-        {
-            GL.glColor4ub(colour.r, colour.g, colour.b, colour.a);
-        }
-
-        //------------------------------------------------------------------------------------------------------------------------
         //														PushMatrix()
         //------------------------------------------------------------------------------------------------------------------------
         public void PushMatrix(float[] matrix)
@@ -431,7 +423,7 @@ namespace GXPEngine.Core
         //------------------------------------------------------------------------------------------------------------------------
         //														DrawQuad()
         //------------------------------------------------------------------------------------------------------------------------
-        public void DrawQuad(Vec2[] verts, float[] uvs)
+        public void DrawQuad(Vec2[] verts, float[] uvs, Colour colour)
         {
             DrawQuad(verts, new float[16]
             {
@@ -439,10 +431,10 @@ namespace GXPEngine.Core
                 0.0f, 1.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
                 0.0f, 0.0f, 0.0f, 1.0f
-            }, uvs);
+            }, uvs, colour);
         }
 
-        public void DrawQuad(Vec2[] verts, float[] transform, float[] uvs)
+        public void DrawQuad(Vec2[] verts, float[] transform, float[] uvs, Colour colour)
         {
             GL.glUseProgram(shaderPrograms[0]);
             verts = AbsoluteToRelative(verts);
@@ -460,6 +452,10 @@ namespace GXPEngine.Core
             GL.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, indices.Length * sizeof(uint), indices, GL.GL_STATIC_DRAW);
 
             GL.glUniformMatrix4fv(GL.glGetUniformLocation(shaderPrograms[0], "transform"), 1, false, transform);
+
+            uint colorLocation = GL.glGetUniformLocation(shaderPrograms[0], "tint");
+            GL.glUniform4f(colorLocation, colour.rf, colour.gf, colour.bf, colour.af);
+
 
             GL.glDrawElements(GL.GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, IntPtr.Zero);
         }

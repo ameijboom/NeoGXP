@@ -14,6 +14,9 @@ public class Sprite : GameObject
 	protected Rectangle _bounds;
 	protected float[] _uvs;
 
+	/// <summary>
+	/// Set this to anything other than white to tint this sprite.
+	/// </summary>
 	public Colour Colour = Colour.White;
 
 	/// <summary>
@@ -193,9 +196,7 @@ public class Sprite : GameObject
 			if (test == false) {
 				if (blendMode != null) blendMode.enable ();
 				_texture.Bind();
-				glContext.SetColour(Colour);
-				glContext.DrawQuad(GetExtents(), _uvs);
-				glContext.SetColour(Colour.White);
+				glContext.DrawQuad(GetExtents(), _uvs, Colour);
 				_texture.Unbind();
 				if (blendMode != null) BlendMode.NORMAL.enable();
 			}
