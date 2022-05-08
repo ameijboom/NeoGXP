@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using NeoGXP.GXPEngine.LinAlg;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace GXPEngine.Core;
 
@@ -171,8 +172,17 @@ public struct Vec2 : IVec
 	/// <returns>The modified vector</returns>
 	public Vec2 SetMag(float mag)
 	{
-		Normalize();
-		return this *= mag;
+		return SetMag(this, mag);
+	}
+
+	/// <summary>
+	/// Copies the vector with the desired magnitude.
+	/// </summary>
+	/// <param name="mag">The desired magnitude for the copied vector</param>
+	/// <returns>The copied vector</returns>
+	public static Vec2 SetMag(Vec2 v, float mag)
+	{
+		return v.Normalized() * mag;
 	}
 
 	/// <summary>
@@ -336,7 +346,7 @@ public struct Vec2 : IVec
 		return Cross(this, other);
 	}
 
-	/// <inheritdoc cref="Cross(GXPEngine.Core.Vec2)"/>
+	/// <inheritdoc cref="Cross(Vec2)"/>
 	/// <summary>
 	/// Calculates the cross product between two vectors
 	/// </summary>
@@ -358,7 +368,9 @@ public struct Vec2 : IVec
 	/// </summary>
 	private Vec2 Add(Vec2 vector)
 	{
-		return new Vec2(x + vector.x, y + vector.y);
+		x += vector.x;
+		y += vector.y;
+		return this;
 	}
 
 	public static Vec2 operator +(Vec2 left, Vec2 right)
@@ -391,7 +403,7 @@ public struct Vec2 : IVec
 	/// </summary>
 	/// <remarks>
 	/// This isn't really a vector operation, but it's convenient to have it here.<br/>
-	/// https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
+	/// See: <a href="https://en.wikipedia.org/wiki/Hadamard_product_(matrices)">Hadamard product</a>
 	/// </remarks>
 	public static Vec2 operator *(Vec2 left, Vec2 right)
 	{
@@ -399,7 +411,7 @@ public struct Vec2 : IVec
 	}
 
 	//for the remark:
-	/// <inheritdoc cref="op_Multiply(GXPEngine.Core.Vec2,GXPEngine.Core.Vec2)"/>
+	/// <inheritdoc cref="op_Multiply(Vec2,Vec2)"/>
 	/// <summary>
 	/// Divide a vector by a number (scalar division)
 	/// </summary>
@@ -409,7 +421,7 @@ public struct Vec2 : IVec
 	}
 
 	//for the remark:
-	/// <inheritdoc cref="op_Multiply(GXPEngine.Core.Vec2,GXPEngine.Core.Vec2)"/>
+	/// <inheritdoc cref="op_Multiply(Vec2,Vec2)"/>
 	/// <summary>
 	/// Divide a number by a vector
 	/// </summary>
@@ -419,7 +431,7 @@ public struct Vec2 : IVec
 	}
 
 	//for the remark:
-	/// <inheritdoc cref="op_Multiply(GXPEngine.Core.Vec2,GXPEngine.Core.Vec2)"/>
+	/// <inheritdoc cref="op_Multiply(Vec2,Vec2)"/>
 	/// <summary>
 	/// Element-wise division
 	/// </summary>
