@@ -46,7 +46,7 @@ public class MyGame : Game
         if (Input.GetKeyDown(Key.NUMPAD_2) || Input.GetKeyDown(50)) player.SetLowerBodyPart(new JumpingLegs(player));
         
         //Blue
-        if (Input.GetKeyDown(Key.NUMPAD_3) || Input.GetKeyDown(51)) player.SetUpperBodyPart(new BlueUpperBodyPart(player));
+        if (Input.GetKeyDown(Key.NUMPAD_3) || Input.GetKeyDown(51)) player.SetUpperBodyPart(new StrongArm(player));
         if (Input.GetKeyDown(Key.NUMPAD_4) || Input.GetKeyDown(52)) player.SetLowerBodyPart(new ExtendyLegs(player));
 
         //Green
@@ -60,10 +60,7 @@ public class MyGame : Game
             player.SetXY(initialPlayerPosition.x, initialPlayerPosition.y);
         }
 
-
         
-        
-
         // if (player.upperBodyPart is GrapplingHook grapplingHook && grapplingHook.hook != null)
         // {
         //     background.Clear(SKColors.LightCyan);

@@ -31,8 +31,8 @@ public class LowerBodyPart : BodyPart
         if (player.horizontalCollision != null) player.lastHorizontalCollision = player.horizontalCollision;
         if (player.verticalCollision != null) player.lastVerticalCollision = player.verticalCollision;
         
-        player.horizontalCollision = player.MoveUntilCollision(player.velocity.x * Time.deltaTime, 0, StageLoader.currentStage.surfaces.GetChildren());
-        player.verticalCollision = player.MoveUntilCollision(0, player.velocity.y * Time.deltaTime, StageLoader.currentStage.surfaces.GetChildren());
+        player.horizontalCollision = player.MoveUntilCollision(player.velocity.x * Time.deltaTime, 0, StageLoader.currentStage?.surfaces.GetChildren()!);
+        player.verticalCollision = player.MoveUntilCollision(0, player.velocity.y * Time.deltaTime, StageLoader.currentStage!.surfaces.GetChildren());
 
         if (!disableKeyAndGravityMovement)
         {
@@ -68,10 +68,12 @@ public class LowerBodyPart : BodyPart
         if (Input.GetKey(Key.D))
         {
             player.velocity.x = speed;
+            player.mirrored = false;
         }
         else if (Input.GetKey(Key.A))
         {
             player.velocity.x = -speed;
+            player.mirrored = true;
         }
 
         if (player.isGrounded && Input.GetKey(Key.A) != Input.GetKey(Key.D))
@@ -122,12 +124,14 @@ public class LowerBodyPart : BodyPart
             // if (target.horizontalCollision != null) DoSlopedMovementIfPossible();
             // else target.velocity.x = -speed;
             player.velocity.x = -speed;
+            player.mirrored = true;
         }
         if (Input.GetKey(Key.D))
         {
             // if (target.horizontalCollision != null) DoSlopedMovementIfPossible();
             // else target.velocity.x = speed;
             player.velocity.x = speed;
+            player.mirrored = false;
         }
 
         if (Input.GetKey(Key.SPACE))
@@ -144,19 +148,22 @@ public class LowerBodyPart : BodyPart
     private void DoSlopedMovementIfPossible()
     {
         if (player.horizontalCollision == null) return;
-        
-        if (player.horizontalCollision.normal.x is < -0.5f and > -1 && player.horizontalCollision.normal.y < -0.5f)
+
+        switch (player.horizontalCollision.normal.x)
         {
-            player.velocity.x = speed; 
-            player.velocity.y = -speed;
+            case < -0.5f and > -1 when player.horizontalCollision.normal.y < -0.5f:
+                player.velocity.x = speed; 
+                player.velocity.y = -speed;
+                break;
+            case > 0.5f and < 1 when player.horizontalCollision.normal.y < -0.5f:
+                player.velocity.x = -speed;
+                player.velocity.y = -speed;
+                break;
+            default:
+                player.velocity.y = 0;
+                break;
         }
-        else if (player.horizontalCollision.normal.x is > 0.5f and < 1 && player.horizontalCollision.normal.y < -0.5f)
-        {
-            player.velocity.x = -speed;
-            player.velocity.y = -speed;
-        }
-        else player.velocity.y = 0;
-        
+
         // switch (target.horizontalCollision.normal.x)
         // {
         //     case < 0.5f and > 0:
@@ -187,8 +194,7 @@ public class LowerBodyPart : BodyPart
         if (player.verticalCollision != null)
         {
             // Console.WriteLine($"Vertical Normal {target.verticalCollision.normal}");
-            if (player.verticalCollision.normal.y < -0.5f) player.isGrounded = true;
-            else player.isGrounded = false;
+            player.isGrounded = player.verticalCollision.normal.y < -0.5f;
         }
         else player.isGrounded = false;
     }

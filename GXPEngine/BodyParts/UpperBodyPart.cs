@@ -23,8 +23,6 @@ public abstract class UpperBodyPart : BodyPart
 
         if (abilityModel != null)
         {
-            abilityDirection = MyGame.mousePos - new Vec2(x + MyGame.playerBaseSize.x / 2, y + MyGame.partBaseSize.y);
-            RotateToMouse();
           
             
             if (Input.GetMouseButtonDown(0))
@@ -52,14 +50,18 @@ public abstract class UpperBodyPart : BodyPart
         SetXY(player.x,player.y);
     }
 
-    protected void SetAbilityModel(string modelPath, int cols, int rows, int frames)
+    protected void SetAbilityModel(string modelPath, int cols, int rows, int frames, bool addCollider_ = false, int rotation_ = 370)
     {
-        abilityModel = new AnimationSprite(modelPath, cols, rows, frames, true,false);
+        abilityModel = new AnimationSprite(modelPath, cols, rows, frames, true,addCollider_);
+
+        if (addCollider_) abilityModel.collider.isTrigger = true;
+        
         abilityModel.SetXY(x + MyGame.playerBaseSize.x / 2, y + MyGame.partBaseSize.y/2);
         abilityModel.SetOrigin(MyGame.playerBaseSize.x/4, MyGame.partBaseSize.y/2);
         
         abilityDirection = MyGame.mousePos - new Vec2(x + MyGame.playerBaseSize.x / 2, y + MyGame.partBaseSize.y);
-        abilityModel.rotation = Vec2.WrapAroundDegree(abilityDirection.GetAngleDegrees());
+
+        abilityModel.rotation = _rotation > 360 ? Vec2.WrapAroundDegree(abilityDirection.GetAngleDegrees()) : _rotation;
         
         AddChild(abilityModel);
 

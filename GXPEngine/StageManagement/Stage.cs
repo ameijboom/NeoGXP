@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using GXPEngine.Visual;
 using TiledMapParser;
@@ -114,30 +113,35 @@ namespace GXPEngine.StageManagement
                 int pX = col * tileWidth;
                 int pY = row * tileHeight;
 
+                // TestClimbableSurface testClimbableSurface = new();
+                // testClimbableSurface.SetXY(pX,pY-16);
+                // backgroundSprites.AddChild(testClimbableSurface);
+                
                 switch (tileNumbers[col, row])
                 {
+                    //Bricks
                     case 1:
-                        TestGrappleSurface testGrappleSurface = new();
-                        testGrappleSurface.SetXY(pX,pY);
-                        spriteBatch.AddChild(testGrappleSurface);
+                        YellowBrick yellowBrick = new();
+                        yellowBrick.SetXY(pX,pY);
+                        spriteBatch.AddChild(yellowBrick);
                         break;
                     
                     case 2:
-                        TestClimbableSurface testClimbableSurface = new();
-                        testClimbableSurface.SetXY(pX,pY-16);
-                        backgroundSprites.AddChild(testClimbableSurface);
+                        YellowBrickSide yellowBrickSide = new();
+                        yellowBrickSide.SetXY(pX,pY);
+                        spriteBatch.AddChild(yellowBrickSide);
                         break;
                     
                     case 3:
-                        // WoodenHitbox woodenHitbox = new ();
-                        // woodenHitbox.SetXY(pX,pY);
-                        // spriteBatch.AddChild(woodenHitbox);
+                        RedBrick redBrick = new ();
+                        redBrick.SetXY(pX,pY);
+                        spriteBatch.AddChild(redBrick);
                         break;
                     
                     case 4:
-                        BlueBrick blueBrick = new ();
-                        blueBrick.SetXY(pX,pY);
-                        spriteBatch.AddChild(blueBrick);
+                        RedBrickSide redBrickSide = new();
+                        redBrickSide.SetXY(pX,pY);
+                        spriteBatch.AddChild(redBrickSide);
                         break;
                     
                     case 5:
@@ -147,21 +151,53 @@ namespace GXPEngine.StageManagement
                         break;
                     
                     case 6:
-                        RedBrick redBrick = new ();
-                        redBrick.SetXY(pX,pY);
-                        spriteBatch.AddChild(redBrick);
+                        GreenBrickSide greenBrickSide = new();
+                        greenBrickSide.SetXY(pX,pY);
+                        spriteBatch.AddChild(greenBrickSide);
                         break;
                     
                     case 7:
-                        YellowBrick yellowBrick = new ();
-                        yellowBrick.SetXY(pX,pY);
-                        spriteBatch.AddChild(yellowBrick);
+                        BlueBrick blueBrick = new ();
+                        blueBrick.SetXY(pX,pY);
+                        spriteBatch.AddChild(blueBrick);
                         break;
                     
                     case 8:
+                        BlueBrickSide blueBrickSide = new();
+                        blueBrickSide.SetXY(pX,pY);
+                        spriteBatch.AddChild(blueBrickSide);
+                        break;
+                       
+                    //Player
+                    case 13:
                         myGame.player = new Player(pX, pY - 13);
                         MyGame.initialPlayerPosition = new Vec2(pX, pY - 13);
                         AddChildAt(myGame.player, 4);
+                        break;
+                    
+                    //PlaceHolders
+                    case 9:
+                        Checkers checkers = new();
+                        checkers.SetXY(pX,pY-16);
+                        spriteBatch.AddChild(checkers);
+                        break;
+                    
+                    case 10:
+                        Block block = new();
+                        block.SetXY(pX,pY-16);
+                        spriteBatch.AddChild(block);
+                        break;
+                    
+                    case 11:
+                        GreyCheckers greyCheckers = new();
+                        greyCheckers.SetXY(pX,pY-16);
+                        spriteBatch.AddChild(greyCheckers);
+                        break;
+                    
+                    case 12:
+                        Colors colors = new();
+                        colors.SetXY(pX,pY-16);
+                        spriteBatch.AddChild(colors);
                         break;
                 }
             }

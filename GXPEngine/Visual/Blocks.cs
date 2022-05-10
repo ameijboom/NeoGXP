@@ -7,30 +7,61 @@ public class RedBrick : Sprite
     public RedBrick() : base("bricks/red.png", true, false){}
 }
 
+public class RedBrickSide : Sprite
+{
+    public RedBrickSide() : base("bricks/redSide.png", true,false){}
+}
+
 public class BlueBrick : Sprite
 {
     public BlueBrick() : base("bricks/blue.png", true, false){}
 }
 
+public class BlueBrickSide : Sprite
+{
+    public BlueBrickSide() : base("bricks/blueSide.png",true,false){}
+}
+
 public class GreenBrick : Sprite
 {
     public GreenBrick() : base("bricks/green.png",true, false){}
-}   
+}
+
+public class GreenBrickSide : Sprite
+{
+    public GreenBrickSide() : base("bricks/greenSide.png",true,false){}
+}
 
 public class YellowBrick : Sprite
 {
     public YellowBrick() : base("bricks/yellow.png", true, false){}
 }
 
-
-//Test
-
-public class TestClimbableSurface : Sprite
+public class YellowBrickSide : Sprite
 {
-    public TestClimbableSurface() : base("tempBackground.png", true,false){}
+    public YellowBrickSide() : base("bricks/yellowSide.png", true,false){}
 }
 
-public class TestGrappleSurface : Sprite
+
+//PlaceHolders
+
+public class GreyCheckers : Sprite
 {
-    public TestGrappleSurface() : base("squareSmall.png", true, false){}
+    public GreyCheckers() : base("placeholders/greyCheckers.png", true,false){}
 }
+
+public class Block : Sprite
+{
+    public Block() : base("placeholders/square.png", true, false){}
+}
+
+public class Colors : Sprite
+{
+    public Colors() : base("placeholders/colors.png",true,false){}
+}
+
+public class Checkers : Sprite
+{
+    public Checkers() : base("placeholders/checkers.png",true,false){}
+}
+

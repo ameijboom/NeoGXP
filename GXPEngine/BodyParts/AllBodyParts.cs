@@ -108,7 +108,8 @@ namespace GXPEngine.BodyParts
             if (abilityModel != null)
             {
                 abilityDirection = MyGame.mousePos - new Vec2(x + MyGame.playerBaseSize.x / 2, y + MyGame.partBaseSize.y);
-                
+                RotateToMouse();
+
           
             
                 if (Input.GetMouseButtonDown(0))
@@ -191,6 +192,8 @@ namespace GXPEngine.BodyParts
     {
         private readonly int extendSpeed;
         private readonly float crouchIntensity;
+        private readonly int maxExtendiness;
+        
         public ExtendyLegs(Player player_) : base("bodyParts/test/blue/lower.png", 1, 1, 1, player_)
         {
             jumpMultiplier = 0;
@@ -198,18 +201,25 @@ namespace GXPEngine.BodyParts
             speed = MyGame.globalSpeed * speedMultiplier;
             extendSpeed = 2;
             crouchIntensity = 0.2f;
+
+            maxExtendiness = (int) MyGame.playerBaseSize.y * 8;
         }
 
         public override void HandleMovement()
         {
             base.HandleMovement();
-            
+
             Collision? boundaryCollision;
 
+            
+            // Console.WriteLine($"State: {player.currentState}");
+            // Console.WriteLine($"VerticalCol: {player.verticalCollision?.other}");
+            // Console.WriteLine($"HorizontalCol: {player.horizontalCollision?.other.x}");
 
-            if (Input.GetKey(Key.UP))
+
+            if (Input.GetKey(Key.UP) && player.height < maxExtendiness)
             {
-                boundaryCollision = player.MoveUntilCollision(0, -extendSpeed, StageLoader.currentStage.surfaces.GetChildren());
+                boundaryCollision = player.MoveUntilCollision(0, -extendSpeed, StageLoader.currentStage?.surfaces.GetChildren()!);
                 if (boundaryCollision == null)
                 {
                     player.height += extendSpeed;
@@ -218,7 +228,7 @@ namespace GXPEngine.BodyParts
             }
             else if (Input.GetKey(Key.DOWN))
             {
-                boundaryCollision = player.MoveUntilCollision(0,extendSpeed, StageLoader.currentStage.surfaces.GetChildren());
+                boundaryCollision = player.MoveUntilCollision(0,extendSpeed, StageLoader.currentStage?.surfaces.GetChildren()!);
                 if (boundaryCollision is {normal: {y: < -0.5f}} && player.height > MyGame.partBaseSize.y*(1+crouchIntensity))
                 {
                     player.height -= extendSpeed;
@@ -230,14 +240,23 @@ namespace GXPEngine.BodyParts
         }
     }
 
-    public class BlueUpperBodyPart : UpperBodyPart
+    public class StrongArm : UpperBodyPart
     {
-        public BlueUpperBodyPart(Player player_) : base("bodyParts/test/blue/upper.png", 1, 1, 1, player_)
+        public StrongArm(Player player_) : base("bodyParts/test/blue/upper.png", 1, 1, 1, player_)
         {
-            SetAbilityModel("bodyParts/test/blue/ability.png",1,1,1);
+            SetAbilityModel("bodyParts/test/blue/ability.png",1,1,1, true,player.mirrored?180:360);
         }
         protected override void UseAbility()
         {
+            
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            
+
+            abilityModel.rotation = player.mirrored ? 180 : 360;
         }
     }
 
@@ -246,7 +265,6 @@ namespace GXPEngine.BodyParts
     {
         private bool inSpiderForm;
         private float climbSpeed;
-        private bool climbKeyPressed;
 
         public SpiderLegs(Player player_) : base("bodyParts/test/green/lower.png", 1, 1, 1, player_)
         {
@@ -324,6 +342,10 @@ namespace GXPEngine.BodyParts
         public GreenUpperBodyPart(Player player_) : base("bodyParts/test/green/upper.png", 1, 1, 1, player_)
         {
             SetAbilityModel("bodyParts/test/green/ability.png",1,1,1);
+            
+            
+            
+            
         }
         
         protected override void UseAbility()
