@@ -20,6 +20,8 @@ namespace GXPEngine.StageManagement
         public Pivot climbableSurfaces;
         public Pivot grappleSurfaces;
         public Pivot surfaces;
+        public Pivot breakableBlocks;
+        public Pivot animations;
 
         
         // public List<Hitbox> climbableSurfaces;
@@ -32,6 +34,8 @@ namespace GXPEngine.StageManagement
         public Pivot backgroundSprites;
 
         public EasyDraw background;
+
+        private bool stageLoaded = false;
 
         
 
@@ -48,6 +52,9 @@ namespace GXPEngine.StageManagement
             surfaces = new Pivot();
             grappleSurfaces = new Pivot();
             climbableSurfaces = new Pivot();
+            breakableBlocks = new Pivot();
+            animations = new Pivot();
+            
             
             stage = givenStage;
             string stagePath = "Tiled/" + stage + ".tmx";
@@ -73,12 +80,20 @@ namespace GXPEngine.StageManagement
                 throw new Exception("Tile file " + stagePath + " does not contain a layer!");
             }
 
-            LoadStage();
+            // LoadStage();
 
         }
 
         private void Update()
         {
+            if (!stageLoaded)
+            {
+                LoadStage();
+                stageLoaded = true;
+            }
+            
+            
+            
             // Console.WriteLine($"Player: {myGame.player.Index}");
             //
             // Console.WriteLine($"BackgroundSprites: {backgroundSprites.Index}");
@@ -195,9 +210,8 @@ namespace GXPEngine.StageManagement
                         break;
                     
                     case 12:
-                        Colors colors = new();
-                        colors.SetXY(pX,pY-16);
-                        spriteBatch.AddChild(colors);
+                        BreakableBlock colors = new(pX,pY-16);
+                        breakableBlocks.AddChild(colors);
                         break;
                 }
             }
@@ -249,6 +263,8 @@ namespace GXPEngine.StageManagement
             AddChild(grappleSurfaces);
             AddChild(climbableSurfaces);
             AddChild(surfaces);
+            AddChild(breakableBlocks);
+            AddChild(animations);
         }
     }
 }

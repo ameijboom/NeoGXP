@@ -10,6 +10,8 @@ public class Hook : Sprite
     private readonly Vec2 velocity;
     private readonly MyGame myGame;
     public bool hasHit;
+
+    private Collision collision;
     
     public Hook(float x, float y, Vec2 velocity_) : base("bodyParts/test/red/hook.png")
     {
@@ -26,22 +28,37 @@ public class Hook : Sprite
     private void Update()
     {
         if (hasHit) return;
-        
-        Collision? collision = MoveUntilCollision(velocity.x * Time.deltaTime, velocity.y * Time.deltaTime, StageLoader.currentStage?.surfaces.GetChildren()!);
 
-        if (collision != null)
-        {
-            Kill();
-        }
-            
-            
+
+        x += velocity.x * Time.deltaTime;
+        y += velocity.y * Time.deltaTime;
+        
+        
+        
         foreach (Sprite sprite in StageLoader.currentStage.grappleSurfaces.GetChildren())
         {
             if (HitTest(sprite))
             {
                 hasHit = true;
+                return;
             }
         }
+
+        if (!hasHit)
+        {
+            foreach (Hitbox hitbox in StageLoader.currentStage.surfaces.GetChildren())
+            {
+                if (HitTest(hitbox))
+                {
+                    Kill();
+                }
+            }
+        }
+        
+       
+            
+            
+       
 
         if (x > StageLoader.currentStage.stageWidth + width || x < -width || y > StageLoader.currentStage.stageHeight + height || y < -height)
         {

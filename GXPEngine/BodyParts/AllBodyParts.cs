@@ -238,7 +238,10 @@ namespace GXPEngine.BodyParts
         }
         protected override void UseAbility()
         {
-            
+            foreach (BreakableBlock breakableBlock in StageLoader.currentStage.breakableBlocks.GetChildren())
+            {
+                if (abilityModel.HitTest(breakableBlock)) breakableBlock.Break(); 
+            }
         }
 
         protected override void Update()

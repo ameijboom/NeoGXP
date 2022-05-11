@@ -72,13 +72,13 @@ public class MyGame : Game
         //     background.Line(player.upperBodyPart.,player.upperBodyPart.y,grapplingHook.hook.x,grapplingHook.hook.y);
         // }
     }
-    
+
     void Scroll()
     {
-        if (StageLoader.currentStage == null) return;
-        
-        //If the player is to the left of the center of the screen it will move to the left with the player until it hits the start of the stage
-        if (player.x + StageLoader.currentStage.x < scrollX)
+        if (StageLoader.currentStage == null || player == null) return;
+
+    //If the player is to the left of the center of the screen it will move to the left with the player until it hits the start of the stage
+    if (player.x + StageLoader.currentStage.x < scrollX)
         {
             StageLoader.currentStage.x = scrollX - player.x;
         }
