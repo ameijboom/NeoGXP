@@ -1,4 +1,5 @@
-﻿using GXPEngine.BodyParts;
+﻿using System;
+using GXPEngine.BodyParts;
 using GXPEngine.StageManagement;
 
 namespace GXPEngine;
@@ -38,7 +39,10 @@ public class MyGame : Game
     private void Update()
     {
         Scroll();
-        
+
+        Console.WriteLine($"Fps: {currentFps}");
+        Console.WriteLine($"Time.dT {Time.deltaTime}");
+
         // Console.WriteLine($"Time: {Time.deltaTime}");
         
         //Red
