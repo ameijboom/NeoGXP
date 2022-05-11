@@ -33,7 +33,7 @@ namespace GXPEngine.BodyParts
         
         public GrapplingHook(Player player_) : base("bodyParts/test/red/upper.png", 1, 1, 1, player_)
         {
-            SetAbilityModel("bodyParts/test/red/ability.png",1,1,1);
+            SetAbilityModel("bodyParts/test/red/ability.png",1,1,1, addCollider_:true);
 
             grapplePower = 1.5f;
             pullPower = 0.05f;
@@ -134,11 +134,22 @@ namespace GXPEngine.BodyParts
                     StageLoader.currentStage?.background.Line(x + abilityModel.x, y + abilityModel.y, hook.x, hook.y);
 
 
-                    if (shootTime + 200 < Time.now)
+                    // if (shootTime + 200 < Time.now)
+                    // {
+                    //     abilityModel.rotation = direction.GetAngleDegrees();
+                    // }
+
+                    if (!hook.HitTest(player) && !hook.HitTest(this))
                     {
                         abilityModel.rotation = direction.GetAngleDegrees();
                     }
                     
+                }
+
+
+                if (!hook.hasHit)
+                {
+                    if (direction.Magnitude() > 400) CancelAbility();
                 }
 
 
