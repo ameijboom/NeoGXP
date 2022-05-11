@@ -10,6 +10,8 @@ public class LowerBodyPart : BodyPart
     protected float jumpMultiplier;
 
     public bool disableKeyAndGravityMovement;
+
+    private AnimationSprite animationSprite;
     
     protected LowerBodyPart(string modelPath, int cols, int rows, int frames, Player player_) : base(modelPath, cols, rows, frames, player_)
     {
@@ -18,6 +20,7 @@ public class LowerBodyPart : BodyPart
 
     protected override void Update()
     {
+
         // Console.WriteLine($"State: {player.currentState}");
         //
         // if (player.verticalCollision != null)

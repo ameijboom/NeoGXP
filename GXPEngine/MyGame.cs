@@ -40,8 +40,8 @@ public class MyGame : Game
     {
         Scroll();
 
-        Console.WriteLine($"Fps: {currentFps}");
-        Console.WriteLine($"Time.dT {Time.deltaTime}");
+        // Console.WriteLine($"Fps: {currentFps}");
+                                                                  // Console.WriteLine($"Time.dT {Time.deltaTime}");
 
         // Console.WriteLine($"Time: {Time.deltaTime}");
         

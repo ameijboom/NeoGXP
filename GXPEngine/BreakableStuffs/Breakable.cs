@@ -15,7 +15,7 @@ public class Breakable : Sprite
 
 		breakAnimationInfo = ("", -1, -1, -1, -1);
 		
-		Console.WriteLine($"{x}, {y}");
+		// Console.WriteLine($"{x}, {y}");
 		hitbox = new Hitbox();		
 		hitbox.SetXY(x,y);
 		hitbox.width = width;
@@ -31,20 +31,29 @@ public class Breakable : Sprite
 
 	public void Break()
 	{
-		(string path, int cols, int rows, int frames, float animationDelay) = breakAnimationInfo;
-
-		if (path =="" || cols < 0 || rows < 0 || frames < 0 || animationDelay < 0)
-		{
-			breakAnimationInfo = ("placeholders/placeHolders.png", 4, 1, 4, 255);
-			( path,  cols,  rows,  frames,  animationDelay) = breakAnimationInfo;
-		}
-			
-		Animation animation = new (path, cols, rows, frames, true, (byte)animationDelay);
-		animation.SetXY(x,y);
-		StageLoader.currentStage?.animations.AddChild(animation);
+		// (string path, int cols, int rows, int frames, float animationDelay) = breakAnimationInfo;
+		//
+		// if (path =="" || cols < 0 || rows < 0 || frames < 0 || animationDelay < 0)
+		// {
+		// 	breakAnimationInfo = ("placeholders/placeHolders.png", 4, 1, 4, 255);
+		// 	( path,  cols,  rows,  frames,  animationDelay) = breakAnimationInfo;
+		// }
+		// 	
+		// Animation animation = new (path, cols, rows, frames, true, (byte)animationDelay);
+		// animation.SetXY(x,y);
+		// StageLoader.currentStage?.animations.AddChild(animation);
+		
+		MakeAnimation();
 		
 		StageLoader.currentStage?.breakableBlocks.RemoveChild(hitbox);
 		hitbox.Destroy();
 		LateDestroy();
+	}
+
+	protected virtual void MakeAnimation()
+	{
+		Animation animation = new ("placeholders/placeHolders.png", 4, 1, 4, true, 255);
+		animation.SetXY(x,y);
+		StageLoader.currentStage?.animations.AddChild(animation);
 	}
 }

@@ -12,7 +12,6 @@ public class Animation : AnimationSprite
 	{
 		playOnce = playOnce_;
 		_animationDelay = animationDelay;
-		SetCycle(0,4);
 	}
 
 	public void Update()
@@ -21,10 +20,12 @@ public class Animation : AnimationSprite
 
 		if (destroyNextFrame) Destroy();
 
+		Console.WriteLine($"Frame: {currentFrame}");
+		
+
 		
 		if (playOnce)
 		{
-			Console.WriteLine(currentFrame);
 			if (currentFrame == frameCount-1)
 			{
 				destroyNextFrame = true;
