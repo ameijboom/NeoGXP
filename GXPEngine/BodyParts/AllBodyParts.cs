@@ -29,6 +29,7 @@ namespace GXPEngine.BodyParts
         private float pullPower;
         private readonly float pullPowerIncrement;
         private readonly float maxPullPower;
+        private int shootTime;
         
         public GrapplingHook(Player player_) : base("bodyParts/test/red/upper.png", 1, 1, 1, player_)
         {
@@ -40,6 +41,7 @@ namespace GXPEngine.BodyParts
             
             pullPowerIncrement = 0.01f;
             maxPullPower = 1;
+            
 
 
             hook = null;
@@ -59,27 +61,11 @@ namespace GXPEngine.BodyParts
             {
                 pulling = false;
 
-                // Vec2 newPosition = new (myGame.player.x + MyGame.partBaseSize.x/2.0f, y - abilityModel.width/2.0f);
-                // Vec2 newPosition = new(x + MyGame.playerBaseSize.x / 2, y);
+                shootTime = Time.now;
+
                 Vec2 newPosition = new Vec2(player.x + abilityModel.x,player.y + abilityModel.y);
                 
-
-                // newPosition.RotateAroundDegrees(x + MyGame.playerBaseSize.x / 4, y + MyGame.partBaseSize.y / 2,
-                //     Vec2.WrapAroundDegree(abilityModel.rotation));
-                
-                
-                // newPosition.RotateAroundDegrees(newPosition.x, newPosition.y + abilityModel.width * 0.75f, abilityModel.rotation);
-                // newPosition.RotateAroundDegrees(newPosition.x, y,-Vec2.AngleDifference(newPosition.GetAngleDegrees(),abilityModel.rotation));
-
-                // Console.WriteLine($"Before: {newPosition}");
-                // Console.WriteLine($"ModelRot: {abilityModel.rotation}");
-                // Console.WriteLine($"BeforeStartPosRot: {newPosition.GetAngleDegrees()}");
-                
-                // newPosition.RotateAroundDegrees(myGame.player.x + MyGame.partBaseSize.x/2.0f, y, 90);
-                
-                // Console.WriteLine($"After: {newPosition}");
-
-                
+              
                 hook = new Hook(newPosition.x,newPosition.y, abilityDirection.SetMagnitude(grapplePower * MyGame.globalSpeed))
                 {
                     rotation = abilityModel.rotation,
@@ -131,10 +117,12 @@ namespace GXPEngine.BodyParts
             
             if (hook != null)
             {
-                Vec2 direction = new Vec2(hook.x,hook.y) + hook.velocity.SetMagnitude(10) - new Vec2(player.x + MyGame.partBaseSize.x / 2.0f,
+                Vec2 direction = new Vec2(hook.x,hook.y) - new Vec2(player.x + MyGame.partBaseSize.x / 2.0f,
                     player.y + MyGame.partBaseSize.y);
 
                 // Vec2 direction = hook.velocity;
+                
+                
                 
                 
                 StageLoader.currentStage?.background.Clear(Color.LightCyan);
@@ -146,14 +134,11 @@ namespace GXPEngine.BodyParts
                     StageLoader.currentStage?.background.Line(x + abilityModel.x, y + abilityModel.y, hook.x, hook.y);
 
 
-                    if ((new Vec2(hook.x, hook.y) - new Vec2(abilityModel.x, abilityModel.y)).Magnitude() > 1000)
+                    if (shootTime + 200 < Time.now)
                     {
                         abilityModel.rotation = direction.GetAngleDegrees();
                     }
                     
-                    
-                    // Console.WriteLine($"Rotation: {abilityModel.rotation}");
-
                 }
 
 
