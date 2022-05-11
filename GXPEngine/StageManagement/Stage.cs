@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using GXPEngine.BreakableStuffs;
 using GXPEngine.Visual;
 using TiledMapParser;
 
@@ -182,14 +183,7 @@ namespace GXPEngine.StageManagement
                         blueBrickSide.SetXY(pX,pY);
                         spriteBatch.AddChild(blueBrickSide);
                         break;
-                       
-                    //Player
-                    case 13:
-                        myGame.player = new Player(pX, pY - 13);
-                        MyGame.initialPlayerPosition = new Vec2(pX, pY - 13);
-                        AddChildAt(myGame.player, 4);
-                        break;
-                    
+
                     //PlaceHolders
                     case 9:
                         Checkers checkers = new();
@@ -210,9 +204,39 @@ namespace GXPEngine.StageManagement
                         break;
                     
                     case 12:
-                        BreakableBlock colors = new(pX,pY-16);
+                        Breakable colors = new(pX,pY-16);
                         breakableBlocks.AddChild(colors);
                         break;
+                    
+                    //Player
+                    case 13:
+                        myGame.player = new Player(pX, pY - 13);
+                        MyGame.initialPlayerPosition = new Vec2(pX, pY - 13);
+                        AddChildAt(myGame.player, 4);
+                        break;
+                    
+                    //Breakables
+                    
+                    case 14:
+                        Breakable wallNormal = new WallNormal(pX, pY);
+                        breakableBlocks.AddChild(wallNormal);
+                        break;
+                    
+                    case 15:
+                        Breakable pencil = new Pencil(pX,pY);
+                        breakableBlocks.AddChild(pencil);
+                        break;
+                    
+                    case 16:
+                        Breakable wallSmall = new WallSmall(pX, pY);
+                        breakableBlocks.AddChild(wallSmall);
+                        break;
+                    
+                    case 17:
+                        Breakable painting = new Painting(pX, pY);
+                        breakableBlocks.AddChild(painting);
+                        break;
+
                 }
             }
             

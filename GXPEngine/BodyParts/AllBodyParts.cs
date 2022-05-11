@@ -2,6 +2,7 @@
 
 using System;
 using System.Drawing;
+using GXPEngine.BreakableStuffs;
 using GXPEngine.Core;
 using GXPEngine.StageManagement;
 
@@ -238,7 +239,7 @@ namespace GXPEngine.BodyParts
         }
         protected override void UseAbility()
         {
-            foreach (BreakableBlock breakableBlock in StageLoader.currentStage.breakableBlocks.GetChildren())
+            foreach (Breakable breakableBlock in StageLoader.currentStage.breakableBlocks.GetChildren())
             {
                 if (abilityModel.HitTest(breakableBlock)) breakableBlock.Break(); 
             }
@@ -314,11 +315,13 @@ namespace GXPEngine.BodyParts
                 if (Input.GetKey(Key.A))
                 {
                     player.MoveUntilCollision(-climbSpeed * Time.deltaTime, 0, StageLoader.currentStage.surfaces.GetChildren());
+                    player.mirrored = true;
                 }
 
                 if (Input.GetKey(Key.D))
                 {
                     player.MoveUntilCollision(climbSpeed * Time.deltaTime, 0, StageLoader.currentStage.surfaces.GetChildren());
+                    player.mirrored = false;
                 }
 
                 if (Input.GetKey(Key.S))

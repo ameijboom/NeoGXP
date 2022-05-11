@@ -145,38 +145,6 @@ public class LowerBodyPart : BodyPart
         }
     }
 
-    private void DoSlopedMovementIfPossible()
-    {
-        if (player.horizontalCollision == null) return;
-
-        switch (player.horizontalCollision.normal.x)
-        {
-            case < -0.5f and > -1 when player.horizontalCollision.normal.y < -0.5f:
-                player.velocity.x = speed; 
-                player.velocity.y = -speed;
-                break;
-            case > 0.5f and < 1 when player.horizontalCollision.normal.y < -0.5f:
-                player.velocity.x = -speed;
-                player.velocity.y = -speed;
-                break;
-            default:
-                player.velocity.y = 0;
-                break;
-        }
-
-        // switch (target.horizontalCollision.normal.x)
-        // {
-        //     case < 0.5f and > 0:
-        //         target.velocity.x = speed;
-        //         target.velocity.y = -speed;
-        //         break;
-        //     case > -0.5f and < 0:
-        //         target.velocity.x = -speed;
-        //         target.velocity.y = -speed;
-        //         break;
-        // }
-    }
-
     /// <summary>
     /// Might as well jump
     /// </summary>
@@ -184,7 +152,6 @@ public class LowerBodyPart : BodyPart
     {
         player.velocity.y -= MyGame.globalJumpForce * jumpMultiplier;
     }
-    
     
     /// <summary>
     /// Checks if the player is grounded based on if the collision normal y has a value lower than -0.5f to ensure jumping works on 45 deg slopes

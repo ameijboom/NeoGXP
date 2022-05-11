@@ -44,7 +44,8 @@
     <Compile Include="BodyParts\BodyPart.cs" />
     <Compile Include="BodyParts\LowerBodyPart.cs" />
     <Compile Include="BodyParts\UpperBodyPart.cs" />
-    <Compile Include="BreakableBlock.cs" />
+    <Compile Include="BreakableStuffs\Breakable.cs" />
+    <Compile Include="BreakableStuffs\BreakableBlocks.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
     <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
     <Compile Include="GXPEngine\AddOns\TiledLoader.cs" />
