@@ -73,7 +73,9 @@ public class Player : Sprite
 	{
 		if (lowerBodyPart?.model.height > MyGame.partBaseSize.y || lowerBodyPart?.model.height < MyGame.partBaseSize.y)
 		{
-			height -= lowerBodyPart.model.height - (int)MyGame.partBaseSize.y;
+			int temp = lowerBodyPart.model.height - (int)MyGame.partBaseSize.y;
+			height -= temp;
+			if (lowerBodyPart != null) y += temp;
 		}
 		
 		lowerBodyPart?.Destroy();

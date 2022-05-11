@@ -132,13 +132,7 @@ namespace GXPEngine.BodyParts
                 {
 
                     StageLoader.currentStage?.background.Line(x + abilityModel.x, y + abilityModel.y, hook.x, hook.y);
-
-
-                    // if (shootTime + 200 < Time.now)
-                    // {
-                    //     abilityModel.rotation = direction.GetAngleDegrees();
-                    // }
-
+                    
                     if (!hook.HitTest(player) && !hook.HitTest(this))
                     {
                         abilityModel.rotation = direction.GetAngleDegrees();
@@ -198,7 +192,7 @@ namespace GXPEngine.BodyParts
             extendSpeed = 2;
             crouchIntensity = 0.2f;
 
-            maxExtendiness = (int) MyGame.playerBaseSize.y * 8;
+            maxExtendiness = (int) MyGame.playerBaseSize.y * 6;
         }
 
         public override void HandleMovement()
