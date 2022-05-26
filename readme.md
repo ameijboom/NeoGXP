@@ -3,6 +3,9 @@
 NeoGXP is a 2D C# game engine based on the GXPEngine created by Saxion. the main purpose of this rewrite is cross-platform support and
 upgraded .NET & library versions.
 
+## Games Made With NeoGXP
+[![Molecats](https://github-readme-stats.vercel.app/api/pin/?username=MythicalSora&repo=Project-Final-Approach&theme=dark)](https://github.com/MythicalSora/Project-Final-Approach)
+
 ## Contribute
 
 To contribute to the project, please fork this repository and commit your changes there. When you're done, you can go ahead and submit
