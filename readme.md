@@ -1,5 +1,8 @@
 # NeoGXP
 
+## Warning: Deprecated
+We have decided to restart this project from scratch, as we've lost track of development and are facing other complications. We're working on a new version, so please stay patient.
+
 NeoGXP is a 2D C# game engine based on the GXPEngine created by Saxion. the main purpose of this rewrite is cross-platform support and
 upgraded .NET & library versions.
 
